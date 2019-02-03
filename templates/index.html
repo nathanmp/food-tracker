@@ -1,0 +1,21 @@
+{% extends "header.html" %}
+{% block header %} {% endblock %}
+{% block stuff %}
+{% for foodtype in foods %}
+	<div class="foodservs" >
+	<p>{{foodtype.name}}: {{foodtype.serv}}</p>
+	<!-- ><svg width="30" height="30" onclick="servingHandler(0.125, '{{foodtype.color}}', {{foodtype.id}})">
+		<path d="M 15 15 V 0 A 15 15 0 0 1 26 5 M 15 15" fill={{foodtype.color}} />
+	</svg> -->
+	<svg width="30" height="30" onclick="servingHandler(0.25, '{{foodtype.color}}', {{foodtype.id}})">
+		<path d="M 15 15 V 0 A 15 15 0 0 1 30 15 M 15 15" fill={{foodtype.color}} />
+	</svg>
+	<svg width="30" height="30" onclick="servingHandler(0.5, '{{foodtype.color}}', {{foodtype.id}})">
+		<path d="M 15 15 V 0 A 15 15 0 0 1 15 30 M 15 15" fill={{foodtype.color}} />
+	</svg>
+	<svg width="30" height="30" onclick="servingHandler(1, '{{foodtype.color}}', {{foodtype.id}})">
+		<circle cx="15" cy="15" r="15" fill={{foodtype.color}} />
+	</svg>
+	</div>
+{% endfor %}
+{% endblock %}

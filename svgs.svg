@@ -1,0 +1,14 @@
+<svsvg id="setinvis">
+	<defs>
+		
+		<svg id="qcircle">
+			<path d="M 25 25 V 0 A 25 25 0 0 1 42 8 M 25 25" fill="param(color)red" />
+		</svg>
+		<svg id="hcircle">
+			<path d="M 25 25 V 0 A 25 25 0 0 1 42 8 M 25 25" fill="param(color) red" />
+		</svg>
+		<svg id="ocircle">
+			<circle cx="50" cy="50" r="50" fill="param(color) red"/>
+		</svg>
+	</defs>
+</svsvg>
