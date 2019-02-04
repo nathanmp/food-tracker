@@ -1,3 +1,13 @@
+<script>	
+	function servingHandler(serv, color, id) {
+		food = {"serv":serv, "color":color, "id":id};
+        console.log(food);
+        var http = new XMLHttpRequest();
+        http.open("POST", "/add", true);
+        http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        http.send(JSON.stringify(food));
+	}
+</script>
 {% block stuff %}
 {% for foodtype in foods %}
 	<div class="foodservs" >

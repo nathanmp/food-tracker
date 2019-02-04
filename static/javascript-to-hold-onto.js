@@ -5,7 +5,7 @@
 		var foods = [];
         function servingHandler(serv, color, id) {
             foods.push([serv, color, id]);
-            food =  "serv:" + serv + ",color:" + color + ",id:" + id;
+            food =  "serv=" + serv + "&color=" + color + "&id=" + id;
             console.log(food);
         }
         function buttonHandler() {
