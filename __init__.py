@@ -24,3 +24,7 @@ login = LoginManager()
 login.init_app(app)
 
 from eatr import routes, models
+from eatr.models import *
+@app.shell_context_processor
+def make_shell_context():
+    return {'db': db, "FoodType":FoodType, "User":User, "FoodElement":FoodElement}

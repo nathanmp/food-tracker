@@ -44,6 +44,8 @@ class FoodElement(db.Model):
 		self.sid = serving	
 		self.uid = username
 		self.timestamp = datetime.utcnow()
+	def __repr__(self):
+		return ("<FoodElement, EID {}, FID {}, Username {}, SS {}>").format(self.eid, self.fid, self.uid, self.sid)
 	eid = db.Column(db.Integer, primary_key=True)
 	fid = db.Column(db.Integer, db.ForeignKey('foodtype.ftid'))
 	sid = db.Column(db.Float)

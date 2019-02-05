@@ -7,6 +7,7 @@ import sqlite3
 import json
 import sys
 import os
+from eatr import db
 from eatr import app, models
 colors = [{"name": "Green and cruciferous vegetables", "color": "green", "serv": "1 cup", "id":"1"},
 		{"name": "Root vegetables and gourds", "color": "green", "serv": "1 cup", "id":"2"},
@@ -63,5 +64,6 @@ def add():
 	print(request.get_json(), file=sys.stderr)
 	f = models.FoodElement(data['id'], data['serving'], data['username'])
 	print(f)
-	
+	db.session.add(f)
+	db.session.commit()
 	return render_template("food.html", title="Home", foods=colors)
