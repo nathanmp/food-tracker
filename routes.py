@@ -61,5 +61,7 @@ def stats():
 def add():
 	data = request.get_json()
 	print(request.get_json(), file=sys.stderr)
-	f = models.FoodElement(data['id'], data['serving'])
+	f = models.FoodElement(data['id'], data['serving'], data['username'])
+	print(f)
+	
 	return render_template("food.html", title="Home", foods=colors)

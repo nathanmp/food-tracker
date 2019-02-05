@@ -12,7 +12,8 @@ from eatr import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class FoodType(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
+	__tablename__ = "foodtype"
+	ftid = db.Column(db.Integer, primary_key=True)
 	food_name = db.Column(db.String(64))
 	serv_name = db.Column(db.String(64))
 	protein_amt = db.Column(db.Integer())
@@ -26,6 +27,7 @@ def load_user(id):
 	return User.query.get(int(id)) """
 
 class User(UserMixin, db.Model):
+	__tablename__ = "user"
 	uid = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(64), unique=True)
 	email = db.Column(db.String(128), unique=True)
@@ -37,12 +39,13 @@ class User(UserMixin, db.Model):
 		return check_password_hash(self.password_hash, password)
 
 class FoodElement(db.Model):
-	def __init__(self, food_id, serving):
+	def __init__(self, food_id, serving, username="Guest"):
 		self.fid = food_id
-		self.sid = serving
-		self.uid = user_id
+		self.sid = serving	
+		self.uid = username
+		self.timestamp = datetime.utcnow()
 	eid = db.Column(db.Integer, primary_key=True)
-	fid = db.Column(db.Integer, db.ForeignKey('foodtype.id'))
+	fid = db.Column(db.Integer, db.ForeignKey('foodtype.ftid'))
 	sid = db.Column(db.Float)
-	uid = db.Column(db.Integer, db.ForeignKey('user.uid'))
+	uid = db.Column(db.String(64), db.ForeignKey('user.uid'))
 	timestamp = db.Column(db.Integer, default=datetime.utcnow)

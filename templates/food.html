@@ -21,7 +21,12 @@
 	<style type="text/css" href="{{ url_for('static', file='style.css') }}"></style>
 </head>
 <body>
-	<p>Foo</p>
+	{% if current_user.is_authenticated %}
+	<p>{{current_user.username}}</p>
+	{% else %}
+	<p>Guest</p>
+	{% endif %}
+	
     <div id="added">
 		{% for foodtype in foods %}
 		{% block stuff %}
@@ -29,4 +34,5 @@
 		{% endblock %}
 		{% endfor %}
 	</div>
+	
 </body>

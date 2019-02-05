@@ -1,6 +1,10 @@
 <script>	
 	function servingHandler(serv, color, id) {
-		food = {"serv":serv, "color":color, "id":id};
+		{% if current_user.is_authenticated %}
+			food = {"serving":serv, "color":color, "id":id, "username": {{current_user.username}} };
+		{% else %}
+			food = {"serving":serv, "color":color, "id":id, "username": "Guest" };
+		{% endif %}
         console.log(food);
         var http = new XMLHttpRequest();
         http.open("POST", "/add", true);
