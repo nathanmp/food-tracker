@@ -56,7 +56,11 @@ def signup():
 
 @app.route("/stats")
 def stats():
-	return 0
+	if current_user.is_authenticated:
+		feq = models.FoodElement.query.filter_by(uid=current_user.username).all()
+	else:
+		feq = models.FoodElement.query.filter_by(uid="Guest").all()
+	return render_template("stats.html", title="Stats", foodelems=feq)
 
 @app.route("/add", methods=["POST"])
 def add():
