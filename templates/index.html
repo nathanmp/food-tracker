@@ -7,7 +7,7 @@
 		{% endif %}
         console.log(food);
         var http = new XMLHttpRequest();
-        http.open("POST", "/add", true);
+        http.open("POST", "/addfood", true);
         http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         http.send(JSON.stringify(food));
 	}

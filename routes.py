@@ -9,6 +9,12 @@ import sys
 import os
 from eatr import db
 from eatr import app, models
+app.secret_key = "REDACTED"
+login_manager = LoginManager()
+login_manager.init_app(app)
+@login_manager.user_loader
+def load_user(user_id):
+	return models.User.query.filter_by(email=user_id).first()
 colors = [{"name": "Green and cruciferous vegetables", "color": "green", "serv": "1 cup", "id":"1"},
 		{"name": "Root vegetables and gourds", "color": "green", "serv": "1 cup", "id":"2"},
 		{"name": "Berries and stone fruit", "color": "green", "serv": "1/2 cup", "id":"3"},
@@ -32,8 +38,11 @@ colors = [{"name": "Green and cruciferous vegetables", "color": "green", "serv":
 		{"name": "Desserts", "color": "red", "serv": "1 oz", "id":"21"}]
 
 @app.route("/")
-def addfood():
-    return render_template("food.html", title="Home", foods=colors, cuser=current_user)
+def addpg():
+	if not current_user.is_authenticated:
+		return render_template("signup.html")
+	else:
+		return render_template("food.html", title="Home", foods=colors, cuser=current_user)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -62,8 +71,8 @@ def stats():
 		feq = models.FoodElement.query.filter_by(uid="Guest").all()
 	return render_template("stats.html", title="Stats", foodelems=feq)
 
-@app.route("/add", methods=["POST"])
-def add():
+@app.route("/addfood", methods=["POST"])
+def addfood():
 	data = request.get_json()
 	print(request.get_json(), file=sys.stderr)
 	f = models.FoodElement(data['id'], data['serving'], data['username'])
@@ -71,3 +80,17 @@ def add():
 	db.session.add(f)
 	db.session.commit()
 	return render_template("food.html", title="Home", foods=colors)
+
+@app.route("/adduser", methods=["POST"])
+def adduser():
+	data = request.get_json()
+	print(request.get_json(), file=sys.stderr)
+	u = models.User(data['uname'], data['email'])
+	u.set_password(data['passwd'])
+	db.session.add(u)
+	db.session.commit()
+	login_user(u)
+	return render_template('food.html')
+@app.route("/login", methods=["POST"])
+def loginuser():
+	return 0

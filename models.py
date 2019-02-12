@@ -27,17 +27,29 @@ def load_user(id):
 	return User.query.get(int(id)) """
 
 class User(UserMixin, db.Model):
-	__tablename__ = "user"
-	uid = db.Column(db.Integer, primary_key=True)
-	username = db.Column(db.String(64), unique=True)
-	email = db.Column(db.String(128), unique=True)
-	password_hash = db.Column(db.String(128), unique=True)
-	food_types = db.Column(db.String(400))
 	def set_password(self, password):
 		self.password_hash = generate_password_hash(password)
 	def check_password(self, password):
 		return check_password_hash(self.password_hash, password)
-
+	
+	def __init__(self, uname, addr):
+		self.username = uname
+		self.email = addr
+		##self.set_password(passwd)
+	
+	__tablename__ = "user"
+	
+	def get_id(self):
+		return self.uid
+	def __repr__(self):
+		return ("<UserID {}, Username {}, Email {}>").format(self.uid, self.username, self.email)
+	
+	uid = db.Column(db.Integer, primary_key=True)
+	username = db.Column(db.String(64), unique=True)
+	email = db.Column(db.String(128), unique=True)
+	password_hash = db.Column(db.String(128))
+	food_types = db.Column(db.String(400))
+	
 class FoodElement(db.Model):
 	def __init__(self, food_id, serving, username="Guest"):
 		self.fid = food_id
