@@ -1,6 +1,6 @@
 <script>	
 	function servingHandler(serv, color, id) {
-		{% if current_user.is_authenticated %}
+		{% if current_user.username %}
 			food = {"serving":serv, "color":color, "id":id, "username": {{current_user.username}} };
 		{% else %}
 			food = {"serving":serv, "color":color, "id":id, "username": "Guest" };

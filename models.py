@@ -40,7 +40,7 @@ class User(UserMixin, db.Model):
 	__tablename__ = "user"
 	
 	def get_id(self):
-		return self.uid
+		return self.username
 	def __repr__(self):
 		return ("<UserID {}, Username {}, Email {}>").format(self.uid, self.username, self.email)
 	

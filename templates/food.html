@@ -21,7 +21,7 @@
 	<style type="text/css" href="{{ url_for('static', file='style.css') }}"></style>
 </head>
 <body>
-	{% if current_user.is_authenticated %}
+	{% if current_user %}
 	<p>{{current_user.username}}</p>
 	{% else %}
 	<p>Guest</p>
