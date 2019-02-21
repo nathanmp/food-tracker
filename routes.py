@@ -10,6 +10,7 @@ import sys
 import os
 from eatr import db
 from eatr import app, models
+from eatr.models import User
 app = Flask('eatr')
 app.debug = True
 app.config.from_pyfile('config.py', silent=True)
@@ -49,37 +50,10 @@ colors = [{"name": "Green and cruciferous vegetables", "color": "green", "serv":
 @app.route("/")
 @app.route("/home")
 def addpg():
-	print("HomeU:" + str(current_user), file=sys.stderr)
-	print("HomeU:" + str(current_user.is_authenticated), file=sys.stderr)
 	if current_user.is_anonymous:
-		return redirect("/signup")
+		return redirect("/signuporin")
 	else:
 		return render_template("food.html", title="Home", foods=colors, cuser=current_user)
-
-@app.route("/loginuser", methods=["GET", "POST"])
-def login():
-	if request.method == "GET":	
-		if current_user.is_authenticated:
-			return redirect(url_for("/"))
-		form = LoginForm()
-		if form.validate_on_submit():
-			user = User.query.filter_by(username=form.username.data).first()
-			if user is None or not user.check_password(form.password.data):
-				return redirect(url_for("/"))
-		return 0
-	else:
-		data = request.form
-		print("LoginU:" + str(current_user), file=sys.stderr)
-		print("LoginU:" + str(current_user.is_authenticated), file=sys.stderr)
-		u = models.User(data['username'], data['email'])
-		u.set_password(data['password'])
-		db.session.add(u)
-		db.session.commit()
-		login_user(u, remember=True)
-		print(current_user, file=sys.stderr)
-		print(current_user.is_authenticated, file=sys.stderr)
-		flash("Logged in.")
-		return redirect("/home")
 
 @app.route("/stats")
 def stats():
@@ -92,27 +66,37 @@ def stats():
 @app.route("/addfood", methods=["POST"])
 def addfood():
 	data = request.get_json()
-	print(request.get_json(), file=sys.stderr)
 	f = models.FoodElement(data['id'], data['serving'], data['username'])
 	print(f)
 	db.session.add(f)
 	db.session.commit()
 	return ""
+	
+@app.route("/signinuser", methods=["POST"])
+def signinuser():
+	if current_user.is_authenticated:
+		return redirect(url_for("/home"))
+	print(str(request.form), file=sys.stderr)
+	u = User.query.filter_by(username=request.form['username']).first()
+	if u is None or not u.check_password(request.form['password']):
+		flash("Incorrect details.")
+		return redirect(url_for("/signuporin"))
+	elif u.check_password(request.form['password']):
+		login_user(u, remember=True)
+		return redirect("/home")
+	else:
+		return redirect("/signuporin")
 
 @app.route("/signupuser", methods=["POST"])
 def signupuser():
 	data = request.form
 	print(data['username'])
-	print("SignupUserU:" + str(current_user), file=sys.stderr)
-	print("SignupUserU:" + str(current_user.is_authenticated), file=sys.stderr)
 	u = models.User(data['username'], data['email'])
 	u.set_password(data['password'])
 	db.session.add(u)
 	db.session.commit()
 	login_user(u, remember=True)
-	print(current_user, file=sys.stderr)
-	print(current_user.is_authenticated, file=sys.stderr)
-	flash("Logged in.")
+	flash("Signed up.")
 	return redirect("/home")
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -120,12 +104,16 @@ def signuppg():
 	if request.method == "GET":
 		return render_template("signup.html")
 	res = signupuser()
-	print("SignupU:" + str(current_user), file=sys.stderr)
-	print("SignupU:" + str(current_user.is_authenticated), file=sys.stderr)
 	if res:
 		return redirect("/home")
 	else:
 		return redirect("/signup")
-@app.route("/login", methods=["POST"])
-def loginuser():
-	return 0
+		
+@app.route("/logout")
+def logout():
+	logout_user()
+	return redirect("/home")
+
+@app.route("/signuporin", methods=["GET"])
+def sorl():
+	return render_template("signuporin.html")

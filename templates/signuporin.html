@@ -1,0 +1,27 @@
+{%include "header.html" %}
+<script>
+	function signup() {
+		uname = document.getElementById("uname").value;
+		passwd = document.getElementById("password").value;
+		data = {"uname":uname, "email":email, "passwd":passwd}
+		var http = new XMLHttpRequest();
+        http.open("POST", "/signuser", true);
+        http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        http.send(JSON.stringify(data));	
+	}
+</script>
+<body>
+	<p>Sign Up Below</p>
+	<form method="post" action="/signupuser">
+		<input type="text" id="uname" name="username"></input>
+		<input type="email" id="email" name="email"></input>
+		<input type="password" id="password" name="password"></input>
+		<button type="submit" value="Submit">Submit</button>
+	</form>
+	<p>Sign In Below</p>
+	<form method="post" action="/signinuser">
+		<input type="text" id="uname" name="username"></input>
+		<input type="password" id="password" name="password"></input>
+		<button type="submit" value="Submit">Submit</button>
+	</form>
+</body>
