@@ -14,7 +14,8 @@ from eatr.models import User
 app = Flask('eatr')
 app.debug = True
 app.config.from_pyfile('config.py', silent=True)
-db.init_app(app)	
+db.init_app(app)
+migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
 

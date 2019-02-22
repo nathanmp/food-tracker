@@ -12,15 +12,21 @@ from eatr import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class FoodType(db.Model):
+	def __init__(self, ftid, color, serv, name):
+		self.ftid = ftid
+		self.color = color
+		self.serv_name = serv
+		self.food_name = name
 	__tablename__ = "foodtype"
 	ftid = db.Column(db.Integer, primary_key=True)
 	food_name = db.Column(db.String(64))
+	color = db.Column(db.String(10))
 	serv_name = db.Column(db.String(64))
 	protein_amt = db.Column(db.Integer())
 	carb_amt = db.Column(db.Integer())
 	fat_amt = db.Column(db.Integer())
 	def __repr__(self):
-		return ("<FoodType Number {}, Name {}, SS {}>").format(self.id, self.food_name, self.serv_name)
+		return ("<FoodType Number {}, Name {}, SS {}>").format(self.ftid, self.food_name, self.serv_name)
 
 """ @login.user_loader
 def load_user(id):
@@ -57,7 +63,8 @@ class FoodElement(db.Model):
 		self.uid = username
 		self.timestamp = datetime.utcnow()
 	def __repr__(self):
-		return ("<FoodElement, EID {}, FID {}, Username {}, SS {}>").format(self.eid, self.fid, self.uid, self.sid)
+		ft = FoodType.query.filter_by(ftid=self.fid).first()
+		return ("<FoodElement, FID {}, Username {}, SS {}, Time {}>").format(ft.food_name, self.uid, self.sid, self.timestamp)
 	eid = db.Column(db.Integer, primary_key=True)
 	fid = db.Column(db.Integer, db.ForeignKey('foodtype.ftid'))
 	sid = db.Column(db.Float)

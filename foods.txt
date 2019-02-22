@@ -1,22 +1,22 @@
-Green and cruciferous vegetables|green|1 cup
-Root vegetables and gourds|green|1 cup
-Berries and stone fruit|green|1/2 cup
-Apples, oranges, and pears|green|1
-Beans|yellow|1/2 cup
-Nuts|yellow|1/2 oz
-Poultry|yellow|3 oz
-Seafood|yellow|3 oz
-Red meat|red|3 oz
-Deli meat|red|2 oz
-Eggs|yellow|1
-Cheese|yellow|1/4 cup
-Yogurt|yellow|1 cup
-Milk|yellow|1 cup
-Wheat|yellow|1 cup
-Oils|red|2 tbsp
-Heavy sauces|red|2 tbsp
-Light sauces|yellow|2 tbsp
-Bread|yellow|1 slice
-Grains|yellow|1 cup
-Dairy desserts|red|1/2 cup
-Other desserts|red|1 oz
+Green vegetables|green|1 cup|40
+Root vegetables and gourds|green|1 cup|100
+Berries and stone fruit|green|1/2 cup|30
+Apples, oranges, and pears|green|1|100
+Beans|yellow|1/2 cup|
+Nuts|yellow|1/2 oz|
+Poultry|yellow|3 oz|
+Seafood|yellow|3 oz|
+Red meat|red|3 oz|
+Deli meat|red|2 oz|
+Eggs|yellow|1|
+Cheese|yellow|1/4 cup|
+Yogurt|yellow|1 cup|
+Milk|yellow|1 cup|
+Wheat|yellow|1 cup|
+Oils|red|2 tbsp|
+Heavy sauces|red|2 tbsp|
+Light sauces|yellow|2 tbsp|
+Bread|yellow|1 slice|
+Grains|yellow|1 cup|
+Dairy desserts|red|1/2 cup|
+Other desserts|red|1 oz|
