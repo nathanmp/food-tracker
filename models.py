@@ -61,6 +61,8 @@ class FoodElement(db.Model):
 		self.fid = food_id
 		self.sid = serving	
 		self.uid = username
+		ft = FoodType.query.filter_by(ftid=self.fid).first()
+		self.color = ft.color
 		self.timestamp = datetime.utcnow()
 	def __repr__(self):
 		ft = FoodType.query.filter_by(ftid=self.fid).first()
@@ -69,4 +71,5 @@ class FoodElement(db.Model):
 	fid = db.Column(db.Integer, db.ForeignKey('foodtype.ftid'))
 	sid = db.Column(db.Float)
 	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
+	color = db.Column(db.String(10))
 	timestamp = db.Column(db.Integer, default=datetime.utcnow)

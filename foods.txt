@@ -1,22 +1,22 @@
-Green vegetables|green|1 cup|40
-Root vegetables and gourds|green|1 cup|100
-Berries and stone fruit|green|1/2 cup|30
-Apples, oranges, and pears|green|1|100
-Beans|yellow|1/2 cup|
-Nuts|yellow|1/2 oz|
-Poultry|yellow|3 oz|
-Seafood|yellow|3 oz|
-Red meat|red|3 oz|
-Deli meat|red|2 oz|
+Name|color|serving|calories|fat|carbs|protein
+
+Green vegetables|green|1 cup|40|
+Starch vegetables|yellow|1/2 cup|80|0|15|3
+Fruit|green|1/2 cup|60|0|15|0
+Fruit juice|green|1/2 cup|60|0|15|0
+Beans|yellow|1/2 cup|125|2|15|7
+Nuts|yellow|1 oz|160|12|9|5
+Poultry|yellow|3 oz|45|2|0|7
+Seafood|yellow|3 oz|45|2|0|7
+Red meat|red|1 oz|100|8|0|7
+Deli meat|red|1 oz|45|2|0|7
 Eggs|yellow|1|
-Cheese|yellow|1/4 cup|
-Yogurt|yellow|1 cup|
-Milk|yellow|1 cup|
-Wheat|yellow|1 cup|
-Oils|red|2 tbsp|
-Heavy sauces|red|2 tbsp|
-Light sauces|yellow|2 tbsp|
-Bread|yellow|1 slice|
-Grains|yellow|1 cup|
+Cheese|yellow|1 oz|5|0|7
+Milk|yellow|1 cup|120|5|15|8
+Oils|red|1 tsp|45|5|0|0
+Heavy sauces|red|1 tbsp|45|5|0|0
+Light sauces|yellow|1 tbsp|45|5|0|0
+Bread|yellow|1 oz|80|0|15|3
+Grains|yellow|1/2 cup|80|0|15|3
 Dairy desserts|red|1/2 cup|
 Other desserts|red|1 oz|

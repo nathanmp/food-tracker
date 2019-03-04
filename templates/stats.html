@@ -1,4 +1,34 @@
 {%include "header.html" %}
+<table style="width:90%">	
+	<tr>
+		<th>Name</th>
+		<th>Color</th>
+		<th>Timestamp</th>
+	</tr>
+	{% for foodelem in foodelems %}
+	<tr>
+	<td>{{foodelem.fid}}</td>
+	<td>{{foodelem.color}}</td>
+	<td>{{foodelem.timestamp}}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% if foodelems != [] %}
+{% set ns = namespace() %}
+{% set ns.reds = 0 %}
+{% set ns.yellows = 0 %}
+{% set ns.greens = 0 %}
 {% for foodelem in foodelems %}
-	<p>{{foodelem}}</p>
+    {{foodelem.color}}
+	{% if foodelem.color == "red" %}
+		{% set ns.reds = ns.reds+1 %}
+	{% elif foodelem.color == "yellow" %}
+		{% set ns.yellows = ns.yellows+1 %}
+	{% elif foodelem.color == "green" %}
+		{% set ns.greens = ns.greens+1 %}
+	{% endif %}
 {% endfor %}
+{% endif %}
+<p>Reds {{ns.reds}}</p>
+<p>Yellows {{ns.yellows}}</p>
+<p>Greens {{ns.greens}}</p>
