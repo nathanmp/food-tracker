@@ -13,7 +13,7 @@ Seafood|green|3 oz|100|10|0|19
 Fruit juice|yellow|1/2 cup|60|0|15|0
 Nuts|yellow|1 oz|160|12|9|5
 Eggs|yellow|1|75|4|0|7
-Cheese|yellow|1 oz|5|0|7
+Cheese|yellow|1 oz|100|5|0|7
 Milk|green|1 cup|120|5|15|8
 Yogurt|green|1 pkg|120|5|15|8
 Light sauces|yellow|1 tbsp|45|5|0|0
@@ -25,3 +25,4 @@ Bread|red|1 slice|80|0|15|3
 Processed Grains|red|1/2 cup|0|15|3
 Dairy desserts|red|1/2 cup|130|7|15|3
 Other desserts|red|2 oz|220|11|30|2
+Soda|red|8 oz|100|0|26|0

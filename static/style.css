@@ -22,7 +22,7 @@ body {
 .template {
 	width: 350px;
 	display: block;
-	height: 60px;
+	height: 40px;
 }
 
 .servingsize {
@@ -89,7 +89,7 @@ svg {
 }
 .ddMenu {
 	width: 120px;
-	height: 60px;
+	height: 40px;
 	padding: 0px;
 	margin: 0px;
 	background-color: green;
@@ -100,7 +100,7 @@ svg {
 	background-color: #AAAAAA;
 	position: absolute;
 	white-space: pre;
-	height: 40px;
+	height: 100px;
 	width: 120px;
 	top: 40px;
 }
@@ -116,7 +116,7 @@ svg {
 .Header {
 	background-color: green;
 	width: 100%;
-	height: 36px;
+	height: 40px;
 }
 .nowrap {
 	font-size: 16px;

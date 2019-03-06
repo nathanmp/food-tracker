@@ -12,11 +12,15 @@ from eatr import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class FoodType(db.Model):
-	def __init__(self, ftid, color, serv, name):
+	def __init__(self, ftid, color, serv, name, cal, fat, carb, pro):
 		self.ftid = ftid
 		self.color = color
 		self.serv_name = serv
 		self.food_name = name
+		self.calories = cal
+		self.carb_amt = carb
+		self.protein_amt = pro
+		self.fat_amt = fat
 	__tablename__ = "foodtype"
 	ftid = db.Column(db.Integer, primary_key=True)
 	food_name = db.Column(db.String(64))
