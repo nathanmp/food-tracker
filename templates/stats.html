@@ -1,5 +1,5 @@
 {%include "header.html" %}
-<table style="width:90%">	
+<table style="width:90%">
 	<tr>
 		<th>Name</th>
 		<th>Color</th>
@@ -19,7 +19,6 @@
 {% set ns.yellows = 0 %}
 {% set ns.greens = 0 %}
 {% for foodelem in foodelems %}
-    {{foodelem.color}}
 	{% if foodelem.color == "red" %}
 		{% set ns.reds = ns.reds+1 %}
 	{% elif foodelem.color == "yellow" %}

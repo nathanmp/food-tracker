@@ -3,7 +3,6 @@ Name|color|serving|calories|fat|carbs|protein
 Green vegetables|green|1 cup|40|
 Starch vegetables|yellow|1/2 cup|80|0|15|3
 Fruit|green|1/2 cup|60|0|15|0
-Fruit juice|green|1/2 cup|60|0|15|0
 Beans|yellow|1/2 cup|125|2|15|7
 Nuts|yellow|1 oz|160|12|9|5
 Poultry|yellow|3 oz|45|2|0|7

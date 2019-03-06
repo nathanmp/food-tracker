@@ -1,4 +1,6 @@
-<script>	
+<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script>
 	function servingHandler(serv, color, id) {
 		{% if current_user.username %}
 			food = {"serving":serv, "color":color, "id":id, "username": "{{current_user.username}}" };
@@ -12,22 +14,71 @@
         http.send(JSON.stringify(food));
 	}
 </script>
-{% block stuff %}
-{% for foodtype in foods %}
-	<div class="foodservs" >
-	<p>{{foodtype.name}}: {{foodtype.serv}}</p>
-	<!-- <svg width="30" height="30" onclick="servingHandler(0.125, '{{foodtype.color}}', {{foodtype.id}})">
-		<path d="M 15 15 V 0 A 15 15 0 0 1 26 5 M 15 15" fill={{foodtype.color}} />
-	</svg> -->
-	<svg width="30" height="30" onclick="servingHandler(0.25, '{{foodtype.color}}', {{foodtype.id}})">
-		<path d="M 15 15 V 0 A 15 15 0 0 1 30 15 M 15 15" fill={{foodtype.color}} />
+<div class="Header">
+<div class="ddMenu">
+	<p class="nowrap">Header - Hover</p>
+	<div class="ddContent">
+    <a href="#history">History</a>
+    <a href="#stats">Stats</a>
+    <a href="#about">About User</a>
+    </div>
+</div>
+</div>
+<div class="container-fluid">
+<div class="row">
+<div class="col col-sm-4">
+{% for foodtype in foods[0:foods|length // 3] %}
+	<div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}" >
+	<p class="foodname">{{foodtype.name}}: {{foodtype.serv}}</p>
+	<div class="elements">
+	<svg width="24" height="24" onclick="servingHandler(0.25, '{{foodtype.color}}', {{foodtype.id}})">
+		<path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{foodtype.color}} />
 	</svg>
-	<svg width="30" height="30" onclick="servingHandler(0.5, '{{foodtype.color}}', {{foodtype.id}})">
-		<path d="M 15 15 V 0 A 15 15 0 0 1 15 30 M 15 15" fill={{foodtype.color}} />
+	<svg width="24" height="24" onclick="servingHandler(0.5, '{{foodtype.color}}', {{foodtype.id}})">
+		<path d="M 12 12 V 0 A 12 12 0 0 1 12 24 M 12 12" fill={{foodtype.color}} />
 	</svg>
-	<svg width="30" height="30" onclick="servingHandler(1, '{{foodtype.color}}', {{foodtype.id}})">
-		<circle cx="15" cy="15" r="15" fill={{foodtype.color}} />
+	<svg width="24" height="24" onclick="servingHandler(1, '{{foodtype.color}}', {{foodtype.id}})">
+		<circle cx="12" cy="12" r="12" fill={{foodtype.color}} />
 	</svg>
 	</div>
+	</div>
 {% endfor %}
-{% endblock %}
+</div>
+<div class="col col-sm-4">
+{% for foodtype in foods[foods|length // 3:2*foods|length//3] %}
+	<div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}" >
+	<p class="foodname">{{foodtype.name}}: {{foodtype.serv}}</p>
+	<div class="elements">
+	<svg width="24" height="24" onclick="servingHandler(0.25, '{{foodtype.color}}', {{foodtype.id}})">
+		<path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{foodtype.color}} />
+	</svg>
+	<svg width="24" height="24" onclick="servingHandler(0.5, '{{foodtype.color}}', {{foodtype.id}})">
+		<path d="M 12 12 V 0 A 12 12 0 0 1 12 24 M 12 12" fill={{foodtype.color}} />
+	</svg>
+	<svg width="24" height="24" onclick="servingHandler(1, '{{foodtype.color}}', {{foodtype.id}})">
+		<circle cx="12" cy="12" r="12" fill={{foodtype.color}} />
+	</svg>
+	</div>
+	</div>
+{% endfor %}
+</div>
+<div class="col col-sm-4">
+{% for foodtype in foods[2*foods|length//3:] %}
+	<div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}" >
+	<p class="foodname">{{foodtype.name}}: {{foodtype.serv}}</p>
+	<div class="elements">
+	<svg width="24" height="24" onclick="servingHandler(0.25, '{{foodtype.color}}', {{foodtype.id}})">
+		<path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{foodtype.color}} />
+	</svg>
+	<svg width="24" height="24" onclick="servingHandler(0.5, '{{foodtype.color}}', {{foodtype.id}})">
+		<path d="M 12 12 V 0 A 12 12 0 0 1 12 24 M 12 12" fill={{foodtype.color}} />
+	</svg>
+	<svg width="24" height="24" onclick="servingHandler(1, '{{foodtype.color}}', {{foodtype.id}})">
+		<circle cx="12" cy="12" r="12" fill={{foodtype.color}} />
+	</svg>
+	</div>
+	</div>
+{% endfor %}
+</div>
+</div>
+</div>
