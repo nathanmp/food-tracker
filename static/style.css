@@ -40,12 +40,6 @@ body {
 	text-align: center;
 }
 
-svg {
-	display: inline;
-	white-space: nowrap;
-	margin: 12px;
-}
-
 .red,
 .yel,
 .grn {
@@ -69,7 +63,8 @@ svg {
 }
 .foodname {
 	white-space: nowrap;
-	font-size: 20px;
+	font-size: 16px;
+	font-family: serif;
 	display: inline;
 	left: 10px;
 	position: relative;
@@ -77,11 +72,12 @@ svg {
 svg {
 	display: inline;
 	white-space: nowrap;
+	margin: 4px;
 }
 .foodservs {
 	position: relative;
 	display: inline-block;
-	height: 60px;
+	height: 40px;
 	width: 100%;
 	display: flex;
 	justify-content: center;
@@ -89,11 +85,11 @@ svg {
 }
 .elements {
 	position: absolute;
-	right: 20px;
+	right: 10px;
 }
 .ddMenu {
 	width: 120px;
-	height: 100%;
+	height: 60px;
 	padding: 0px;
 	margin: 0px;
 	background-color: green;
@@ -104,9 +100,9 @@ svg {
 	background-color: #AAAAAA;
 	position: absolute;
 	white-space: pre;
-	height: 100px;
+	height: 40px;
 	width: 120px;
-	top: 36px;
+	top: 40px;
 }
 .ddContent a {
 	font-size: 16px;
@@ -123,6 +119,9 @@ svg {
 	height: 36px;
 }
 .nowrap {
-	font-size: 24px;
+	font-size: 16px;
 	white-space: nowrap;
+}
+.col {
+	margin: 0px;
 }

@@ -26,10 +26,10 @@ def load_user(user_id):
 	print(u, file=sys.stderr)
 	return u
 
-colors = [{"name": "Green vegetables", "color": "green", "serv": "1 cup", "id":"1"},
-		{"name": "Root vegetables", "color": "green", "serv": "1 cup", "id":"2"},
-		{"name": "Berries and stone fruit", "color": "green", "serv": "1/2 cup", "id":"3"},
-		{"name": "Apples, oranges, and pears", "color": "green", "serv": "1", "id":"4"},
+colors = [{"name": "Green veggies", "color": "green", "serv": "1 cup", "id":"1"},
+		{"name": "Root veggies", "color": "green", "serv": "1 cup", "id":"2"},
+		{"name": "Berries", "color": "green", "serv": "1/2 cup", "id":"3"},
+		{"name": "Sphere fruit", "color": "green", "serv": "1", "id":"4"},
 		{"name": "Beans", "color": "yellow", "serv": "1/2 cup", "id":"5"},
 		{"name": "Nuts", "color": "yellow", "serv": "1/2 oz", "id":"6"},
 		{"name": "Poultry", "color": "yellow", "serv": "3 oz", "id":"7"},
