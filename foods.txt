@@ -1,8 +1,8 @@
 Name|color|serving|calories|fat|carbs|protein
 
-Water|blue|1 cup|0|0|0
-Tea|blue|1 cup|0|0|0
-Coffee|blue|1 cup|0|0|0
+Water|blue|1 cup|0|0|0|0
+Tea|blue|1 cup|0|0|0|0
+Coffee|blue|1 cup|0|0|0|0
 Green vegetables|green|1 cup|25|0|5|2
 Starchy vegetables|green|1/2 cup|80|0|15|3
 Potatoes|red|4 oz|100|0|21|3

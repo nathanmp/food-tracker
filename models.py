@@ -29,6 +29,7 @@ class FoodType(db.Model):
 	protein_amt = db.Column(db.Integer())
 	carb_amt = db.Column(db.Integer())
 	fat_amt = db.Column(db.Integer())
+	calories = db.Column(db.Integer())
 	def __repr__(self):
 		return ("<FoodType Number {}, Name {}, SS {}>").format(self.ftid, self.food_name, self.serv_name)
 
@@ -67,6 +68,10 @@ class FoodElement(db.Model):
 		self.uid = username
 		ft = FoodType.query.filter_by(ftid=self.fid).first()
 		self.color = ft.color
+		self.calories = ft.calories
+		self.carb_amt = ft.carb_amt
+		self.protein_amt = ft.protein_amt
+		self.fat_amt = ft.fat_amt
 		self.timestamp = datetime.utcnow()
 	def __repr__(self):
 		ft = FoodType.query.filter_by(ftid=self.fid).first()
@@ -77,3 +82,7 @@ class FoodElement(db.Model):
 	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
 	color = db.Column(db.String(10))
 	timestamp = db.Column(db.Integer, default=datetime.utcnow)
+	carb_amt = db.Column(db.Integer)
+	protein_amt = db.Column(db.Integer)
+	fat_amt = db.Column(db.Integer)
+	calories = db.Column(db.Integer)

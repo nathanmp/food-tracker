@@ -1,15 +1,27 @@
 {%include "header.html" %}
+<script>
+	function del(food) {
+        console.log(food);
+        var http = new XMLHttpRequest();
+        http.open("POST", "/deletefood", true);
+        http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        http.send(JSON.stringify(food));
+	}
+</script>
 <table style="width:90%">
 	<tr>
 		<th>Name</th>
 		<th>Color</th>
 		<th>Timestamp</th>
+		<th>Delete</th>
 	</tr>
 	{% for foodelem in foodelems %}
 	<tr>
 	<td>{{foodelem.fid}}</td>
 	<td>{{foodelem.color}}</td>
 	<td>{{foodelem.timestamp}}</td>
+	<td>{{foodelem.uid}}</td>
+	<td style="onclick=del({{foodelem}})">Delete</td>
 	</tr>
 	{% endfor %}
 </table>
@@ -18,6 +30,10 @@
 {% set ns.reds = 0 %}
 {% set ns.yellows = 0 %}
 {% set ns.greens = 0 %}
+{% set ns.cals = 0 %}
+{% set ns.pros = 0 %}
+{% set ns.fats = 0 %}
+{% set ns.carbs = 0 %}
 {% for foodelem in foodelems %}
 	{% if foodelem.color == "red" %}
 		{% set ns.reds = ns.reds+1 %}
@@ -26,8 +42,16 @@
 	{% elif foodelem.color == "green" %}
 		{% set ns.greens = ns.greens+1 %}
 	{% endif %}
+	{% set ns.cals = ns.cals + foodelem.calories %}
+	{% set ns.pros = ns.pros + foodelem.protein_amt %}
+	{% set ns.fats = ns.fats + foodelem.fat_amt %}
+	{% set ns.carbs = ns.carbs + foodelem.carb_amt %}
 {% endfor %}
-{% endif %}
 <p>Reds {{ns.reds}}</p>
 <p>Yellows {{ns.yellows}}</p>
 <p>Greens {{ns.greens}}</p>
+<p>Calories {{ns.cals}}</p>
+<p>Proteins {{ns.pros}}</p>
+<p>Fats {{ns.fats}}</p>
+<p>Carbs {{ns.carbs}}</p>
+{% endif %}

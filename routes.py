@@ -8,6 +8,7 @@ import sqlite3
 import json
 import sys
 import os
+import datetime
 from eatr import db
 from eatr import app, models
 from eatr.models import User
@@ -62,7 +63,9 @@ def addpg():
 @app.route("/stats")
 def stats():
 	if current_user.is_authenticated:
-		feq = models.FoodElement.query.filter_by(uid=current_user.username).all()
+		timediff = datetime.datetime.utcnow() - datetime.timedelta(days=7)
+		feq = models.FoodElement.query.filter(models.FoodElement.timestamp > timediff,\
+		models.FoodElement.uid==current_user.username).all()
 	else:
 		feq = models.FoodElement.query.filter_by(uid="Guest").all()
 	return render_template("stats.html", title="Stats", foodelems=feq)
@@ -121,3 +124,11 @@ def logout():
 @app.route("/signuporin", methods=["GET"])
 def sorl():
 	return render_template("signuporin.html")
+
+@app.route("/deletefood", methods=["POST"])
+def delete():
+	print(request.form)
+	fe = request.form['foodelem']
+	if fe.uid == current_user.username:
+		db.session.delete(fe)
+	return redirect('/stats')
