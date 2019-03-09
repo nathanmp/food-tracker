@@ -11,7 +11,6 @@ import os
 import datetime
 from eatr import db
 from eatr import app, models
-from eatr.models import User
 app = Flask('eatr')
 app.debug = True
 app.config.from_pyfile('config.py', silent=True)
@@ -58,12 +57,16 @@ def addpg():
 	if current_user.is_anonymous:
 		return redirect("/signuporin")
 	else:
-		return render_template("food.html", title="Home", foods=colors, cuser=current_user)
+		return render_template("index.html", title="Home", foods=colors, cuser=current_user)
 
-@app.route("/stats")
-def stats():
+@app.route("/stats/", defaults={"timeframe":-1})
+@app.route("/stats/<int:timeframe>")
+def stats(timeframe):
+	if timeframe == -1:
+		timediff = datetime.datetime.utcnow() - datetime.datetime(2019, 3, 1)
+	else:
+			timediff = datetime.datetime.utcnow() - datetime.timedelta(days=timeframe)
 	if current_user.is_authenticated:
-		timediff = datetime.datetime.utcnow() - datetime.timedelta(days=7)
 		feq = models.FoodElement.query.filter(models.FoodElement.timestamp > timediff,\
 		models.FoodElement.uid==current_user.username).all()
 	else:
@@ -84,7 +87,7 @@ def signinuser():
 	if current_user.is_authenticated:
 		return redirect(url_for("/home"))
 	print(str(request.form), file=sys.stderr)
-	u = User.query.filter_by(username=request.form['username']).first()
+	u = models.User.query.filter_by(username=request.form['username']).first()
 	if u is None or not u.check_password(request.form['password']):
 		flash("Incorrect details.")
 		return redirect(url_for("/signuporin"))
@@ -127,8 +130,10 @@ def sorl():
 
 @app.route("/deletefood", methods=["POST"])
 def delete():
-	print(request.form)
-	fe = request.form['foodelem']
+	print(request.get_json())
+	feid = request.get_json()['foodelem']
+	fe = models.FoodElement.query.filter_by(eid=feid).first()
 	if fe.uid == current_user.username:
 		db.session.delete(fe)
+		db.session.commit()
 	return redirect('/stats')
