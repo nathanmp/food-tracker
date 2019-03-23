@@ -113,3 +113,11 @@ svg {
 .col {
 	margin: 0px;
 }
+#advert {
+	margin: 30px;
+}
+input {
+	position: relative;
+	display: block;
+	margin-bottom: 10px !important;
+}

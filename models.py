@@ -67,6 +67,7 @@ class FoodElement(db.Model):
 		self.sid = serving	
 		self.uid = username
 		ft = FoodType.query.filter_by(ftid=self.fid).first()
+		self.food_name = ft.food_name
 		self.color = ft.color
 		self.calories = ft.calories
 		self.carb_amt = ft.carb_amt
@@ -86,3 +87,4 @@ class FoodElement(db.Model):
 	protein_amt = db.Column(db.Integer)
 	fat_amt = db.Column(db.Integer)
 	calories = db.Column(db.Integer)
+	food_name = db.Column(db.String(64))

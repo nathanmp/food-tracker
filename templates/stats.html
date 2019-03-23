@@ -21,11 +21,11 @@
 	</tr>
 	{% for foodelem in foodelems %}
 	<tr>
-	<td>{{foodelem.fid}}</td>
+	<td>{{foodelem.food_name}}</td>
 	<td>{{foodelem.color}}</td>
 	<td>{{foodelem.timestamp}}</td>
 	<td>{{foodelem.uid}}</td>
-	<td><a href="del({{foodelem.eid}})">Delete</a></td>
+	<td><a href="/deletefood/{{foodelem.eid}}">Delete</a></td>
 	</tr>
 	{% endfor %}
 </table>
