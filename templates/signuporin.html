@@ -1,16 +1,16 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<script>
+<!-- ><script>
 	function signup() {
 		uname = document.getElementById("uname").value;
 		passwd = document.getElementById("password").value;
 		data = {"uname":uname, "email":email, "passwd":passwd}
 		var http = new XMLHttpRequest();
-        http.open("POST", "/signuser", true);
+        http.open("POST", "/signinuser", true);
         http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         http.send(JSON.stringify(data));	
 	}
-</script>
+</script> -->
 <body>
 	<div class="container-fluid">
 	<div class="row">
@@ -24,15 +24,15 @@
 	<div class="col-md-4">
 	<p>Sign Up Below</p>
 	<form method="post" action="/signupuser">
-		<input type="text" id="uname" name="username"></input>
-		<input type="email" id="email" name="email"></input>
-		<input type="password" id="password" name="password"></input>
+		<input class="margin10inp" type="text" id="uname" name="username"></input>
+		<input class="margin10inp" type="email" id="email" name="email"></input>
+		<input class="margin10inp" type="password" id="password" name="password"></input>
 		<button type="submit" value="Submit">Submit</button>
 	</form>
 	<p>Sign In Below</p>
 	<form method="post" action="/signinuser">
-		<input type="text" id="uname" name="username"></input>
-		<input type="password" id="password" name="password"></input>
+		<input class="margin10inp" type="text" id="uname" name="username"></input>
+		<input class="margin10inp" type="password" id="password" name="password"></input>
 		<button type="submit" value="Submit">Submit</button>
 	</form>
 	</div>

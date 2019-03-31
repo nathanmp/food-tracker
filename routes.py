@@ -9,8 +9,7 @@ import json
 import sys
 import os
 import datetime
-from eatr import db
-from eatr import app, models
+from eatr import db, app, models
 app = Flask('eatr')
 app.debug = True
 app.config.from_pyfile('config.py', silent=True)
@@ -22,8 +21,6 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
 	u = models.User.query.filter_by(username=user_id).first()
-	print(user_id, file=sys.stderr)
-	print(u, file=sys.stderr)
 	return u
 
 @app.route("/")
@@ -32,17 +29,12 @@ def addpg():
 	if current_user.is_anonymous:
 		return redirect("/signuporin")
 	else:
-		flist = current_user.food_types
+		flist = current_user.foodtypes
 		colors = []
-		for item in flist.split(","):
-			fti = models.FoodType.query.filter_by(ftid=int(item)).first()
-			d = {"id":int(item), "name":fti.food_name, "color":fti.color, "serving":fti.serv_name}
-			d['cal'] = fti.calories
-			d['carbs'] = fti.carb_amt
-			d['fat'] = fti.fat_amt
-			d['protein'] = fti.protein_amt
-			colors.append(d)
-		print(str(colors), file=sys.stderr)	
+		for i in flist:
+			colors.append({"name":i.food_name, "id":i.ftid, "color":i.color, "serving":i.serv_name,
+				"protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories})
+		print(str(colors), file=sys.stderr)
 		return render_template("index.html", title="Home", foods=colors, cuser=current_user)
 
 @app.route("/stats/", defaults={"timeframe":-1})
@@ -51,7 +43,7 @@ def stats(timeframe):
 	if timeframe == -1:
 		timediff = datetime.datetime.utcnow() - datetime.datetime(2019, 3, 1)
 	else:
-			timediff = datetime.datetime.utcnow() - datetime.timedelta(days=timeframe)
+		timediff = datetime.datetime.utcnow() - datetime.timedelta(days=timeframe)
 	if current_user.is_authenticated:
 		feq = models.FoodElement.query.filter(models.FoodElement.timestamp > timediff,\
 		models.FoodElement.uid==current_user.username).all()
@@ -59,14 +51,39 @@ def stats(timeframe):
 		feq = models.FoodElement.query.filter_by(uid="Guest").all()
 	return render_template("stats.html", title="Stats", foodelems=feq)
 
-@app.route("/addfood", methods=["POST"])
-def addfood():
-	data = request.get_json()
-	f = models.FoodElement(data['id'], data['serving'], data['username'])
-	db.session.add(f)
-	db.session.commit()
-	return ""
+@app.route("/signup", methods=["GET"])
+def signuppg():
+	return render_template("signup.html")
+
+
+@app.route("/signuporin", methods=["GET"])
+def sorl():
+	return render_template("signuporin.html")
+
+def deletefood(food_id):
+	fe = models.FoodElement.query.filter_by(eid=food_id).first()
+	if fe.uid == current_user.username:
+		db.session.delete(fe)
+		db.session.commit()
+	return redirect('/stats')
 	
+@app.route("/logout")
+def logout():
+	logout_user()
+	return redirect("/home")
+
+@app.route("/signupuser", methods=["POST"])
+def signupuser():
+	data = request.form
+	print(data['username'])
+	u = models.User(data['username'], data['email'])
+	u.set_password(data['password'])
+	db.session.add(u)
+	db.session.commit()
+	login_user(u, remember=True)
+	flash("Signed up.")
+	return redirect("/home")
+
 @app.route("/signinuser", methods=["POST"])
 def signinuser():
 	if current_user.is_authenticated:
@@ -81,41 +98,15 @@ def signinuser():
 	else:
 		return redirect("/signuporin")
 
-@app.route("/signupuser", methods=["POST"])
-def signupuser():
-	data = request.form
-	print(data['username'])
-	u = models.User(data['username'], data['email'])
-	u.set_password(data['password'])
-	db.session.add(u)
+@app.route("/addfood", methods=["POST"])
+def addfood():
+	data = request.get_json()
+	m = models.Meal(timestamp=datetime.utcnow())
+	db.session.add(m)
 	db.session.commit()
-	login_user(u, remember=True)
-	flash("Signed up.")
-	return redirect("/home")
-
-@app.route("/signup", methods=["GET", "POST"])
-def signuppg():
-	if request.method == "GET":
-		return render_template("signup.html")
-	res = signupuser()
-	if res:
-		return redirect("/home")
-	else:
-		return redirect("/signup")
-		
-@app.route("/logout")
-def logout():
-	logout_user()
-	return redirect("/home")
-
-@app.route("/signuporin", methods=["GET"])
-def sorl():
-	return render_template("signuporin.html")
-
-@app.route("/deletefood/<int:food_id>")
-def delete(food_id):
-	fe = models.FoodElement.query.filter_by(eid=food_id).first()
-	if fe.uid == current_user.username:
-		db.session.delete(fe)
-		db.session.commit()
-	return redirect('/stats')
+	l = []
+	for i in data:
+		m = models.FoodElement(i['id'], i['serving'], i['username'], mealid=m)
+		l.append(m)
+	db.session.commit()
+	return ""

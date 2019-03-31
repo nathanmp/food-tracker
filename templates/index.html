@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script>
+	var foods = {}
 	function servingHandler(serv, color, id) {
 		{% if current_user.username %}
 			food = {"serving":serv, "color":color, "id":id, "username": "{{current_user.username}}" };
@@ -8,10 +9,14 @@
 			food = {"serving":serv, "color":color, "id":id, "username": "Guest" };
 		{% endif %}
         console.log(food);
+        foods.push(food);
+    }
+    function submit() {
         var http = new XMLHttpRequest();
         http.open("POST", "/addfood", true);
         http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        http.send(JSON.stringify(food));
+        http.send(JSON.stringify(foods));
+        window.location.href = "/stats";
 	}
 </script>
 {% include "header.html" %}
@@ -70,6 +75,10 @@
 	</div>
 	</div>
 {% endfor %}
+</div>
+<div class="col-xs-12 col-md-4">
+<input type="text" name="textSubmit">
+<button onclick="submit();">Submit Foods</button>
 </div>
 </div>
 </div>

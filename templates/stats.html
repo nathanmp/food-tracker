@@ -1,8 +1,8 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script>
-	function del(food) {
-		foodjson = {'foodelem':food}
+	function del() {
+		var checkboxes = documents.getElementsByName("cbdel");
         console.log(foodjson);
         var http = new XMLHttpRequest();
         http.open("POST", "/deletefood", true);
@@ -17,7 +17,7 @@
 		<th>Name</th>
 		<th>Color</th>
 		<th>Timestamp</th>
-		<th>Delete</th>
+		<th><a onclick="del();">Delete Selected</a></th>
 	</tr>
 	{% for foodelem in foodelems %}
 	<tr>
@@ -25,7 +25,7 @@
 	<td>{{foodelem.color}}</td>
 	<td>{{foodelem.timestamp}}</td>
 	<td>{{foodelem.uid}}</td>
-	<td><a href="/deletefood/{{foodelem.eid}}">Delete</a></td>
+	<td>Delete: <input type="checkbox" name="cbdel"></input></td>
 	</tr>
 	{% endfor %}
 </table>

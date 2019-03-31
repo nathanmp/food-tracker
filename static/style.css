@@ -116,7 +116,7 @@ svg {
 #advert {
 	margin: 30px;
 }
-input {
+.margin10inp {
 	position: relative;
 	display: block;
 	margin-bottom: 10px !important;
