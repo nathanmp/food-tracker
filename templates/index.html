@@ -1,10 +1,10 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script>
-	var foods = {}
-	function servingHandler(serv, color, id) {
+	var foods = [];
+	function servingHandler(serv, color, name, id, calories, protein, carbs, fat) {
 		{% if current_user.username %}
-			food = {"serving":serv, "color":color, "id":id, "username": "{{current_user.username}}" };
+			food = {"name":name, "fat": fat, "protein":protein, "carbs":carbs, "calories":calories, "serving":serv, "color":color, "id":id, "username": {{current_user.uid}} };
 		{% else %}
 			food = {"serving":serv, "color":color, "id":id, "username": "Guest" };
 		{% endif %}
@@ -16,61 +16,63 @@
         http.open("POST", "/addfood", true);
         http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         http.send(JSON.stringify(foods));
-        window.location.href = "/stats";
+        setTimeout( function() {
+			window.location.href = "/stats";
+		}, 1000);
 	}
 </script>
 {% include "header.html" %}
 <div class="container-fluid">
 <div class="row">
 <div class="col-xs-12 col-md-4">
-{% for foodtype in foods[0:foods|length // 3] %}
+{% for ft in foods[0:foods|length // 3] %}
 	<div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}" >
-	<p class="foodname">{{foodtype.name}}: {{foodtype.serv}}</p>
+	<p class="foodname">{{ft.name}}: {{ft.serv}}</p>
 	<div class="elements">
-	<svg width="24" height="24" onclick="servingHandler(0.25, '{{foodtype.color}}', {{foodtype.id}})">
-		<path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{foodtype.color}} />
+	<svg width="24" height="24" onclick="servingHandler(0.25, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
+		<path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{ft.color}} />
 	</svg>
-	<svg width="24" height="24" onclick="servingHandler(0.5, '{{foodtype.color}}', {{foodtype.id}})">
-		<path d="M 12 12 V 0 A 12 12 0 0 1 12 24 M 12 12" fill={{foodtype.color}} />
+	<svg width="24" height="24" onclick="servingHandler(0.5, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
+		<path d="M 12 12 V 0 A 12 12 0 0 1 12 24 M 12 12" fill={{ft.color}} />
 	</svg>
-	<svg width="24" height="24" onclick="servingHandler(1, '{{foodtype.color}}', {{foodtype.id}})">
-		<circle cx="12" cy="12" r="12" fill={{foodtype.color}} />
+	<svg width="24" height="24" onclick="servingHandler(1, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
+		<circle cx="12" cy="12" r="12" fill={{ft.color}} />
 	</svg>
 	</div>
 	</div>
 {% endfor %}
 </div>
 <div class="col-xs-12 col-md-4">
-{% for foodtype in foods[foods|length // 3:2*foods|length//3] %}
+{% for ft in foods[foods|length // 3:2*foods|length//3] %}
 	<div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}" >
-	<p class="foodname">{{foodtype.name}}: {{foodtype.serv}}</p>
+	<p class="foodname">{{ft.name}}: {{ft.serv}}</p>
 	<div class="elements">
-	<svg width="24" height="24" onclick="servingHandler(0.25, '{{foodtype.color}}', {{foodtype.id}})">
-		<path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{foodtype.color}} />
+	<svg width="24" height="24" onclick="servingHandler(0.25, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
+		<path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{ft.color}} />
 	</svg>
-	<svg width="24" height="24" onclick="servingHandler(0.5, '{{foodtype.color}}', {{foodtype.id}})">
-		<path d="M 12 12 V 0 A 12 12 0 0 1 12 24 M 12 12" fill={{foodtype.color}} />
+	<svg width="24" height="24" onclick="servingHandler(0.5, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
+		<path d="M 12 12 V 0 A 12 12 0 0 1 12 24 M 12 12" fill={{ft.color}} />
 	</svg>
-	<svg width="24" height="24" onclick="servingHandler(1, '{{foodtype.color}}', {{foodtype.id}})">
-		<circle cx="12" cy="12" r="12" fill={{foodtype.color}} />
+	<svg width="24" height="24" onclick="servingHandler(1, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
+		<circle cx="12" cy="12" r="12" fill={{ft.color}} />
 	</svg>
 	</div>
 	</div>
 {% endfor %}
 </div>
 <div class="col-xs-12 col-md-4">
-{% for foodtype in foods[2*foods|length//3:] %}
+{% for ft in foods[2*foods|length//3:] %}
 	<div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}" >
-	<p class="foodname">{{foodtype.name}}: {{foodtype.serv}}</p>
+	<p class="foodname">{{ft.name}}: {{ft.serv}}</p>
 	<div class="elements">
-	<svg width="24" height="24" onclick="servingHandler(0.25, '{{foodtype.color}}', {{foodtype.id}})">
-		<path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{foodtype.color}} />
+	<svg width="24" height="24" onclick="servingHandler(0.25, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
+		<path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{ft.color}} />
 	</svg>
-	<svg width="24" height="24" onclick="servingHandler(0.5, '{{foodtype.color}}', {{foodtype.id}})">
-		<path d="M 12 12 V 0 A 12 12 0 0 1 12 24 M 12 12" fill={{foodtype.color}} />
+	<svg width="24" height="24" onclick="servingHandler(0.5, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
+		<path d="M 12 12 V 0 A 12 12 0 0 1 12 24 M 12 12" fill={{ft.color}} />
 	</svg>
-	<svg width="24" height="24" onclick="servingHandler(1, '{{foodtype.color}}', {{foodtype.id}})">
-		<circle cx="12" cy="12" r="12" fill={{foodtype.color}} />
+	<svg width="24" height="24" onclick="servingHandler(1, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
+		<circle cx="12" cy="12" r="12" fill={{ft.color}} />
 	</svg>
 	</div>
 	</div>

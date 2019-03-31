@@ -101,12 +101,14 @@ def signinuser():
 @app.route("/addfood", methods=["POST"])
 def addfood():
 	data = request.get_json()
-	m = models.Meal(timestamp=datetime.utcnow())
+	m = models.Meal(timestamp=datetime.datetime.utcnow())
 	db.session.add(m)
 	db.session.commit()
 	l = []
 	for i in data:
-		m = models.FoodElement(i['id'], i['serving'], i['username'], mealid=m)
-		l.append(m)
+		fe = models.FoodElement(fid=i['id'], sid=i['serving'], uid=i['username'], mealid=m.mid, calories=i['calories'],
+		protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'])
+		l.append(fe)
+		db.session.add(fe)
 	db.session.commit()
 	return ""
