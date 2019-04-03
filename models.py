@@ -27,7 +27,7 @@ class FoodType(db.Model):
 	carb_amt = db.Column(db.Integer())
 	fat_amt = db.Column(db.Integer())
 	calories = db.Column(db.Integer())
-	user_id = db.Column(db.Integer, db.ForeignKey("user.uid"))
+	uid = db.Column(db.Integer, db.ForeignKey("user.uid"))
 
 class User(UserMixin, db.Model):
 	def set_password(self, password):
@@ -71,4 +71,5 @@ class Meal(db.Model):
 	__tablename__ = "meal"
 	mid = db.Column(db.Integer, primary_key=True)
 	elements = db.relationship('FoodElement', backref="meal", lazy=True)
-	timestamp = db.Column(db.Integer)
+	ts_created = db.Column(db.Integer)
+	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
