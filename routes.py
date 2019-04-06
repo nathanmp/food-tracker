@@ -93,7 +93,7 @@ def stats(timeframe):
 		print("Guest", file=sys.stderr)
 	feqd = []
 	for item in feq:
-		feqd.append({"timestamp": datetime.datetime.utcfromtimestamp(item.ts_created).strftime("%a, %B %d %Y, %M:%S")})
+		feqd.append({"mealid": item.mid, "timestamp": datetime.datetime.utcfromtimestamp(item.ts_created).strftime("%a, %B %d %Y, %M:%S")})
 		print(item.elements, file=sys.stderr)
 		feqd[-1]['list'] = []
 		for i in item.elements:
@@ -111,13 +111,16 @@ def signuppg():
 def sorl():
 	return render_template("signuporin.html")
 
-def deletefood(food_id):
-	fe = models.FoodElement.query.filter_by(eid=food_id).first()
-	if fe.uid == current_user.username:
-		db.session.delete(fe)
+@app.route("/deletemeal/", defaults={"mealid":-1})
+@app.route("/deletemeal/<int:mealid>")
+def deletemeal(mealid):
+	if mealid == -1:
+		return redirect('/stats')
+	me = models.Meal.query.filter_by(mid=mealid).first()
+	if me.uid == current_user.username:
+		db.session.delete(me)
 		db.session.commit()
 	return redirect('/stats')
-	
 @app.route("/logout")
 def logout():
 	logout_user()

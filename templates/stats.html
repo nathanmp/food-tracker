@@ -18,14 +18,13 @@
 		<th>Name</th>
 		<th>Color</th>
 		<th>Calories</th>
-		<th><a onclick="del();">Delete Selected</a></th>
+		<th><a href="/deletemeal/{{meal.mealid}}">Delete</a></th>
 	</tr>
 	{% for item in meal['list'] %}
 	<tr>
 	<td>{{item.name}}</td>
 	<td>{{item.color}}</td>
 	<td>{{item.calories}}</td>
-	<td>Delete: <input type="checkbox" name="cbdel"></input></td>
 	</tr>
 	{% endfor %}
 </table>
