@@ -12,23 +12,25 @@
 	
 </script>
 {% include "header.html" %}
+{% for meal in meals %}
 <table style="width:90%">
 	<tr>
 		<th>Name</th>
 		<th>Color</th>
-		<th>Timestamp</th>
+		<th>Calories</th>
 		<th><a onclick="del();">Delete Selected</a></th>
 	</tr>
-	{% for foodelem in foodelems %}
+	{% for item in meal['list'] %}
 	<tr>
-	<td>{{foodelem.food_name}}</td>
-	<td>{{foodelem.color}}</td>
-	<td>{{foodelem.timestamp}}</td>
-	<td>{{foodelem.uid}}</td>
+	<td>{{item.name}}</td>
+	<td>{{item.color}}</td>
+	<td>{{item.calories}}</td>
 	<td>Delete: <input type="checkbox" name="cbdel"></input></td>
 	</tr>
 	{% endfor %}
 </table>
+<br>
+{% endfor %}
 {% if foodelems != [] %}
 {% set ns = namespace() %}
 {% set ns.reds = 0 %}
@@ -41,7 +43,8 @@
 {% set ns.redcals = 0 %}
 {% set ns.yellowcals = 0 %}
 {% set ns.greencals = 0 %}
-{% for foodelem in foodelems %}
+{% for meal in meals %}
+{% for foodelem in meal['list'] %}
 	{% if foodelem.color == "red" %}
 		{% set ns.reds = ns.reds+foodelem.sid %}
 		{% set ns.redcals = ns.redcals + foodelem.calories %}
@@ -56,6 +59,7 @@
 	{% set ns.pros = ns.pros + foodelem.protein_amt %}
 	{% set ns.fats = ns.fats + foodelem.fat_amt %}
 	{% set ns.carbs = ns.carbs + foodelem.carb_amt %}
+{% endfor %}
 {% endfor %}
 <h4>Servings</h4>
 <p>Reds {{ns.reds}}</p>
@@ -74,10 +78,10 @@
 	{% set sum = r+y+g %}
 	{% set rs = r/sum %}
 	{% set ys = y/sum %}
-	{% set gs = g/sum %}
-	
+	{% set gs = g/sum %}	
 	<svg width="50" height="50">
 		<path>M 25 25 V 0 </path>
 	</svg>
 {%- endmacro %}
 {% endif %}
+

@@ -77,23 +77,30 @@ def addpg():
 @app.route("/stats/<int:timeframe>")
 def stats(timeframe):
 	if timeframe == -1:
-		timediff = datetime.datetime.utcnow() - datetime.datetime(2019, 3, 1)
+		timediff = datetime.datetime(2019, 3, 1)
+		timediff = datetime.datetime.timestamp(timediff)
+		print(timediff, file=sys.stderr)
 	else:
 		timediff = datetime.datetime.utcnow() - datetime.timedelta(days=timeframe)
+		timediff = datetime.datetime.timestamp(timediff)
+		print(timediff, file=sys.stderr)
 	if current_user.is_authenticated:
-		feq = models.Meal.query.filter(models.Meal.ts_created > timediff,
-		models.Meal.uid==current_user.username).all()
-		print(feq, file=sys.stderr)
+		feq = models.Meal.query.filter(models.Meal.ts_created>timediff).filter_by(uid=current_user.username).all()
+		print(type(models.Meal.uid), file=sys.stderr)
 		print(current_user.username, file=sys.stderr)
 	else:
 		feq = models.Meal.query.filter_by(uid="Guest").all()
 		print("Guest", file=sys.stderr)
-	feqd = {}
+	feqd = []
 	for item in feq:
-		feqd[item] = {"timestamp": datetime.datetime.utcfromtimestamp(models.Meal.ts_created).strf("%a, %B %d %Y, %M:%S")}
+		feqd.append({"timestamp": datetime.datetime.utcfromtimestamp(item.ts_created).strftime("%a, %B %d %Y, %M:%S")})
 		print(item.elements, file=sys.stderr)
-		feqd[item]['list'] = item.elements
-	return render_template("stats.html", title="Stats", foodelems=feqd)
+		feqd[-1]['list'] = []
+		for i in item.elements:
+			print(i, file=sys.stderr)
+			d = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.sid}
+			feqd[-1]['list'].append(d)
+	return render_template("stats.html", title="Stats", meals=feqd)
 
 @app.route("/signup", methods=["GET"])
 def signuppg():
@@ -152,7 +159,7 @@ def addfood():
 	for i in data:
 		print(i, file=sys.stderr)
 		fe = models.FoodElement(fid=i['id'], sid=i['serving'], uid=i['username'], mealid=m.mid, calories=i['calories'],
-		protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'])
+		protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'], color=i['color'])
 		l.append(fe)
 		db.session.add(fe)
 	db.session.commit()
