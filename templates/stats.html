@@ -1,11 +1,11 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script>
-	function del() {
+	function delmeal() {
 		var checkboxes = documents.getElementsByName("cbdel");
     console.log(foodjson);
     var http = new XMLHttpRequest();
-    http.open("POST", "/deletefood", true);
+    http.open("POST", "/deletemeal", true);
     http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
     http.send(JSON.stringify(foodjson));
 	}
@@ -23,10 +23,12 @@
 {% set ns.fats = 0 %}
 {% set ns.carbs = 0 %}
 {% for foodelem in meal['list'] %}
+{% if foodelem.active == True %}
 {% set ns.cals = ns.cals + foodelem.calories %}
 {% set ns.proteins = ns.proteins + foodelem.protein_amt %}
 {% set ns.fats = ns.fats + foodelem.fat_amt %}
 {% set ns.carbs = ns.carbs + foodelem.carb_amt %}
+{% endif %}
 {% endfor %}
 {% endif %}
 <table class="w-50 mealtable">
@@ -46,6 +48,7 @@
 		<th class="mealheading"><a href="/deletemeal/{{meal.mealid}}">Delete</a></th>
 	</tr>
 	{% for item in meal['list'] %}
+	{% if item.active == True %}
 	<tr class="mealrow">
 	<td>{{item.name}}</td>
 	<td>{{item.color}}</td>
@@ -53,7 +56,9 @@
 	<td>{{item.protein_amt}}</td>
 	<td>{{item.fat_amt}}</td>
 	<td>{{item.carb_amt}}</td>
+	<td><a href="/deletefood/{{item.eid}}">Delete</a></td>
 	</tr>
+	{% endif %}
 	{% endfor %}
 	<tr class="mealrow">
 	<td>Total</td>

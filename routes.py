@@ -79,26 +79,19 @@ def stats(timeframe):
 	if timeframe == -1:
 		timediff = datetime.datetime(2019, 3, 1)
 		timediff = datetime.datetime.timestamp(timediff)
-		print(timediff, file=sys.stderr)
 	else:
 		timediff = datetime.datetime.utcnow() - datetime.timedelta(days=timeframe)
 		timediff = datetime.datetime.timestamp(timediff)
-		print(timediff, file=sys.stderr)
 	if current_user.is_authenticated:
 		feq = models.Meal.query.filter(models.Meal.ts_created>timediff).filter_by(uid=current_user.username).all()
-		print(type(models.Meal.uid), file=sys.stderr)
-		print(current_user.username, file=sys.stderr)
 	else:
 		feq = models.Meal.query.filter_by(uid="Guest").all()
-		print("Guest", file=sys.stderr)
 	feqd = []
 	for item in feq:
 		feqd.append({"mealid": item.mid, "timestamp": datetime.datetime.utcfromtimestamp(item.ts_created).strftime("%a, %B %d %Y, %M:%S")})
-		print(item.elements, file=sys.stderr)
 		feqd[-1]['list'] = []
 		for i in item.elements:
-			print(i, file=sys.stderr)
-			d = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.sid}
+			d = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.sid, "active":i.active, "eid":i.eid}
 			feqd[-1]['list'].append(d)
 	return render_template("stats.html", title="Stats", meals=feqd)
 
@@ -121,6 +114,21 @@ def deletemeal(mealid):
 		db.session.delete(me)
 		db.session.commit()
 	return redirect('/stats')
+
+@app.route("/deletefood/", defaults={"foodid":-1})
+@app.route("/deletefood/<int:foodid>")
+def deletefood(foodid):
+	if foodid == -1:
+		return redirect('/stats')
+	fe = models.FoodElement.query.filter_by(eid=foodid).first()
+	print(fe.uid, file=sys.stderr)
+	print(current_user.uid, file=sys.stderr)
+	if str(fe.uid) == str(current_user.uid):
+		print("Deleting", file=sys.stderr)
+		db.session.delete(fe)
+		db.session.commit()
+	return redirect('/stats')
+
 @app.route("/logout")
 def logout():
 	logout_user()

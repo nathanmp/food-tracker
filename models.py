@@ -65,6 +65,7 @@ class FoodElement(db.Model):
 	calories = db.Column(db.Integer)
 	food_name = db.Column(db.String(64))
 	previous_changes = db.Column(db.Boolean())
+	active = db.Column(db.Boolean(), default=True)
 	mealid = db.Column(db.Integer, db.ForeignKey("meal.mid"))
 
 class Meal(db.Model):
