@@ -15,6 +15,12 @@ meals = db.Table("meals",
 	db.Column("mealid", db.Integer, db.ForeignKey("meal.mid"), primary_key=True),
 	db.Column("userid", db.Integer, db.ForeignKey("user.uid"), primary_key=True)
 )
+
+follows = db.Table("follows",
+	db.Column("userid", db.Integer, db.ForeignKey("user.uid"), primary_key=True),
+	db.Column("userid", db.Integer, db.ForeignKey("user.uid"), primary_key=True)
+)
+
 class FoodType(db.Model):
 	def __repr__(self):
 		return ("<FoodType Number {}, Name {}, SS {}>").format(self.ftid, self.food_name, self.serv_name)
@@ -67,6 +73,7 @@ class FoodElement(db.Model):
 	previous_changes = db.Column(db.Boolean())
 	active = db.Column(db.Boolean(), default=True)
 	mealid = db.Column(db.Integer, db.ForeignKey("meal.mid"))
+	follows = db.relationship("User", lazy=True)
 
 class Meal(db.Model):
 	__tablename__ = "meal"
@@ -74,3 +81,37 @@ class Meal(db.Model):
 	elements = db.relationship('FoodElement', backref="meal", lazy=True)
 	ts_created = db.Column(db.Integer)
 	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
+
+class WeightElement(db.Model):
+	wid = db.Column(db.Float, primary_key=True)
+	ts_created = db.Column(db.Integer, default=datetime.timestamp(datetime.utcnow()))
+	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
+	val = db.Column(db.Float)
+
+class Post(db.Model):
+	text = db.Column(db.String(300))
+	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
+	tags = db.relationship("Tag", lazy=True)
+
+class Tag(db.Model):
+	name = db.Column(db.String(50))
+	posts = db.relationship("Post", lazy=True)
+	
+class ExerciseType(db.Model):
+	tid = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(50))
+	calories = db.Column(db.Integer)
+
+class ExerciseElement(db.Model):
+	eid = db.Column(db.Integer, primary_key=True)
+	uid = db.Column(db.Integer, db.ForeignKey("user.uid"))
+	ts_created = db.Column(db.Integer, default=datetime.timestamp(datetime.utcnow()))
+	length = db.Column(db.Integer)
+	etid = db.Column(db.Integer, db.ForeignKey('exercisetype.tid'))
+	calsburned = db.Column(db.Integer)
+
+class CalorieTarget(db.Model):
+	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
+	dtstarted = db.Column(db.String(40))
+	dtended = db.Column(db.String(40))
+	target = db.Column(db.Integer)

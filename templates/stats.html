@@ -32,12 +32,13 @@
 {% endfor %}
 {% endif %}
 <table class="w-50 mealtable">
-	<col style="width:40%">
+	<col style="width:35%">
 	<col style="width:20%">
 	<col style="width:10%">
 	<col style="width:10%">
 	<col style="width:10%">
 	<col style="width:10%">
+	<col style="width:5%">
 	<tr class="mealrow">
 		<th class="mealheading">Food Name</th>
 		<th class="mealheading">Color</th>
@@ -45,7 +46,7 @@
 		<th class="mealheading">Protein</th>
 		<th class="mealheading">Fats</th>
 		<th class="mealheading">Carbs</th>
-		<th class="mealheading"><a href="/deletemeal/{{meal.mealid}}">Delete</a></th>
+		<th class="mealheading">Delete</th>
 	</tr>
 	{% for item in meal['list'] %}
 	{% if item.active == True %}
@@ -67,62 +68,10 @@
 	<td>{{ns.proteins}}</td>
 	<td>{{ns.fats}}</td>
 	<td>{{ns.carbs}}</td>
+	<td class="mealheading"><a href="/deletemeal/{{meal.mealid}}">Delete</a></td>
 	</tr>
 </table>
 </div>
 </div>
 <br>
 {% endfor %}
-<!-- {% if foodelems != [] %}
-{% set ns = namespace() %}
-{% set ns.reds = 0 %}
-{% set ns.yellows = 0 %}
-{% set ns.greens = 0 %}
-{% set ns.cals = 0 %}
-{% set ns.pros = 0 %}
-{% set ns.fats = 0 %}
-{% set ns.carbs = 0 %}
-{% set ns.redcals = 0 %}
-{% set ns.yellowcals = 0 %}
-{% set ns.greencals = 0 %}
-{% for meal in meals %}
-{% for foodelem in meal['list'] %}
-	{% if foodelem.color == "red" %}
-		{% set ns.reds = ns.reds+foodelem.sid %}
-		{% set ns.redcals = ns.redcals + foodelem.calories %}
-	{% elif foodelem.color == "yellow" %}
-		{% set ns.yellows = ns.yellows+foodelem.sid %}
-		{% set ns.yellowcals = ns.yellowcals + foodelem.calories %}
-	{% elif foodelem.color == "green" %}
-		{% set ns.greens = ns.greens+foodelem.sid %}
-		{% set ns.greencals = ns.greencals+foodelem.calories %}
-	{% endif %}
-	{% set ns.cals = ns.cals + foodelem.calories %}
-	{% set ns.pros = ns.pros + foodelem.protein_amt %}
-	{% set ns.fats = ns.fats + foodelem.fat_amt %}
-	{% set ns.carbs = ns.carbs + foodelem.carb_amt %}
-{% endfor %}
-{% endfor %}
-<h4>Servings</h4>
-<p>Reds {{ns.reds}}</p>
-<p>Yellows {{ns.yellows}}</p>
-<p>Greens {{ns.greens}}</p>
-<h4>Calories</h4>
-<p>Reds {{ns.redcals}}</p>
-<p>Yellows {{ns.yellowcals}}</p>
-<p>Greens {{ns.greencals}}</p>
-<h4>Total Stats</h4>
-<p>Calories {{ns.cals}}</p>
-<p>Proteins {{ns.pros}}</p>
-<p>Fats {{ns.fats}}</p>
-<p>Carbs {{ns.carbs}}</p>
-{% macro piechart(r, y, g) -%}
-	{% set sum = r+y+g %}
-	{% set rs = r/sum %}
-	{% set ys = y/sum %}
-	{% set gs = g/sum %}	
-	<svg width="50" height="50">
-		<path>M 25 25 V 0 </path>
-	</svg>
-{%- endmacro %}
-{% endif %} -->

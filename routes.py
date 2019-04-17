@@ -17,21 +17,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
-
-@login_manager.user_loader
-def load_user(user_id):
-	u = models.User.query.filter_by(username=user_id).first()
-	return u
-
-@app.route("/")
-@app.route("/home")
-def addpg():
-	if current_user.is_anonymous:
-		return redirect("/signuporin")
-	else:
-		flist = current_user.foodtypes
-		if flist == []:
-			s = """Water|blue|1 cup|0|0|0|0
+s = """Water|blue|1 cup|0|0|0|0
 			Tea|blue|1 cup|0|0|0|0
 			Coffee|blue|1 cup|0|0|0|0
 			Green vegetables|green|1 cup|25|0|5|2
@@ -57,6 +43,36 @@ def addpg():
 			Dairy desserts|red|1/2 cup|130|7|15|3
 			Other desserts|red|2 oz|220|11|30|2
 			Soda|red|8 oz|100|0|26|0""".split("\n")
+@login_manager.user_loader
+def load_user(user_id):
+	u = models.User.query.filter_by(username=user_id).first()
+	return u
+@app.route("/home")	
+def home():
+	flist = current_user.foodtypes
+	if flist == []:
+		for i in range(len(s)):
+			s[i] = s[i].strip().split("|")
+			nft = models.FoodType(food_name=s[i][0], color=s[i][1],
+			serv_name=s[i][2], calories=int(s[i][3]), fat_amt=int(s[i][4]),
+			carb_amt=int(s[i][5]), protein_amt=int(s[i][6]))
+			nft.uid = current_user.uid
+			db.session.add(nft)
+		db.session.commit()
+		flist = current_user.foodtypes
+	colors = []
+	for i in flist:
+		colors.append({"name":i.food_name, "id":i.ftid, "color":i.color, "serving":i.serv_name,
+			"protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories})
+	return render_template("home.html", quickadd=colors)
+
+@app.route("/addfood")
+def addpg():
+	if current_user.is_anonymous:
+		return redirect("/signuporin")
+	else:
+		flist = current_user.foodtypes
+		if flist == []:
 			for i in range(len(s)):
 				s[i] = s[i].strip().split("|")
 				nft = models.FoodType(food_name=s[i][0], color=s[i][1],
@@ -73,8 +89,8 @@ def addpg():
 		print(str(colors), file=sys.stderr)
 		return render_template("index.html", title="Home", foods=colors, cuser=current_user)
 
-@app.route("/stats/", defaults={"timeframe":-1})
-@app.route("/stats/<int:timeframe>")
+@app.route("/foodstats/", defaults={"timeframe":-1})
+@app.route("/foodstats/<int:timeframe>")
 def stats(timeframe):
 	if timeframe == -1:
 		timediff = datetime.datetime(2019, 3, 1)
@@ -132,7 +148,7 @@ def deletefood(foodid):
 @app.route("/logout")
 def logout():
 	logout_user()
-	return redirect("/home")
+	return redirect("/")
 
 @app.route("/signupuser", methods=["POST"])
 def signupuser():
@@ -144,7 +160,7 @@ def signupuser():
 	db.session.commit()
 	login_user(u, remember=True)
 	flash("Signed up.")
-	return redirect("/home")
+	return redirect("/")
 
 @app.route("/signinuser", methods=["POST"])
 def signinuser():
@@ -156,7 +172,7 @@ def signinuser():
 		return redirect("/signuporin")
 	elif u.check_password(request.form['password']):
 		login_user(u, remember=True)
-		return redirect("/home")
+		return redirect("/")
 	else:
 		return redirect("/signuporin")
 
@@ -176,3 +192,15 @@ def addfood():
 	db.session.commit()
 	return ""
 
+@app.route("/addweight")
+def addweight():
+	data = request.get_json()
+	w = models.WeightElement(uid=current_user.username, ts_created=datetime.datetime.timestamp(datetime.utcnow()), val=int(data["weight"]))
+	db.session.add(w)
+	db.session.commit()
+	return ""
+
+@app.route("/addexercise")
+def addexercise():
+	data = request.get_json()
+	w = models.ExerciseElement(uid=current_user.username, ts_created=datetime.datetime.timestamp(datetime.utcnow()), etid=int(data['exercise']), calsburned=)
