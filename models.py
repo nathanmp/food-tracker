@@ -83,26 +83,34 @@ class Meal(db.Model):
 	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
 
 class WeightElement(db.Model):
+	__tablename__ = "weightelement"
 	wid = db.Column(db.Float, primary_key=True)
 	ts_created = db.Column(db.Integer, default=datetime.timestamp(datetime.utcnow()))
 	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
 	val = db.Column(db.Float)
 
 class Post(db.Model):
+	__tablename__ = "post"
+	pid = db.Column(db.Integer, primary_key=True)
 	text = db.Column(db.String(300))
 	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
 	tags = db.relationship("Tag", lazy=True)
 
 class Tag(db.Model):
+	__tablename__ = "tag"
+	tid = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(50))
 	posts = db.relationship("Post", lazy=True)
 	
 class ExerciseType(db.Model):
+	__tablename__ = "exercisetype"
 	tid = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(50))
-	calories = db.Column(db.Integer)
+	mets = db.Column(db.Float)
+	color = db.Column(db.String(10))
 
 class ExerciseElement(db.Model):
+	__tablename__ = "exerciseelement"
 	eid = db.Column(db.Integer, primary_key=True)
 	uid = db.Column(db.Integer, db.ForeignKey("user.uid"))
 	ts_created = db.Column(db.Integer, default=datetime.timestamp(datetime.utcnow()))
@@ -111,6 +119,8 @@ class ExerciseElement(db.Model):
 	calsburned = db.Column(db.Integer)
 
 class CalorieTarget(db.Model):
+	__tablename__ = "calorietarget"
+	ctid = db.Column(db.Integer, primary_key=True)
 	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
 	dtstarted = db.Column(db.String(40))
 	dtended = db.Column(db.String(40))

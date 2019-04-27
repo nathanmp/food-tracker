@@ -17,32 +17,39 @@ db.init_app(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
-s = """Water|blue|1 cup|0|0|0|0
-			Tea|blue|1 cup|0|0|0|0
-			Coffee|blue|1 cup|0|0|0|0
-			Green vegetables|green|1 cup|25|0|5|2
-			Starchy vegetables|green|1/2 cup|80|0|15|3
-			Potatoes|red|4 oz|100|0|21|3
-			Fruit|green|1/2 cup|60|0|15|0
-			Beans|green|1/2 cup|125|2|15|7
-			Poultry|green|3 oz|45|3|0|28
-			Seafood|green|3 oz|100|10|0|19
-			Fruit juice|yellow|1/2 cup|60|0|15|0
-			Nuts|yellow|1 oz|160|12|9|5
-			Eggs|yellow|1|75|4|0|7
-			Cheese|yellow|1 oz|100|5|0|7
-			Milk|green|1 cup|120|5|15|8
-			Yogurt|green|1 pkg|120|5|15|8
-			Light sauces|yellow|1 tbsp|45|5|0|0
-			Heavy sauces|red|1 tbsp|45|5|0|0
-			Red meat|red|1 oz|100|8|0|7
-			Deli meat|red|1 oz|45|9|0|7
-			Oils|red|1 tsp|45|5|0|0
-			Bread|red|1 slice|80|0|15|3
-			Processed Grains|red|1/2 cup|0|15|3|0
-			Dairy desserts|red|1/2 cup|130|7|15|3
-			Other desserts|red|2 oz|220|11|30|2
-			Soda|red|8 oz|100|0|26|0""".split("\n")
+food_defaults_med = """
+Water|blue|1 cup|0|0|0|0
+Tea|blue|1 cup|0|0|0|0
+Coffee|blue|1 cup|0|0|0|0
+Green vegetables|green|1 cup|25|0|5|2
+Starchy vegetables|green|1/2 cup|80|0|15|3
+Potatoes|red|4 oz|100|0|21|3
+Fruit|green|1/2 cup|60|0|15|0
+Beans|green|1/2 cup|125|2|15|7
+Poultry|green|3 oz|45|3|0|28
+Seafood|green|3 oz|100|10|0|19
+Fruit juice|yellow|1/2 cup|60|0|15|0
+Nuts|yellow|1 oz|160|12|9|5
+Eggs|yellow|1|75|4|0|7
+Cheese|yellow|1 oz|100|5|0|7
+Milk|green|1 cup|120|5|15|8
+Yogurt|green|1 pkg|120|5|15|8
+Light sauces|yellow|1 tbsp|45|5|0|0
+Heavy sauces|red|1 tbsp|45|5|0|0
+Red meat|red|1 oz|100|8|0|7
+Deli meat|red|1 oz|45|9|0|7
+Oils|red|1 tsp|45|5|0|0
+Bread|red|1 slice|80|0|15|3
+Processed Grains|red|1/2 cup|0|15|3|0
+Dairy desserts|red|1/2 cup|130|7|15|3
+Other desserts|red|2 oz|220|11|30|2
+Soda|red|8 oz|100|0|26|0""".split("\n")
+
+exercise_defaults_med = """
+Light exercise (<3 METs)|gray|1 hour|
+Medium exercise (3-6 METs)|gray|1 hour|
+Intense exercise (>6 METs)|gray|1 hour|
+""".split("\n")
 @login_manager.user_loader
 def load_user(user_id):
 	u = models.User.query.filter_by(username=user_id).first()
@@ -51,11 +58,11 @@ def load_user(user_id):
 def home():
 	flist = current_user.foodtypes
 	if flist == []:
-		for i in range(len(s)):
-			s[i] = s[i].strip().split("|")
-			nft = models.FoodType(food_name=s[i][0], color=s[i][1],
-			serv_name=s[i][2], calories=int(s[i][3]), fat_amt=int(s[i][4]),
-			carb_amt=int(s[i][5]), protein_amt=int(s[i][6]))
+		for i in range(len(food_defaults_med)):
+			food_defaults_med[i] = food_defaults_med[i].strip().split("|")
+			nft = models.FoodType(food_name=food_defaults_med[i][0], color=food_defaults_med[i][1],
+			serv_name=food_defaults_med[i][2], calories=int(food_defaults_med[i][3]), fat_amt=int(food_defaults_med[i][4]),
+			carb_amt=int(food_defaults_med[i][5]), protein_amt=int(food_defaults_med[i][6]))
 			nft.uid = current_user.uid
 			db.session.add(nft)
 		db.session.commit()
@@ -67,17 +74,17 @@ def home():
 	return render_template("home.html", quickadd=colors)
 
 @app.route("/addfood")
-def addpg():
+def addfoodpg():
 	if current_user.is_anonymous:
 		return redirect("/signuporin")
 	else:
 		flist = current_user.foodtypes
 		if flist == []:
-			for i in range(len(s)):
-				s[i] = s[i].strip().split("|")
-				nft = models.FoodType(food_name=s[i][0], color=s[i][1],
-				serv_name=s[i][2], calories=int(s[i][3]), fat_amt=int(s[i][4]),
-				carb_amt=int(s[i][5]), protein_amt=int(s[i][6]))
+			for i in range(len(exercise_defaults_med)):
+				food_defaults_med[i] = food_defaults_med[i].strip().split("|")
+				nft = models.FoodType(food_name=food_defaults_med[i][0], color=food_defaults_med[i][1],
+				serv_name=food_defaults_med[i][2], calories=int(food_defaults_med[i][3]), fat_amt=int(food_defaults_med[i][4]),
+				carb_amt=int(food_defaults_med[i][5]), protein_amt=int(food_defaults_med[i][6]))
 				nft.uid = current_user.uid
 				db.session.add(nft)
 			db.session.commit()
@@ -87,7 +94,29 @@ def addpg():
 			colors.append({"name":i.food_name, "id":i.ftid, "color":i.color, "serving":i.serv_name,
 				"protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories})
 		print(str(colors), file=sys.stderr)
-		return render_template("index.html", title="Home", foods=colors, cuser=current_user)
+		return render_template("food-index.html", title="Home", foods=colors, cuser=current_user)
+		
+@app.route("/addexer")
+def addexerpg():
+	if current_user.is_anonymous:
+		return redirect("/signuporin")
+	else:
+		flist = current_user.foodtypes
+		if flist == []:
+			for i in range(len(s)):
+				exercise_defaults_med[i] = exercise_defaults_med[i].strip().split("|")
+				nft = models.ExerciseType(food_name=exercise_defaults_med[i][0], color=exercise_defaults_med[i][1],
+				serv_name=exercise_defaults_med[i][2], calories=int(exercise_defaults_med[i][3]))
+				nft.uid = current_user.uid
+				db.session.add(nft)
+			db.session.commit()
+			flist = current_user.foodtypes
+		colors = []
+		for i in flist:
+			colors.append({"name":i.food_name, "id":i.ftid, "color":i.color, "serving":i.serv_name,
+				"protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories})
+		print(str(colors), file=sys.stderr)
+		return render_template("food-index.html", title="Home", foods=colors, cuser=current_user)
 
 @app.route("/foodstats/", defaults={"timeframe":-1})
 @app.route("/foodstats/<int:timeframe>")
@@ -203,4 +232,4 @@ def addweight():
 @app.route("/addexercise")
 def addexercise():
 	data = request.get_json()
-	w = models.ExerciseElement(uid=current_user.username, ts_created=datetime.datetime.timestamp(datetime.utcnow()), etid=int(data['exercise']), calsburned=)
+	w = models.ExerciseElement(uid=current_user.username, ts_created=datetime.datetime.timestamp(datetime.utcnow()), etid=int(data['exercise']), calsburned=int(data['cals'])*int(data['minutes']))
