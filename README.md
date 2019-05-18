@@ -6,11 +6,11 @@ For an example, if you had a slice of pizza, you could log it as 1 serving of br
 
 It's built in Flask using Jinja2 templates and SQLalchemy.
 
-Features (for my use):
+Features (this is mostly a todo list):
 - [x] - sign up
 - [x] - sign in
 - [x] - add a meal
-- [x] - presets that appear on first use
+- [x] - preset categories appear on first use
 - [ ] - add a category of food
 - [ ] - edit a category of food
 - [ ] - delete a category of food

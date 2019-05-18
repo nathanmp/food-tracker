@@ -21,6 +21,11 @@ follows = db.Table("follows",
 	db.Column("userid", db.Integer, db.ForeignKey("user.uid"), primary_key=True)
 )
 
+tags = db.Table("posttags",
+	db.Column("pid", db.Integer, db.ForeignKey("post.pid"), primary_key=True),
+	db.Column("tid", db.Integer, db.ForeignKey("tag.tid"), primary_key=True)
+)
+
 class FoodType(db.Model):
 	def __repr__(self):
 		return ("<FoodType Number {}, Name {}, SS {}>").format(self.ftid, self.food_name, self.serv_name)
@@ -51,6 +56,7 @@ class User(UserMixin, db.Model):
 	email = db.Column(db.String(128), unique=True)
 	password_hash = db.Column(db.String(128))
 	foodtypes = db.relationship(FoodType, backref="user")
+	follows = db.relationship("User", secondary=follows, lazy="dynamic", backref=db.backref('followers', lazy="dynamic"))
 	meals = db.relationship("Meal", secondary=meals, lazy="subquery", backref="user")
 	
 class FoodElement(db.Model):
@@ -94,13 +100,13 @@ class Post(db.Model):
 	pid = db.Column(db.Integer, primary_key=True)
 	text = db.Column(db.String(300))
 	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
-	tags = db.relationship("Tag", lazy=True)
+	tags = db.relationship("Tag", secondary=tags, backref=db.backref("post", lazy="joined"), lazy=True)
 
 class Tag(db.Model):
 	__tablename__ = "tag"
 	tid = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(50))
-	posts = db.relationship("Post", lazy=True)
+	posts = db.relationship("Post", secondary=tags, lazy=True)
 	
 class ExerciseType(db.Model):
 	__tablename__ = "exercisetype"

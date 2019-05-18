@@ -17,8 +17,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
-food_defaults_med = """
-Water|blue|1 cup|0|0|0|0
+food_defaults_med = """Water|blue|1 cup|0|0|0|0
 Tea|blue|1 cup|0|0|0|0
 Coffee|blue|1 cup|0|0|0|0
 Green vegetables|green|1 cup|25|0|5|2
@@ -54,8 +53,11 @@ Intense exercise (>6 METs)|gray|1 hour|
 def load_user(user_id):
 	u = models.User.query.filter_by(username=user_id).first()
 	return u
+@app.route("/")	
 @app.route("/home")	
 def home():
+	if current_user.is_anonymous:
+		return redirect("/signuporin")
 	flist = current_user.foodtypes
 	if flist == []:
 		for i in range(len(food_defaults_med)):
@@ -70,8 +72,13 @@ def home():
 	colors = []
 	for i in flist:
 		colors.append({"name":i.food_name, "id":i.ftid, "color":i.color, "serving":i.serv_name,
-			"protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories})
-	return render_template("home.html", quickadd=colors)
+		"protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories})
+	postlist = []
+	##follows = current_user.follows
+	##print(str(follows), file=sys.stderr)
+	
+	postlist = models.Post.query.filter(models.Post.uid in list(current_user.follows))
+	return render_template("home.html", quickadd=colors, posts=postlist)
 
 @app.route("/addfood")
 def addfoodpg():
@@ -153,18 +160,18 @@ def sorl():
 @app.route("/deletemeal/<int:mealid>")
 def deletemeal(mealid):
 	if mealid == -1:
-		return redirect('/stats')
+		return redirect('/foodstats')
 	me = models.Meal.query.filter_by(mid=mealid).first()
 	if me.uid == current_user.username:
 		db.session.delete(me)
 		db.session.commit()
-	return redirect('/stats')
+	return redirect('/foodstats')
 
 @app.route("/deletefood/", defaults={"foodid":-1})
 @app.route("/deletefood/<int:foodid>")
 def deletefood(foodid):
 	if foodid == -1:
-		return redirect('/stats')
+		return redirect('/foodstats')
 	fe = models.FoodElement.query.filter_by(eid=foodid).first()
 	print(fe.uid, file=sys.stderr)
 	print(current_user.uid, file=sys.stderr)
@@ -172,7 +179,7 @@ def deletefood(foodid):
 		print("Deleting", file=sys.stderr)
 		db.session.delete(fe)
 		db.session.commit()
-	return redirect('/stats')
+	return redirect('/foodstats')
 
 @app.route("/logout")
 def logout():
