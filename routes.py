@@ -77,7 +77,7 @@ def home():
 	##follows = current_user.follows
 	##print(str(follows), file=sys.stderr)
 	
-	postlist = models.Post.query.filter(models.Post.uid in list(current_user.follows))
+	postlist = models.Post.query.all()
 	return render_template("home.html", quickadd=colors, posts=postlist)
 
 @app.route("/addfood")
@@ -239,4 +239,15 @@ def addweight():
 @app.route("/addexercise")
 def addexercise():
 	data = request.get_json()
-	w = models.ExerciseElement(uid=current_user.username, ts_created=datetime.datetime.timestamp(datetime.utcnow()), etid=int(data['exercise']), calsburned=int(data['cals'])*int(data['minutes']))
+	e = models.ExerciseElement(uid=current_user.username, ts_created=datetime.datetime.timestamp(datetime.utcnow()), etid=int(data['exercise']), calsburned=int(data['cals'])*int(data['minutes']))
+	db.session.add(e)
+	db.session.commit()
+	return ""
+
+@app.route("/addpost", methods=["POST"])
+def addpost():
+	data = request.get_json()
+	p = models.Post(text=data['text'], uid=current_user.username)
+	db.session.add(p)
+	db.session.commit()
+	return ""

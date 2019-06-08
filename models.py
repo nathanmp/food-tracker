@@ -47,9 +47,20 @@ class User(UserMixin, db.Model):
 		return check_password_hash(self.password_hash, password)
 	def get_id(self):
 		return self.username
+	def makepost(self, t):
+		p = Post(text, self.uid)
+		l = []
+		for item in t.split(" "):
+			if len(item) > 2 and item[0] == "#" and item[1] in list("abcdefghijklmnopqrstuvwxyz"):
+				t = Tag()
+				t.name = item[1:]
+				session.add(t)
+				p.tags.append(t)
+		session.add(p)
+		session.commit()
+		return p.pid
 	def __repr__(self):
 		return ("<UserID {}, Username {}, Email {}>").format(self.uid, self.username, self.email)
-	
 	__tablename__ = "user"
 	uid = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(64), unique=True)
@@ -79,7 +90,6 @@ class FoodElement(db.Model):
 	previous_changes = db.Column(db.Boolean())
 	active = db.Column(db.Boolean(), default=True)
 	mealid = db.Column(db.Integer, db.ForeignKey("meal.mid"))
-	follows = db.relationship("User", lazy=True)
 
 class Meal(db.Model):
 	__tablename__ = "meal"
@@ -100,13 +110,12 @@ class Post(db.Model):
 	pid = db.Column(db.Integer, primary_key=True)
 	text = db.Column(db.String(300))
 	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
-	tags = db.relationship("Tag", secondary=tags, backref=db.backref("post", lazy="joined"), lazy=True)
 
 class Tag(db.Model):
 	__tablename__ = "tag"
 	tid = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(50))
-	posts = db.relationship("Post", secondary=tags, lazy=True)
+	posts = db.relationship("Post", secondary=tags, lazy=True, backref=db.backref("tags"))
 	
 class ExerciseType(db.Model):
 	__tablename__ = "exercisetype"

@@ -27,7 +27,7 @@
 <div class="col-xs-12 col-md-4">
 {% for ft in foods[0:foods|length // 3] %}
 	<div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}" >
-	<p class="foodname">{{ft.name}}: {{ft.serv}}</p>
+	<p class="foodname">{{ft.name}}: {{ft.serving}}</p>
 	<div class="elements">
 	<svg width="24" height="24" onclick="servingHandler(0.25, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
 		<path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{ft.color}} />
@@ -45,7 +45,7 @@
 <div class="col-xs-12 col-md-4">
 {% for ft in foods[foods|length // 3:2*foods|length//3] %}
 	<div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}" >
-	<p class="foodname">{{ft.name}}: {{ft.serv}}</p>
+	<p class="foodname">{{ft.name}}: {{ft.serving}}</p>
 	<div class="elements">
 	<svg width="24" height="24" onclick="servingHandler(0.25, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
 		<path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{ft.color}} />
@@ -63,7 +63,7 @@
 <div class="col-xs-12 col-md-4">
 {% for ft in foods[2*foods|length//3:] %}
 	<div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}" >
-	<p class="foodname">{{ft.name}}: {{ft.serv}}</p>
+	<p class="foodname">{{ft.name}}: {{ft.serving}}</p>
 	<div class="elements">
 	<svg width="24" height="24" onclick="servingHandler(0.25, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
 		<path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{ft.color}} />
@@ -81,9 +81,6 @@
 <div class="col-xs-12 col-md-4">
 <input type="text" name="textSubmit">
 <button onclick="submit();">Submit Foods</button>
-</div>
-<div class="col-xs-12 col-md-4">
-	<input type="number" name="textSubmit">
 </div>
 </div>
 </div>
