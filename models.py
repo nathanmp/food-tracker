@@ -20,11 +20,12 @@ follows = db.Table("follows",
 	db.Column("userid", db.Integer, db.ForeignKey("user.uid"), primary_key=True),
 	db.Column("userid", db.Integer, db.ForeignKey("user.uid"), primary_key=True)
 )
-
+"""
 tags = db.Table("posttags",
 	db.Column("pid", db.Integer, db.ForeignKey("post.pid"), primary_key=True),
 	db.Column("tid", db.Integer, db.ForeignKey("tag.tid"), primary_key=True)
 )
+"""
 
 class FoodType(db.Model):
 	def __repr__(self):
@@ -97,6 +98,7 @@ class Meal(db.Model):
 	elements = db.relationship('FoodElement', backref="meal", lazy=True)
 	ts_created = db.Column(db.Integer)
 	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
+	details = db.Column(db.String(300), default="")
 
 class WeightElement(db.Model):
 	__tablename__ = "weightelement"
@@ -104,7 +106,7 @@ class WeightElement(db.Model):
 	ts_created = db.Column(db.Integer, default=datetime.timestamp(datetime.utcnow()))
 	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
 	val = db.Column(db.Float)
-
+"""
 class Post(db.Model):
 	__tablename__ = "post"
 	pid = db.Column(db.Integer, primary_key=True)
@@ -116,6 +118,7 @@ class Tag(db.Model):
 	tid = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(50))
 	posts = db.relationship("Post", secondary=tags, lazy=True, backref=db.backref("tags"))
+"""
 	
 class ExerciseType(db.Model):
 	__tablename__ = "exercisetype"

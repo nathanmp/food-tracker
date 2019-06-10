@@ -15,8 +15,8 @@ Features (this is mostly a todo list):
 - [ ] - edit a category of food
 - [ ] - delete a category of food
 - [ ] - edit meals
-- [ ] - delete meals
-- [ ] - view meals
+- [x] - delete meals
+- [x] - view meals
 - [ ] - have calorie target
 - [ ] - modify calorie target
 - [ ] - add weight

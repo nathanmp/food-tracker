@@ -12,6 +12,7 @@
         foods.push(food);
     }
     function submit() {
+		foods.push(document.getElementById("post").value);
         var http = new XMLHttpRequest();
         http.open("POST", "/addfood", true);
         http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
@@ -79,7 +80,7 @@
 {% endfor %}
 </div>
 <div class="col-xs-12 col-md-4">
-<input type="text" name="textSubmit">
+<textarea rows="3" cols="40" id="post" name="post"></textarea>
 <button onclick="submit();">Submit Foods</button>
 </div>
 </div>

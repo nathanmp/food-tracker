@@ -31,7 +31,7 @@
 {% endif %}
 {% endfor %}
 {% endif %}
-<table class="w-50 mealtable">
+<table class="w-50 mealtable" style="border-collapse: collapse;">
 	<col style="width:35%">
 	<col style="width:20%">
 	<col style="width:10%">
@@ -70,6 +70,11 @@
 	<td>{{ns.carbs}}</td>
 	<td class="mealheading"><a href="/deletemeal/{{meal.mealid}}">Delete</a></td>
 	</tr>
+	{% if meal.details != "" %}
+	<tr class="details" style="border-bottom: 1pt solid black;">
+		<td colspan=7>Notes: {{meal.details}}</td>
+	</tr>
+	{% endif %}
 </table>
 </div>
 </div>

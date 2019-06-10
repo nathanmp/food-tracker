@@ -12,7 +12,8 @@
         console.log(food);
         foods.push(food);
     }
-    function submitfood() {
+    function submit() {
+		foods.push(document.getElementById("post").value);
         var http = new XMLHttpRequest();
         http.open("POST", "/addfood", true);
         http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
@@ -21,28 +22,9 @@
 			window.location.href = "/home";
 		}, 1000);
 	}
-	function submitpost() {
-		post['text'] = document.getElementById("post").value;
-        var http = new XMLHttpRequest();
-        console.log(post);
-        http.open("POST", "/addpost", true);
-        http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        http.send(JSON.stringify(post));
-        //setTimeout( function() {
-		//	window.location.href = "/home";
-		//}, 1000);
-	}
 </script>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-4">
-            <div class="posts">
-				<p>TODO: posting</p>
-                {% for item in posts %}
-                <p>Post Element</p>
-                {% endfor %}
-            </div>
-        </div>
         <div class="col-4">
 			{% for ft in quickadd %}
             <div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}">				
@@ -60,11 +42,16 @@
                 </div>
             </div>
 			{% endfor %}
+			<textarea rows="3" cols="40" id="post" name="post"></textarea>
 			<button onclick="submit();" name="quicksubmitfood">Submit Food</button>
         </div>
-		<div class="col-4">
-			<textarea rows="3" cols="40" id = "post" name="post"></textarea>
-			<button onclick="submitpost();" name="quicksubmitpost">Submit Post</button>
-		</div>
+        <div class="col-4">
+            <div class="posts">
+                {% for item in posts %}
+                <p>{{item.text}}</p>
+                <p>{{item.uid}}</p>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </div>

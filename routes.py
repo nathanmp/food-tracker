@@ -76,9 +76,7 @@ def home():
 	postlist = []
 	##follows = current_user.follows
 	##print(str(follows), file=sys.stderr)
-	
-	postlist = models.Post.query.all()
-	return render_template("home.html", quickadd=colors, posts=postlist)
+	return render_template("home.html", quickadd=colors)
 
 @app.route("/addfood")
 def addfoodpg():
@@ -140,7 +138,7 @@ def stats(timeframe):
 		feq = models.Meal.query.filter_by(uid="Guest").all()
 	feqd = []
 	for item in feq:
-		feqd.append({"mealid": item.mid, "timestamp": datetime.datetime.utcfromtimestamp(item.ts_created).strftime("%a, %B %d %Y, %M:%S")})
+		feqd.append({"mealid": item.mid, "timestamp": datetime.datetime.utcfromtimestamp(item.ts_created).strftime("%a, %B %d %Y, %M:%S"), "details":item.details})
 		feqd[-1]['list'] = []
 		for i in item.elements:
 			d = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.sid, "active":i.active, "eid":i.eid}
@@ -215,11 +213,11 @@ def signinuser():
 @app.route("/addfood", methods=["POST"])
 def addfood():
 	data = request.get_json()
-	m = models.Meal(ts_created=int(datetime.datetime.utcnow().timestamp()), uid=current_user.username)
+	m = models.Meal(ts_created=int(datetime.datetime.utcnow().timestamp()), uid=current_user.username, details=data[-1])
 	db.session.add(m)
 	db.session.commit()
 	l = []
-	for i in data:
+	for i in data[:-1]:
 		print(i, file=sys.stderr)
 		fe = models.FoodElement(fid=i['id'], sid=i['serving'], uid=i['username'], mealid=m.mid, calories=i['calories'],
 		protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'], color=i['color'])
@@ -228,7 +226,7 @@ def addfood():
 	db.session.commit()
 	return ""
 
-@app.route("/addweight")
+@app.route("/addweight", methods=["POST"])
 def addweight():
 	data = request.get_json()
 	w = models.WeightElement(uid=current_user.username, ts_created=datetime.datetime.timestamp(datetime.utcnow()), val=int(data["weight"]))
@@ -236,18 +234,10 @@ def addweight():
 	db.session.commit()
 	return ""
 
-@app.route("/addexercise")
+@app.route("/addexercise", methods=["POST"])
 def addexercise():
 	data = request.get_json()
 	e = models.ExerciseElement(uid=current_user.username, ts_created=datetime.datetime.timestamp(datetime.utcnow()), etid=int(data['exercise']), calsburned=int(data['cals'])*int(data['minutes']))
 	db.session.add(e)
-	db.session.commit()
-	return ""
-
-@app.route("/addpost", methods=["POST"])
-def addpost():
-	data = request.get_json()
-	p = models.Post(text=data['text'], uid=current_user.username)
-	db.session.add(p)
 	db.session.commit()
 	return ""
