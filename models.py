@@ -26,6 +26,16 @@ tags = db.Table("posttags",
 	db.Column("tid", db.Integer, db.ForeignKey("tag.tid"), primary_key=True)
 )
 """
+class ExerciseType(db.Model):
+	def __repr__(self):
+		return ("<UserID {}, Name {}, METS {}>").format(self.uid, self.name, self.mets)
+	__tablename__ = "exercisetype"
+	tid = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(50))
+	mets = db.Column(db.Float)
+	serv_name = db.Column(db.String(64))
+	calperlb = db.Column(db.Integer)
+	uid = db.Column(db.Integer, db.ForeignKey("user.uid"))
 
 class FoodType(db.Model):
 	def __repr__(self):
@@ -68,6 +78,7 @@ class User(UserMixin, db.Model):
 	email = db.Column(db.String(128), unique=True)
 	password_hash = db.Column(db.String(128))
 	foodtypes = db.relationship(FoodType, backref="user")
+	exercisetypes = db.relationship(ExerciseType)
 	follows = db.relationship("User", secondary=follows, lazy="dynamic", backref=db.backref('followers', lazy="dynamic"))
 	meals = db.relationship("Meal", secondary=meals, lazy="subquery", backref="user")
 	
@@ -120,13 +131,6 @@ class Tag(db.Model):
 	posts = db.relationship("Post", secondary=tags, lazy=True, backref=db.backref("tags"))
 """
 	
-class ExerciseType(db.Model):
-	__tablename__ = "exercisetype"
-	tid = db.Column(db.Integer, primary_key=True)
-	name = db.Column(db.String(50))
-	mets = db.Column(db.Float)
-	color = db.Column(db.String(10))
-
 class ExerciseElement(db.Model):
 	__tablename__ = "exerciseelement"
 	eid = db.Column(db.Integer, primary_key=True)

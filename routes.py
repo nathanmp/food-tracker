@@ -44,11 +44,9 @@ Dairy desserts|red|1/2 cup|130|7|15|3
 Other desserts|red|2 oz|220|11|30|2
 Soda|red|8 oz|100|0|26|0""".split("\n")
 
-exercise_defaults_med = """
-Light exercise (<3 METs)|gray|1 hour|
-Medium exercise (3-6 METs)|gray|1 hour|
-Intense exercise (>6 METs)|gray|1 hour|
-""".split("\n")
+exercise_defaults_med = """Light exercise (<3 METs)|3|1 hour|3
+Medium exercise (3-6 METs)|5|1 hour|5
+Intense exercise (>6 METs)|7|1 hour|7""".split("\n")
 @login_manager.user_loader
 def load_user(user_id):
 	u = models.User.query.filter_by(username=user_id).first()
@@ -58,38 +56,42 @@ def load_user(user_id):
 def home():
 	if current_user.is_anonymous:
 		return redirect("/signuporin")
-	flist = current_user.foodtypes
-	if flist == []:
-		for i in range(len(food_defaults_med)):
-			food_defaults_med[i] = food_defaults_med[i].strip().split("|")
-			nft = models.FoodType(food_name=food_defaults_med[i][0], color=food_defaults_med[i][1],
-			serv_name=food_defaults_med[i][2], calories=int(food_defaults_med[i][3]), fat_amt=int(food_defaults_med[i][4]),
-			carb_amt=int(food_defaults_med[i][5]), protein_amt=int(food_defaults_med[i][6]))
-			nft.uid = current_user.uid
-			db.session.add(nft)
-		db.session.commit()
-		flist = current_user.foodtypes
-	colors = []
-	for i in flist:
-		colors.append({"name":i.food_name, "id":i.ftid, "color":i.color, "serving":i.serv_name,
-		"protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories})
-	postlist = []
-	##follows = current_user.follows
-	##print(str(follows), file=sys.stderr)
-	return render_template("home.html", quickadd=colors)
+	else:
+		return redirect("/addfood")
+	# ~ flist = current_user.foodtypes
+	# ~ if flist == []:
+		# ~ for i in range(len(food_defaults_med)):
+			# ~ food_defaults_med[i] = food_defaults_med[i].strip().split("|")
+			# ~ nft = models.FoodType(food_name=food_defaults_med[i][0], color=food_defaults_med[i][1],
+			# ~ serv_name=food_defaults_med[i][2], calories=int(food_defaults_med[i][3]), fat_amt=int(food_defaults_med[i][4]),
+			# ~ carb_amt=int(food_defaults_med[i][5]), protein_amt=int(food_defaults_med[i][6]))
+			# ~ nft.uid = current_user.uid
+			# ~ db.session.add(nft)
+		# ~ db.session.commit()
+		# ~ flist = current_user.foodtypes
+	# ~ colors = []
+	# ~ for i in flist:
+		# ~ colors.append({"name":i.food_name, "id":i.ftid, "color":i.color, "serving":i.serv_name,
+		# ~ "protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories})
+	# ~ postlist = []
+	# ~ follows = current_user.follows
+	# ~ print(str(follows), file=sys.stderr)
+	# ~ return render_template("home.html", quickadd=colors)
 
-@app.route("/addfood")
+@app.route("/addfood", methods=["GET"])
 def addfoodpg():
 	if current_user.is_anonymous:
 		return redirect("/signuporin")
 	else:
 		flist = current_user.foodtypes
 		if flist == []:
-			for i in range(len(exercise_defaults_med)):
+			for i in range(len(food_defaults_med)):
 				food_defaults_med[i] = food_defaults_med[i].strip().split("|")
+				
 				nft = models.FoodType(food_name=food_defaults_med[i][0], color=food_defaults_med[i][1],
 				serv_name=food_defaults_med[i][2], calories=int(food_defaults_med[i][3]), fat_amt=int(food_defaults_med[i][4]),
 				carb_amt=int(food_defaults_med[i][5]), protein_amt=int(food_defaults_med[i][6]))
+				
 				nft.uid = current_user.uid
 				db.session.add(nft)
 			db.session.commit()
@@ -98,30 +100,48 @@ def addfoodpg():
 		for i in flist:
 			colors.append({"name":i.food_name, "id":i.ftid, "color":i.color, "serving":i.serv_name,
 				"protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories})
-		print(str(colors), file=sys.stderr)
-		return render_template("food-index.html", title="Home", foods=colors, cuser=current_user)
 		
-@app.route("/addexer")
-def addexerpg():
-	if current_user.is_anonymous:
-		return redirect("/signuporin")
-	else:
-		flist = current_user.foodtypes
-		if flist == []:
-			for i in range(len(s)):
+		elist = current_user.exercisetypes
+		if elist == []:
+			for i in range(len(exercise_defaults_med)):
 				exercise_defaults_med[i] = exercise_defaults_med[i].strip().split("|")
-				nft = models.ExerciseType(food_name=exercise_defaults_med[i][0], color=exercise_defaults_med[i][1],
-				serv_name=exercise_defaults_med[i][2], calories=int(exercise_defaults_med[i][3]))
-				nft.uid = current_user.uid
-				db.session.add(nft)
+				print(exercise_defaults_med[i], file=sys.stderr)
+				net = models.ExerciseType(name=exercise_defaults_med[i][0], mets=exercise_defaults_med[i][1],
+				serv_name=exercise_defaults_med[i][2], calperlb=exercise_defaults_med[i][3])
+				net.uid = current_user.uid
+				db.session.add(net)
+				elist.append(net)
 			db.session.commit()
-			flist = current_user.foodtypes
-		colors = []
-		for i in flist:
-			colors.append({"name":i.food_name, "id":i.ftid, "color":i.color, "serving":i.serv_name,
-				"protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories})
-		print(str(colors), file=sys.stderr)
-		return render_template("food-index.html", title="Home", foods=colors, cuser=current_user)
+			elist = current_user.exercisetypes
+		exercises = []
+		for i in elist:
+			print(i, file=sys.stderr)
+			exercises.append({"name":i.name, "id":i.tid, "serving":i.serv_name, "mets":i.mets})
+		
+		return render_template("food-index.html", title="Home", foods=colors, elist=exercises, cuser=current_user)
+
+
+@app.route("/addfood", methods=["POST"])
+def addfood():
+	data = request.get_json()
+	m = models.Meal(ts_created=int(datetime.datetime.utcnow().timestamp()), uid=current_user.username, details=data['foods'][-1])
+	db.session.add(m)
+	db.session.commit()
+	l = []
+	for i in data["foods"][:-1]:
+		print(i, file=sys.stderr)
+		fe = models.FoodElement(fid=i['id'], sid=i['serving'], uid=i['username'], mealid=m.mid, calories=i['calories'],
+		protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'], color=i['color'])
+		l.append(fe)
+		db.session.add(fe)
+	for i in data["exercises"]:
+		print(str(i), file=sys.stderr)
+		##fe = models.FoodElement(fid=i['id'], sid=i['serving'], uid=i['username'], mealid=m.mid, calories=i['calories'],
+		##protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'], color=i['color'])
+		##l.append(fe)
+		##db.session.add(fe)
+	db.session.commit()
+	return ""
 
 @app.route("/foodstats/", defaults={"timeframe":-1})
 @app.route("/foodstats/<int:timeframe>")
@@ -138,7 +158,7 @@ def stats(timeframe):
 		feq = models.Meal.query.filter_by(uid="Guest").all()
 	feqd = []
 	for item in feq:
-		feqd.append({"mealid": item.mid, "timestamp": datetime.datetime.utcfromtimestamp(item.ts_created).strftime("%a, %B %d %Y, %M:%S"), "details":item.details})
+		feqd.append({"mealid": item.mid, "timestamp": datetime.datetime.utcfromtimestamp(item.ts_created).strftime("%B %d %Y, %I:%M%p"), "details":item.details})
 		feqd[-1]['list'] = []
 		for i in item.elements:
 			d = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.sid, "active":i.active, "eid":i.eid}
@@ -209,22 +229,6 @@ def signinuser():
 		return redirect("/")
 	else:
 		return redirect("/signuporin")
-
-@app.route("/addfood", methods=["POST"])
-def addfood():
-	data = request.get_json()
-	m = models.Meal(ts_created=int(datetime.datetime.utcnow().timestamp()), uid=current_user.username, details=data[-1])
-	db.session.add(m)
-	db.session.commit()
-	l = []
-	for i in data[:-1]:
-		print(i, file=sys.stderr)
-		fe = models.FoodElement(fid=i['id'], sid=i['serving'], uid=i['username'], mealid=m.mid, calories=i['calories'],
-		protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'], color=i['color'])
-		l.append(fe)
-		db.session.add(fe)
-	db.session.commit()
-	return ""
 
 @app.route("/addweight", methods=["POST"])
 def addweight():

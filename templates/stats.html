@@ -62,13 +62,15 @@
 	{% endif %}
 	{% endfor %}
 	<tr class="mealrow">
-	<td>Total</td>
-	<td>None</td>
+	<td colspan=2>Total</td>
 	<td>{{ns.cals}}</td>
 	<td>{{ns.proteins}}</td>
 	<td>{{ns.fats}}</td>
 	<td>{{ns.carbs}}</td>
 	<td class="mealheading"><a href="/deletemeal/{{meal.mealid}}">Delete</a></td>
+	</tr>
+	<tr class="time">
+		<td colspan=7>Created on: {{meal.timestamp}}</td>
 	</tr>
 	{% if meal.details != "" %}
 	<tr class="details" style="border-bottom: 1pt solid black;">
