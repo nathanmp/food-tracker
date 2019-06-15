@@ -13,9 +13,9 @@
 </script>
 {% include "header.html" %}
 <div class="container-fluid">
-{% for meal in meals %}
 <div class="row">
-<div class="col">
+<div class="col-xs-6">
+{% for meal in meals %}
 {% if foodelems != [] %}
 {% set ns = namespace() %}
 {% set ns.cals = 0 %}
@@ -31,7 +31,7 @@
 {% endif %}
 {% endfor %}
 {% endif %}
-<table class="w-50 mealtable" style="border-collapse: collapse;">
+<table class="mealtable" style="border-collapse: collapse;">
 	<col style="width:35%">
 	<col style="width:20%">
 	<col style="width:10%">
@@ -51,7 +51,7 @@
 	{% for item in meal['list'] %}
 	{% if item.active == True %}
 	<tr class="mealrow">
-	<td>{{item.name}}</td>
+	<td>{{item.name}}: {{item.sid}}</td>
 	<td>{{item.color}}</td>
 	<td>{{item.calories}}</td>
 	<td>{{item.protein_amt}}</td>
@@ -78,7 +78,33 @@
 	</tr>
 	{% endif %}
 </table>
-</div>
-</div>
-<br>
 {% endfor %}
+</div>
+<div class="col">
+	<table class="mealtable" style="border-collapse: collapse;">
+	<col style="width:35%">
+	<col style="width:20%">
+	<col style="width:10%">
+	<col style="width:10%">
+	<col style="width:10%">
+	<col style="width:10%">
+	<col style="width:5%">
+	<tr class="mealrow">
+		<th class="mealheading">Date</th>
+		<th class="mealheading">Calories</th>
+		<th class="mealheading">Protein</th>
+		<th class="mealheading">Fats</th>
+		<th class="mealheading">Carbs</th>
+	</tr>
+	{% for date in d|reverse %}
+	<tr class="daterow">
+		<td class="data">{{date}}</td>
+		<td class="data">{{d[date].calories}}</td>
+		<td class="data">{{d[date].protein}}</td>
+		<td class="data">{{d[date].fat}}</td>
+		<td class="data">{{d[date].carbs}}</td>
+	</tr>
+	{% endfor %}
+	</table>
+</div>
+</div>

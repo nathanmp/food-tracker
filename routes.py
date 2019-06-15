@@ -8,7 +8,7 @@ import sqlite3
 import json
 import sys
 import os
-import datetime
+from datetime import datetime, date, timedelta
 from eatr import db, app, models
 app = Flask('eatr')
 app.debug = True
@@ -124,7 +124,7 @@ def addfoodpg():
 @app.route("/addfood", methods=["POST"])
 def addfood():
 	data = request.get_json()
-	m = models.Meal(ts_created=int(datetime.datetime.utcnow().timestamp()), uid=current_user.username, details=data['foods'][-1])
+	m = models.Meal(ts_created=int(datetime.utcnow().timestamp()), uid=current_user.username, details=data['foods'][-1])
 	db.session.add(m)
 	db.session.commit()
 	l = []
@@ -136,10 +136,7 @@ def addfood():
 		db.session.add(fe)
 	for i in data["exercises"]:
 		print(str(i), file=sys.stderr)
-		##fe = models.FoodElement(fid=i['id'], sid=i['serving'], uid=i['username'], mealid=m.mid, calories=i['calories'],
-		##protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'], color=i['color'])
-		##l.append(fe)
-		##db.session.add(fe)
+		
 	db.session.commit()
 	return ""
 
@@ -147,23 +144,49 @@ def addfood():
 @app.route("/foodstats/<int:timeframe>")
 def stats(timeframe):
 	if timeframe == -1:
-		timediff = datetime.datetime(2019, 3, 1)
-		timediff = datetime.datetime.timestamp(timediff)
+		timediff = datetime(2019, 3, 1)
+		timediff = datetime.timestamp(timediff)
 	else:
-		timediff = datetime.datetime.utcnow() - datetime.timedelta(days=timeframe)
-		timediff = datetime.datetime.timestamp(timediff)
+		timediff = datetime.utcnow() - timedelta(days=timeframe)
+		timediff = datetime.timestamp(timediff)
 	if current_user.is_authenticated:
 		feq = models.Meal.query.filter(models.Meal.ts_created>timediff).filter_by(uid=current_user.username).all()
 	else:
 		feq = models.Meal.query.filter_by(uid="Guest").all()
 	feqd = []
+	ddict = {}
+	td = date.today()
+	ddict[td] = []
+	timediff = timedelta(days=1)
+	for i in range(timeframe):
+		td = td - timediff
+		ddict[td] = []
 	for item in feq:
-		feqd.append({"mealid": item.mid, "timestamp": datetime.datetime.utcfromtimestamp(item.ts_created).strftime("%B %d %Y, %I:%M%p"), "details":item.details})
+		dt = datetime.utcfromtimestamp(item.ts_created)
+		d = date.fromtimestamp(item.ts_created)
+		feqd.append({"mealid": item.mid, "timestamp": dt.strftime("%B %d %Y, %I:%M%p"), "details":item.details})
 		feqd[-1]['list'] = []
+		##ddict[d].append([])
 		for i in item.elements:
-			d = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.sid, "active":i.active, "eid":i.eid}
-			feqd[-1]['list'].append(d)
-	return render_template("stats.html", title="Stats", meals=feqd)
+			tempd = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.sid, "active":i.active, "eid":i.eid}
+			feqd[-1]['list'].append(tempd)
+			ddict[d].append(tempd)
+	nddict = {}
+	for k in ddict.keys():
+		tdict = {"fat":0, "protein":0, "carbs":0, "calories":0}
+		for i in ddict[k]:
+			print(str(i), file=sys.stderr)
+			if i['color'] not in tdict.keys():
+				tdict[i['color']] = i['sid']
+			else:
+				tdict[i['color']] += i['sid']
+			tdict['fat'] += i['fat_amt']
+			tdict['protein'] += i['protein_amt']
+			tdict['carbs'] += i['carb_amt']
+			tdict['calories'] += i['calories']
+		nddict[k.strftime("%B %d %Y")] = tdict
+	print(str(nddict), file=sys.stderr)
+	return render_template("stats.html", title="Stats", meals=feqd, d=nddict)
 
 @app.route("/signup", methods=["GET"])
 def signuppg():
@@ -235,13 +258,5 @@ def addweight():
 	data = request.get_json()
 	w = models.WeightElement(uid=current_user.username, ts_created=datetime.datetime.timestamp(datetime.utcnow()), val=int(data["weight"]))
 	db.session.add(w)
-	db.session.commit()
-	return ""
-
-@app.route("/addexercise", methods=["POST"])
-def addexercise():
-	data = request.get_json()
-	e = models.ExerciseElement(uid=current_user.username, ts_created=datetime.datetime.timestamp(datetime.utcnow()), etid=int(data['exercise']), calsburned=int(data['cals'])*int(data['minutes']))
-	db.session.add(e)
 	db.session.commit()
 	return ""
