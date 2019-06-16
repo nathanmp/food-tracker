@@ -144,6 +144,8 @@ def addfood():
 @app.route("/foodstats/<int:timeframe>")
 def stats(timeframe):
 	if timeframe == -1:
+		tf = date.today() - date(2019, 3, 1)
+		timeframe = tf.days
 		timediff = datetime(2019, 3, 1)
 		timediff = datetime.timestamp(timediff)
 	else:
@@ -158,15 +160,15 @@ def stats(timeframe):
 	td = date.today()
 	ddict[td] = []
 	timediff = timedelta(days=1)
-	for i in range(timeframe):
+	for i in range(timeframe-1):
 		td = td - timediff
+		print(td, file=sys.stderr)
 		ddict[td] = []
 	for item in feq:
 		dt = datetime.utcfromtimestamp(item.ts_created)
 		d = date.fromtimestamp(item.ts_created)
 		feqd.append({"mealid": item.mid, "timestamp": dt.strftime("%B %d %Y, %I:%M%p"), "details":item.details})
 		feqd[-1]['list'] = []
-		##ddict[d].append([])
 		for i in item.elements:
 			tempd = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.sid, "active":i.active, "eid":i.eid}
 			feqd[-1]['list'].append(tempd)
