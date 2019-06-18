@@ -135,7 +135,8 @@ def addfood():
 		l.append(fe)
 		db.session.add(fe)
 	for i in data["exercises"]:
-		print(str(i), file=sys.stderr)
+		ee = models.ExerciseElement(eid=i['id'], sid=i['serving'], uid=i['username'], mealid=m.mid, calories=i['calories'],
+		protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'], color=i['color'])
 		
 	db.session.commit()
 	return ""
@@ -144,12 +145,12 @@ def addfood():
 @app.route("/foodstats/<int:timeframe>")
 def stats(timeframe):
 	if timeframe == -1:
-		tf = date.today() - date(2019, 3, 1)
+		tf = date.today() - date(2019, 6, 1)
 		timeframe = tf.days
-		timediff = datetime(2019, 3, 1)
+		timediff = datetime(2019, 6, 1)
 		timediff = datetime.timestamp(timediff)
 	else:
-		timediff = datetime.utcnow() - timedelta(days=timeframe)
+		timediff = datetime.utcnow() - timedelta(days=timeframe-1)
 		timediff = datetime.timestamp(timediff)
 	if current_user.is_authenticated:
 		feq = models.Meal.query.filter(models.Meal.ts_created>timediff).filter_by(uid=current_user.username).all()
@@ -174,6 +175,7 @@ def stats(timeframe):
 			feqd[-1]['list'].append(tempd)
 			ddict[d].append(tempd)
 	nddict = {}
+	
 	for k in ddict.keys():
 		tdict = {"fat":0, "protein":0, "carbs":0, "calories":0}
 		for i in ddict[k]:
@@ -187,6 +189,7 @@ def stats(timeframe):
 			tdict['carbs'] += i['carb_amt']
 			tdict['calories'] += i['calories']
 		nddict[k.strftime("%B %d %Y")] = tdict
+	
 	print(str(nddict), file=sys.stderr)
 	return render_template("stats.html", title="Stats", meals=feqd, d=nddict)
 

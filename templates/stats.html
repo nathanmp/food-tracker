@@ -1,4 +1,7 @@
-<link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" />
+<!--
+<head>
+-->
+<link rel="stylesheet" href="{{url_for('static', filename='style.css') ~ '?v=' ~ range(1,5000)|random}}" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script>
 	function delmeal() {
@@ -11,100 +14,110 @@
 	}
 	
 </script>
-{% include "header.html" %}
-<div class="container-fluid">
-<div class="row">
-<div class="col-xs-6">
-{% for meal in meals %}
-{% if foodelems != [] %}
-{% set ns = namespace() %}
-{% set ns.cals = 0 %}
-{% set ns.proteins = 0 %}
-{% set ns.fats = 0 %}
-{% set ns.carbs = 0 %}
-{% for foodelem in meal['list'] %}
-{% if foodelem.active == True %}
-{% set ns.cals = ns.cals + foodelem.calories %}
-{% set ns.proteins = ns.proteins + foodelem.protein_amt %}
-{% set ns.fats = ns.fats + foodelem.fat_amt %}
-{% set ns.carbs = ns.carbs + foodelem.carb_amt %}
-{% endif %}
-{% endfor %}
-{% endif %}
-<table class="mealtable" style="border-collapse: collapse;">
-	<col style="width:35%">
-	<col style="width:20%">
-	<col style="width:10%">
-	<col style="width:10%">
-	<col style="width:10%">
-	<col style="width:10%">
-	<col style="width:5%">
-	<tr class="mealrow">
-		<th class="mealheading">Food Name</th>
-		<th class="mealheading">Color</th>
-		<th class="mealheading">Calories</th>
-		<th class="mealheading">Protein</th>
-		<th class="mealheading">Fats</th>
-		<th class="mealheading">Carbs</th>
-		<th class="mealheading">Delete</th>
-	</tr>
-	{% for item in meal['list'] %}
-	{% if item.active == True %}
-	<tr class="mealrow">
-	<td>{{item.name}}: {{item.sid}}</td>
-	<td>{{item.color}}</td>
-	<td>{{item.calories}}</td>
-	<td>{{item.protein_amt}}</td>
-	<td>{{item.fat_amt}}</td>
-	<td>{{item.carb_amt}}</td>
-	<td><a href="/deletefood/{{item.eid}}">Delete</a></td>
-	</tr>
-	{% endif %}
-	{% endfor %}
-	<tr class="mealrow">
-	<td colspan=2>Total</td>
-	<td>{{ns.cals}}</td>
-	<td>{{ns.proteins}}</td>
-	<td>{{ns.fats}}</td>
-	<td>{{ns.carbs}}</td>
-	<td class="mealheading"><a href="/deletemeal/{{meal.mealid}}">Delete</a></td>
-	</tr>
-	<tr class="time">
-		<td colspan=7>Created on: {{meal.timestamp}}</td>
-	</tr>
-	{% if meal.details != "" %}
-	<tr class="details" style="border-bottom: 1pt solid black;">
-		<td colspan=7>Notes: {{meal.details}}</td>
-	</tr>
-	{% endif %}
-</table>
-{% endfor %}
-</div>
-<div class="col">
-	<table class="mealtable" style="border-collapse: collapse;">
-	<col style="width:35%">
-	<col style="width:20%">
-	<col style="width:10%">
-	<col style="width:10%">
-	<col style="width:10%">
-	<col style="width:10%">
-	<col style="width:5%">
-	<tr class="mealrow">
-		<th class="mealheading">Date</th>
-		<th class="mealheading">Calories</th>
-		<th class="mealheading">Protein</th>
-		<th class="mealheading">Fats</th>
-		<th class="mealheading">Carbs</th>
-	</tr>
-	{% for date in d|reverse %}
-	<tr class="daterow">
-		<td class="data">{{date}}</td>
-		<td class="data">{{d[date].calories}}</td>
-		<td class="data">{{d[date].protein}}</td>
-		<td class="data">{{d[date].fat}}</td>
-		<td class="data">{{d[date].carbs}}</td>
-	</tr>
-	{% endfor %}
-	</table>
-</div>
-</div>
+<!--
+</head>
+-->
+<body>
+	{% include "header.html" %}
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col">
+				{% for meal in meals %}
+				<div class="table-responsive">
+				{% if meal['list'] != [] %}
+				{% set ns = namespace() %}
+				{% set ns.cals = 0 %}
+				{% set ns.proteins = 0 %}
+				{% set ns.fats = 0 %}
+				{% set ns.carbs = 0 %}
+				{% for foodelem in meal['list'] %}
+				{% if foodelem.active == True %}
+				{% set ns.cals = ns.cals + foodelem.calories %}
+				{% set ns.proteins = ns.proteins + foodelem.protein_amt %}
+				{% set ns.fats = ns.fats + foodelem.fat_amt %}
+				{% set ns.carbs = ns.carbs + foodelem.carb_amt %}
+				{% endif %}
+				{% endfor %}
+				{% endif %}
+				{% if meal['list'] != [] %}
+				<table class="mealtable table no-gutters">
+					<tr class="mealrow">
+						<th style="width:20%" class="mealheading">Food Name</th>
+						<th style="width:15%" class="mealheading">Color</th>
+						<th style="width:12%" class="mealheading">Calories</th>
+						<th style="width:12%" class="mealheading">Protein</th>
+						<th style="width:12%" class="mealheading">Fats</th>
+						<th style="width:12%" class="mealheading">Carbs</th>
+						<th style="width:12%" class="mealheading">Delete</th>
+					</tr>
+					{% for item in meal['list'] %}
+					{% if item.active == True %}
+					<tr class="mealrow">
+					<td>{{item.name}}: {{item.sid}}</td>
+					<td>{{item.color}}</td>
+					<td>{{item.calories}}</td>
+					<td>{{item.protein_amt}}</td>
+					<td>{{item.fat_amt}}</td>
+					<td>{{item.carb_amt}}</td>
+					<td><a href="/deletefood/{{item.eid}}">Delete</a></td>
+					</tr>
+					{% endif %}
+					{% endfor %}
+					<tr class="mealrow">
+					<td colspan=2>Total</td>
+					<td>{{ns.cals}}</td>
+					<td>{{ns.proteins}}</td>
+					<td>{{ns.fats}}</td>
+					<td>{{ns.carbs}}</td>
+					<td class="mealheading"><a href="/deletemeal/{{meal.mealid}}">Delete</a></td>
+					</tr>
+					<tr class="time">
+						<td colspan=7>Created on: {{meal.timestamp}}</td>
+					</tr>
+					{% if meal.details != "" %}
+					<tr class="details" style="border-bottom: 1pt solid black;">
+						<td colspan=7>Notes: {{meal.details}}</td>
+					</tr>
+					{% endif %}
+				</table>
+				{% endif %}
+				</div>
+				{% endfor %}
+			</div>
+			
+			
+			<div class="col">
+				<div class="table-responsive">
+				<table class="mealtable table no-gutters">
+				<colgroup>
+				<col style="width:35%">
+				<col style="width:20%">
+				<col style="width:10%">
+				<col style="width:10%">
+				<col style="width:10%">
+				<col style="width:10%">
+				<col style="width:5%">
+				</colgroup>
+				<tr class="mealrow">
+					<th class="mealheading">Date</th>
+					<th class="mealheading">Calories</th>
+					<th class="mealheading">Protein</th>
+					<th class="mealheading">Fats</th>
+					<th class="mealheading">Carbs</th>
+				</tr>
+				{% for date in d|reverse %}
+				<tr class="daterow">
+					<td class="data">{{date}}</td>
+					<td class="data">{{d[date].calories}}</td>
+					<td class="data">{{d[date].protein}}</td>
+					<td class="data">{{d[date].fat}}</td>
+					<td class="data">{{d[date].carbs}}</td>
+				</tr>
+				{% endfor %}
+				</table>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+</body>

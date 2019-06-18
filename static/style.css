@@ -63,18 +63,21 @@ body {
 }
 .foodname {
 	white-space: nowrap;
-	font-size: 16px;
 	font-family: serif;
 	display: inline;
 	left: 10px;
 	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
 }
-svg {
+svg, text {
 	display: inline;
 	white-space: nowrap;
 	margin: 4px;
+	z-index: 5;
+	font-family: serif;
 }
-.foodservs {
+.eservs, .foodservs {
 	position: relative;
 	display: inline-block;
 	height: 40px;
@@ -86,6 +89,9 @@ svg {
 .elements {
 	position: absolute;
 	right: 10px;
+}
+p, .elements * {
+	font-size: 16px;
 }
 .Header {
 	display: flex;
@@ -122,8 +128,43 @@ svg {
 	margin-bottom: 10px !important;
 }
 .mealtable {
-	border: 1px solid black;
+	border: 1px solid black !important;
 }
+table {
+	margin: 10px;
+}
+
 #post {
 	color: blue;
+}
+.table-responsive {
+	width: 100%;
+}
+table {
+	border: 1px solid black !important;
+	width: 100% !important;
+}
+
+col, td, th {
+	white-space: normal;
+	border-top: 1px solid black !important;
+}
+td {
+	border: 0px !important;
+}
+.divnotes {
+	margin: 20px;
+}
+button {
+	width: 100px;
+	height: 50px;
+}
+.exel {
+	padding: 2px;
+	margin: 1px;
+	background-color: #AAA;
+	text-align: center;
+	display: inline-block;
+}
+.exel * {
 }
