@@ -107,6 +107,7 @@ class Meal(db.Model):
 	__tablename__ = "meal"
 	mid = db.Column(db.Integer, primary_key=True)
 	elements = db.relationship('FoodElement', backref="meal", lazy=True)
+	eelements = db.relationship('ExerciseElement', backref="meal", lazy=True)
 	ts_created = db.Column(db.Integer)
 	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
 	details = db.Column(db.String(300), default="")
@@ -139,6 +140,10 @@ class ExerciseElement(db.Model):
 	length = db.Column(db.Integer)
 	etid = db.Column(db.Integer, db.ForeignKey('exercisetype.tid'))
 	calsburned = db.Column(db.Integer)
+	previous_changes = db.Column(db.Boolean())
+	mealid = db.Column(db.Integer, db.ForeignKey("meal.mid"))
+	active = db.Column(db.Boolean(), default=True)
+	ename = db.Column(db.String(40))
 
 class CalorieTarget(db.Model):
 	__tablename__ = "calorietarget"

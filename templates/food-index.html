@@ -1,4 +1,8 @@
+<html>
+<head>
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')  ~ '?v=' ~ range(1,5000)|random}}" />
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="expires" content="-1" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script>
 	var foods = [];
@@ -13,8 +17,8 @@
         console.log(food);
         foods.push(food);
     }
-    function exerciseHandler(serv, color, name, id, mets) {
-		exercise = {"name":name, "length": "", "calories":100*mets, "serving":serv, "id":id, "username": {{current_user.uid}} };
+    function exerciseHandler(l, color, name, id, mets) {
+		exercise = {"name":name, "length": l, "calories":100*mets, "id":id, "username": {{current_user.uid}} };
         console.log(exercise);
         exercises.push(exercise);
     }
@@ -30,10 +34,12 @@
 		}, 1000);
 	}
 </script>
+</head>
+<body>
 {% include "header.html" %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-12 col-md-3">
+        <div class="col-12 col-md-6  col-lg-3">
             {% for ft in foods[0:foods|length // 3] %}
             <div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}">
                 <p class="foodname">{{ft.name}}: {{ft.serving}}</p>
@@ -51,7 +57,7 @@
             </div>
             {% endfor %}
         </div>
-        <div class="col-xs-12 col-md-3">
+        <div class="col-12 col-md-6  col-lg-3">
             {% for ft in foods[foods|length // 3:2*foods|length//3] %}
             <div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}">
                 <p class="foodname">{{ft.name}}: {{ft.serving}}</p>
@@ -69,7 +75,7 @@
             </div>
             {% endfor %}
         </div>
-        <div class="col-xs-12 col-md-3">
+        <div class="col-12 col-md-6  col-lg-3">
             {% for ft in foods[2*foods|length//3:] %}
             <div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}">
                 <p class="foodname">{{ft.name}}: {{ft.serving}}</p>
@@ -87,9 +93,12 @@
             </div>
             {% endfor %}
         </div>
-        <div class="col-xs-12 col-md-3">
+        <div class="col-12 col-md-6  col-lg-3">
+			<div class="outerminlabel">
+				<p class="minlabel" style="background-color: #C5C5C5;">All measured in minutes</p>
+			</div>
 			{% for et in elist %}
-			<div class="eservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}">
+			<div class="eservs" style="background-color: {{loop.cycle('#DCDCDC', '#C5C5C5')}}">
                 <p class="foodname">{{et.name}}</p>
                 <div class="elements">
 					<div class="exel" onclick="exerciseHandler(1, 'black', '{{et.name}}', {{et.id}}, {{et.mets}})" >
@@ -108,6 +117,7 @@
             </div>
             {% endfor %}
 		</div>
+		<div class="w-100"></div>
         <div class="divnotes col-12 d-flex justify-content-center">
             <textarea rows="3" cols="40" id="post" name="post" placeholder="Notes"></textarea>
         </div>
@@ -116,3 +126,5 @@
         </div>
     </div>
 </div>
+</body>
+</html>

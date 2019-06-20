@@ -132,12 +132,12 @@ def addfood():
 		print(i, file=sys.stderr)
 		fe = models.FoodElement(fid=i['id'], sid=i['serving'], uid=i['username'], mealid=m.mid, calories=i['calories'],
 		protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'], color=i['color'])
-		l.append(fe)
 		db.session.add(fe)
 	for i in data["exercises"]:
-		ee = models.ExerciseElement(eid=i['id'], sid=i['serving'], uid=i['username'], mealid=m.mid, calories=i['calories'],
-		protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'], color=i['color'])
-		
+		print(i, file=sys.stderr)
+		ee = models.ExerciseElement(uid=i['username'], mealid=m.mid, calsburned=i['calories'],
+		previous_changes=False, ename=i['name'], length=i['length'])
+		db.session.add(ee)
 	db.session.commit()
 	return ""
 
@@ -161,7 +161,7 @@ def stats(timeframe):
 	td = date.today()
 	ddict[td] = []
 	timediff = timedelta(days=1)
-	for i in range(timeframe-1):
+	for i in range(timeframe):
 		td = td - timediff
 		print(td, file=sys.stderr)
 		ddict[td] = []
@@ -169,17 +169,24 @@ def stats(timeframe):
 		dt = datetime.utcfromtimestamp(item.ts_created)
 		d = date.fromtimestamp(item.ts_created)
 		feqd.append({"mealid": item.mid, "timestamp": dt.strftime("%B %d %Y, %I:%M%p"), "details":item.details})
-		feqd[-1]['list'] = []
+		feqd[-1]['flist'] = []
+		feqd[-1]['elist'] = []
 		for i in item.elements:
 			tempd = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.sid, "active":i.active, "eid":i.eid}
-			feqd[-1]['list'].append(tempd)
+			feqd[-1]['flist'].append(tempd)
+			print(str(tempd), file=sys.stderr)
 			ddict[d].append(tempd)
+		for i in item.eelements:
+			tempd = {"eid":i.eid, "uid":i.uid, "calories":i.calsburned, "previous_changes":False, "ename":i.ename, "length":i.length}
+			print(str(tempd), file=sys.stderr)
+			feqd[-1]['elist'].append(tempd)
+			##ddict[d][1].append(tempd)
 	nddict = {}
-	
+	print(ddict, file=sys.stderr)
 	for k in ddict.keys():
 		tdict = {"fat":0, "protein":0, "carbs":0, "calories":0}
+		print(ddict[k], file=sys.stderr)
 		for i in ddict[k]:
-			print(str(i), file=sys.stderr)
 			if i['color'] not in tdict.keys():
 				tdict[i['color']] = i['sid']
 			else:
