@@ -28,13 +28,13 @@
 			
 			<div class="col">
 				{% for meal in meals %}
-				<div class="table-responsive">
-				{% if meal['flist'] != [] %}
 				{% set ns = namespace() %}
 				{% set ns.cals = 0 %}
 				{% set ns.proteins = 0 %}
 				{% set ns.fats = 0 %}
 				{% set ns.carbs = 0 %}
+				<div class="table-responsive">
+				{% if meal['flist'] != [] %}
 				{% for foodelem in meal['flist'] %}
 				{% if foodelem.active == True %}
 				{% set ns.cals = ns.cals + foodelem.calories %}
@@ -44,8 +44,9 @@
 				{% endif %}
 				{% endfor %}
 				{% endif %}
-				{% if meal['flist'] != [] %}
+				{% if meal['flist'] != [] or meal['elist'] != [] %}
 				<table class="mealtable table no-gutters">
+					{% if meal['flist'] != [] %}
 					<tr class="mealrow">
 						<th style="width:40%" class="mealheading">Food Name</th>
 						<th style="width:15%" class="mealheading">Color</th>
@@ -76,6 +77,23 @@
 					<td>{{ns.carbs}}</td>
 					<td class="mealheading"><a href="/deletemeal/{{meal.mealid}}">Delete</a></td>
 					</tr>
+					{% endif %}
+					{% if meal['elist'] != [] %}
+					<tr class="mealrow">
+						<th colspan=3 class="mealheading">Exercise Name</th>
+						<th colspan=1 class="mealheading">Length</th>
+						<th colspan=2 class="mealheading">Calories</th>
+						<th colspan=1 class="mealheading">Delete</th>
+					</tr>
+					{% for item in meal['elist'] %}
+						<tr class="mealrow">
+							<td colspan=3 >{{item.ename}}</td>
+							<td colspan=1 >{{item.length}}</td>
+							<td colspan=2 >{{item.calories}}</td>
+							<td colspan=1 ><a href="/deletefood/{{item.eid}}">Delete</a></td>
+						</tr>
+					{% endfor %}
+					{% endif %}
 					<tr class="time">
 						<td colspan=7>Created on: {{meal.timestamp}}</td>
 					</tr>
@@ -84,24 +102,6 @@
 						<td colspan=7>Notes: {{meal.details}}</td>
 					</tr>
 					{% endif %}
-				</table>
-				{% endif %}
-				{% if meal['elist'] != [] %}
-				<table class="mealtable table no-gutters">
-					<tr class="mealrow">
-						<th style="width:30%" class="mealheading">Exercise Name</th>
-						<th style="width:10%" class="mealheading">Length</th>
-						<th style="width:12%" class="mealheading">Calories</th>
-						<th style="width:12%" class="mealheading">Delete</th>
-					</tr>
-				{% for item in meal['elist'] %}
-					<tr class="mealrow">
-						<td>{{item.name}}</td>
-						<td>{{item.length}}</td>
-						<td>{{item.calories}}</td>
-						<td><a href="/deletefood/{{item.eid}}">Delete</a></td>
-					</tr>
-				{% endfor %}
 				</table>
 				{% endif %}
 				</div>

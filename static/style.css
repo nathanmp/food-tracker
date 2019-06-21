@@ -154,13 +154,10 @@ table {
 
 col, td, th {
 	white-space: normal;
-	border-top: 1px solid black !important;
+	border: 1px solid black !important;
 }
 td {
 	border: 0px !important;
-}
-.divnotes {
-	margin: 20px;
 }
 button {
 	width: 100px;

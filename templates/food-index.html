@@ -39,7 +39,7 @@
 {% include "header.html" %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-12 col-md-6  col-lg-3">
+        <div class="col-12 col-md-6  col-lg-4">
             {% for ft in foods[0:foods|length // 3] %}
             <div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}">
                 <p class="foodname">{{ft.name}}: {{ft.serving}}</p>
@@ -57,7 +57,7 @@
             </div>
             {% endfor %}
         </div>
-        <div class="col-12 col-md-6  col-lg-3">
+        <div class="col-12 col-md-6  col-lg-4">
             {% for ft in foods[foods|length // 3:2*foods|length//3] %}
             <div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}">
                 <p class="foodname">{{ft.name}}: {{ft.serving}}</p>
@@ -75,7 +75,7 @@
             </div>
             {% endfor %}
         </div>
-        <div class="col-12 col-md-6  col-lg-3">
+        <div class="col-12 col-md-6 col-lg-4">
             {% for ft in foods[2*foods|length//3:] %}
             <div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}">
                 <p class="foodname">{{ft.name}}: {{ft.serving}}</p>
@@ -93,7 +93,7 @@
             </div>
             {% endfor %}
         </div>
-        <div class="col-12 col-md-6  col-lg-3">
+        <div class="col-12 col-md-6 col-lg-4">
 			<div class="outerminlabel">
 				<p class="minlabel" style="background-color: #C5C5C5;">All measured in minutes</p>
 			</div>
@@ -117,11 +117,8 @@
             </div>
             {% endfor %}
 		</div>
-		<div class="w-100"></div>
-        <div class="divnotes col-12 d-flex justify-content-center">
-            <textarea rows="3" cols="40" id="post" name="post" placeholder="Notes"></textarea>
-        </div>
-        <div class="divsubmit col-12 d-flex justify-content-center">    
+        <div class="divnotes col-12 col-md-6 col-lg-4 flex-column d-flex align-items-center ">
+            <textarea rows="5" cols="50" id="post" name="post" placeholder="Notes"></textarea>
             <button class="submitbutton" onclick="submit();">Submit</button>
         </div>
     </div>
