@@ -97,6 +97,11 @@
 					<tr class="time">
 						<td colspan=7>Created on: {{meal.timestamp}}</td>
 					</tr>
+					{% if meal.welem != -1 %}
+					<tr class="weight" style="border-bottom: 1pt solid black;">
+						<td colspan=7>Weight: {{meal.welem}}</td>
+					</tr>
+					{% endif %}
 					{% if meal.details != "" %}
 					<tr class="details" style="border-bottom: 1pt solid black;">
 						<td colspan=7>Notes: {{meal.details}}</td>

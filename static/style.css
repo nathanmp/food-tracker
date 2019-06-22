@@ -173,3 +173,6 @@ button {
 .col-md-6 {
 	margin-bottom: 30px !important;
 }
+#weightinp {
+	width: 200px;
+}

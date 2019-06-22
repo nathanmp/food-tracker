@@ -111,13 +111,16 @@ class Meal(db.Model):
 	ts_created = db.Column(db.Integer)
 	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
 	details = db.Column(db.String(300), default="")
+	##represented in 100ths of a pound to prevent rounding issues
+	weightval = db.Column(db.Integer)
 
-class WeightElement(db.Model):
-	__tablename__ = "weightelement"
-	wid = db.Column(db.Float, primary_key=True)
-	ts_created = db.Column(db.Integer, default=datetime.timestamp(datetime.utcnow()))
-	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
-	val = db.Column(db.Float)
+# ~ class WeightElement(db.Model):
+	# ~ __tablename__ = "weightelement"
+	# ~ weightid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	# ~ ts_created = db.Column(db.Integer, default=datetime.timestamp(datetime.utcnow()))
+	# ~ uid = db.Column(db.String(64), db.ForeignKey('user.username'))
+	# ~ mealid = db.Column(db.Integer, db.ForeignKey("meal.mid"))
+	# ~ ##represented in 100ths of a pound to prevent rounding issues
 """
 class Post(db.Model):
 	__tablename__ = "post"

@@ -124,11 +124,15 @@ def addfoodpg():
 @app.route("/addfood", methods=["POST"])
 def addfood():
 	data = request.get_json()
-	m = models.Meal(ts_created=int(datetime.utcnow().timestamp()), uid=current_user.username, details=data['foods'][-1])
+	m = models.Meal(ts_created=int(datetime.utcnow().timestamp()), uid=current_user.username, details=data['post'])
+	if data['weight'] != -1:
+		m.weightval = 100*float(data['weight'])
+	else:
+		m.weightval = -1
 	db.session.add(m)
 	db.session.commit()
 	l = []
-	for i in data["foods"][:-1]:
+	for i in data["foods"]:
 		print(i, file=sys.stderr)
 		fe = models.FoodElement(fid=i['id'], sid=i['serving'], uid=i['username'], mealid=m.mid, calories=i['calories'],
 		protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'], color=i['color'])
@@ -163,7 +167,6 @@ def stats(timeframe):
 	timediff = timedelta(days=1)
 	for i in range(timeframe):
 		td = td - timediff
-		print(td, file=sys.stderr)
 		ddict[td] = []
 	for item in feq:
 		dt = datetime.utcfromtimestamp(item.ts_created)
@@ -171,15 +174,19 @@ def stats(timeframe):
 		feqd.append({"mealid": item.mid, "timestamp": dt.strftime("%B %d %Y, %I:%M%p"), "details":item.details})
 		feqd[-1]['flist'] = []
 		feqd[-1]['elist'] = []
+		feqd[-1]['welem'] = 0
 		for i in item.elements:
 			tempd = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.sid, "active":i.active, "eid":i.eid}
 			feqd[-1]['flist'].append(tempd)
-			print(str(tempd), file=sys.stderr)
 			ddict[d].append(tempd)
 		for i in item.eelements:
 			tempd = {"eid":i.eid, "uid":i.uid, "calories":i.calsburned, "previous_changes":False, "ename":i.ename, "length":i.length}
-			print(str(tempd), file=sys.stderr)
 			feqd[-1]['elist'].append(tempd)
+		if item.weightval != -1 and item.weightval != None:
+			print(str(item.weightval/100.0), file=sys.stderr)
+			feqd[-1]['welem'] = str(item.weightval/100.0)
+		else:
+			feqd[-1]['welem'] = -1
 			##ddict[d][1].append(tempd)
 	nddict = {}
 	print(ddict, file=sys.stderr)

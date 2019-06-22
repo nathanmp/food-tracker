@@ -23,9 +23,16 @@
         exercises.push(exercise);
     }
     function submit() {
-		foods.push(document.getElementById("post").value);
+		var weight = -1;
+		if (document.getElementById("weightinp").value != "") {
+			weight = document.getElementById("weightinp").value;
+		}
+		var post = "";
+		if (document.getElementById("post").value != "") {
+			post = document.getElementById("post").value;
+		}
         var http = new XMLHttpRequest();
-        var to_send = {"foods":foods, "exercises":exercises};
+        var to_send = {"foods":foods, "exercises":exercises, "weight":weight, "post":post};
         http.open("POST", "/addfood", true);
         http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         http.send(JSON.stringify(to_send));
@@ -119,6 +126,7 @@
 		</div>
         <div class="divnotes col-12 col-md-6 col-lg-4 flex-column d-flex align-items-center ">
             <textarea rows="5" cols="50" id="post" name="post" placeholder="Notes"></textarea>
+            <input type="text" id="weightinp" name="weight" placeholder="Weight"></input>
             <button class="submitbutton" onclick="submit();">Submit</button>
         </div>
     </div>
