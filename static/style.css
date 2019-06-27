@@ -176,3 +176,47 @@ button {
 #weightinp {
 	width: 200px;
 }
+.editfoodexp {
+	margin: 5px;
+}
+.editfoodinp {
+	margin-bottom: 30px !important;
+}
+.editexplp {
+	display: inline-block;
+	width: 100px !important;
+	margin: 5px;
+	text-align: center;
+}
+.editinp {
+	margin: 5px;
+	width: 100px;
+}
+.nameinp {
+	margin: 5px;
+	width: 150px !important;
+}
+.editfoodbdiv {
+	border: 1px solid black !important;
+	margin: 20px !important;
+	text-align: center;
+}
+.editdivsm {
+	display: block;
+	text-align: left;
+}
+.editexplpsm {
+	display: inline;
+	width: 100px !important;
+	text-align: center;
+}
+.submitbtndiv {
+	display: inline-block;
+	margin: 5px;
+	text-align: center;
+}
+.editinpsm {
+	position: relative;
+	left: 10px;
+	width: 150px !important;
+}

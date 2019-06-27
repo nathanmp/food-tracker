@@ -58,18 +58,6 @@ class User(UserMixin, db.Model):
 		return check_password_hash(self.password_hash, password)
 	def get_id(self):
 		return self.username
-	def makepost(self, t):
-		p = Post(text, self.uid)
-		l = []
-		for item in t.split(" "):
-			if len(item) > 2 and item[0] == "#" and item[1] in list("abcdefghijklmnopqrstuvwxyz"):
-				t = Tag()
-				t.name = item[1:]
-				session.add(t)
-				p.tags.append(t)
-		session.add(p)
-		session.commit()
-		return p.pid
 	def __repr__(self):
 		return ("<UserID {}, Username {}, Email {}>").format(self.uid, self.username, self.email)
 	__tablename__ = "user"
@@ -81,7 +69,7 @@ class User(UserMixin, db.Model):
 	exercisetypes = db.relationship(ExerciseType)
 	follows = db.relationship("User", secondary=follows, lazy="dynamic", backref=db.backref('followers', lazy="dynamic"))
 	meals = db.relationship("Meal", secondary=meals, lazy="subquery", backref="user")
-	
+
 class FoodElement(db.Model):
 	def __repr__(self):
 		ft = FoodType.query.filter_by(ftid=self.fid).first()
@@ -108,11 +96,12 @@ class Meal(db.Model):
 	mid = db.Column(db.Integer, primary_key=True)
 	elements = db.relationship('FoodElement', backref="meal", lazy=True)
 	eelements = db.relationship('ExerciseElement', backref="meal", lazy=True)
-	ts_created = db.Column(db.Integer)
-	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
+	ts_created = db.Column(db.Integer, default=datetime.utcnow())
+	uid = db.Column(db.Integer, db.ForeignKey("user.uid"))
 	details = db.Column(db.String(300), default="")
 	##represented in 100ths of a pound to prevent rounding issues
 	weightval = db.Column(db.Integer)
+	timeoffset = db.Column(db.Integer)
 
 # ~ class WeightElement(db.Model):
 	# ~ __tablename__ = "weightelement"

@@ -10,7 +10,7 @@
 	var weight = -1;
 	function servingHandler(serv, color, name, id, calories, protein, carbs, fat) {
 		{% if current_user.username %}
-			food = {"name":name, "fat": fat, "protein":protein, "carbs":carbs, "calories":calories, "serving":serv, "color":color, "id":id, "username": {{current_user.uid}} };
+			food = {"name":name, "fat": fat, "protein":protein, "carbs":carbs, "calories":calories, "serving":serv, "color":color, "id":id, "uid": {{current_user.uid}} };
 		{% else %}
 			food = {"serving":serv, "color":color, "id":id, "username": "Guest" };
 		{% endif %}
@@ -32,7 +32,8 @@
 			post = document.getElementById("post").value;
 		}
         var http = new XMLHttpRequest();
-        var to_send = {"foods":foods, "exercises":exercises, "weight":weight, "post":post};
+        var offset = new Date().getTimezoneOffset();
+        var to_send = {"foods":foods, "exercises":exercises, "weight":weight, "post":post, "tz":offset};
         http.open("POST", "/addfood", true);
         http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         http.send(JSON.stringify(to_send));
