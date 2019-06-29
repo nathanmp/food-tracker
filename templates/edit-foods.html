@@ -4,69 +4,92 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css') ~ '?v=' ~ range(1,5000)|random}}" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script>
-	function submit() {
-	var foodjson = [];
-    var foodlist = document.getElementsByClassName("editfoodinp");
-    for (var i = 0, len = foodlist.length; i < len; i++) {
-		var div = foodlist[i];
-		id = div.id;
-		name = div.children[0].value;
-		console.log(name);
-		servname = div.children[1].value;
-		console.log(servname);
-		cals = div.children[2].value;
-		console.log(cals);
-		protein = div.children[3].value;
-		console.log(protein);
-		carbs = div.children[4].value;
-		console.log(carbs);
-		fat = div.children[5].value;
-		console.log(fat);
-		color = div.children[6].value;
-		console.log(color);
-		food = {"name":name, "fat": fat, "protein":protein, "carbs":carbs, "calories":cals, "serving":servname, "color":color, "id":id, "username": {{current_user.uid}} };
-		foodjson.push(food);
-	};
-	var http = new XMLHttpRequest();
-    http.open("POST", "/editfoods", true);
-    http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    http.send(JSON.stringify(foodjson));
-    setTimeout( function() {
-			window.location.href = "/addfood";
-	}, 1000);
+	
+	
+	function childAdder(parent, childName, childClass) {
+		var p = document.createElement("p");
+		p.classList.add("editexplp");
+		if (childName == "Name") {
+			p.classList.add("nameexp");
+		}
+		p.innerHTML = childName;
+		
+		var inp = document.createElement("input");
+		inp.type = "text";
+		inp.classList.add("editinp");
+		inp.classList.add(childClass);
+		inp.placeholder = childName;
+		parent.children[0].appendChild(p);
+		parent.children[1].appendChild(inp);
 	}
 	
 	
-	function submitsmall() {
-	var foodjson = [];
-    var foodlist = document.getElementsByClassName("editfoodexpsm");
-    for (var i = 0, len = foodlist.length; i < len; i++) {
-		var div = foodlist[i];
-		id = div.id;
-		name = div.children[0].children[1].value;
-		console.log(name);
-		servname = div.children[1].children[1].value;
-		console.log(servname);
-		cals = div.children[2].children[1].value;
-		console.log(cals);
-		protein = div.children[3].children[1].value;
-		console.log(protein);
-		carbs = div.children[4].children[1].value;
-		console.log(carbs);
-		fat = div.children[5].children[1].value;
-		console.log(fat);
-		color = div.children[6].children[1].value;
-		console.log(color);
-		food = {"name":name, "fat": fat, "protein":protein, "carbs":carbs, "calories":cals, "serving":servname, "color":color, "id":id, "username": {{current_user.uid}} };
-		foodjson.push(food);
-	};
-	var http = new XMLHttpRequest();
-    http.open("POST", "/editfoods", true);
-    http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    http.send(JSON.stringify(foodjson));
-    setTimeout( function() {
-			window.location.href = "/addfood";
-	}, 1000);
+	function adddiv() {
+		var div = document.createElement('div');
+		div.id = "-1";
+		div.classList.add("editfoodbdiv");
+		
+		var ediv = document.createElement('div');
+		ediv.id = "-2";
+		ediv.classList.add("editfoodinp");
+		ediv.classList.add("row");
+		
+		var expdiv = document.createElement('div');
+		expdiv.id = "-3";
+		expdiv.classList.add("col-6")
+		expdiv.classList.add("col-lg-12");
+		expdiv.classList.add("exps");
+
+		var inpdiv = document.createElement('div');
+		inpdiv.id = "-4";
+		inpdiv.classList.add("col-6")
+		inpdiv.classList.add("col-lg-12");
+		inpdiv.classList.add("inps");
+		
+		ediv.appendChild(expdiv);
+		ediv.appendChild(inpdiv);
+		childAdder(ediv, "Name", "nameinp");
+		childAdder(ediv, "Serving", "servinp");
+		childAdder(ediv, "Calories", "calinp");
+		childAdder(ediv, "Protein", "protinp");
+		childAdder(ediv, "Carbs", "carbinp");
+		childAdder(ediv, "Fat", "finp");
+		childAdder(ediv, "Color", "colorinp");
+		div.appendChild(ediv);
+		document.getElementById("allfoods").appendChild(div);
+	}
+	
+	
+	function submit() {
+		var foodjson = [];
+		var foodlist = document.getElementsByClassName("editfoodinp");
+		for (var i = 0, len = foodlist.length; i < len; i++) {
+			var div = foodlist[i];
+			id = div.id;
+			name = div.children[0].value;
+			console.log(name);
+			servname = div.children[1].value;
+			console.log(servname);
+			cals = div.children[2].value;
+			console.log(cals);
+			protein = div.children[3].value;
+			console.log(protein);
+			carbs = div.children[4].value;
+			console.log(carbs);
+			fat = div.children[5].value;
+			console.log(fat);
+			color = div.children[6].value;
+			console.log(color);
+			food = {"name":name, "fat": fat, "protein":protein, "carbs":carbs, "calories":cals, "serving":servname, "color":color, "id":id, "username": {{current_user.uid}} };
+			foodjson.push(food);
+		};
+		var http = new XMLHttpRequest();
+		http.open("POST", "/editfoods", true);
+		http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+		http.send(JSON.stringify(foodjson));
+		setTimeout( function() {
+				window.location.href = "/addfood";
+		}, 1000);
 	}
 </script>
 <!--
@@ -76,78 +99,36 @@
 	{% include "header.html" %}
 	<div class="container-fluid">
 		<div class="row">
-			
-<!--
-			The below column contains list of meals
--->
-			<div class="col-2 d-none d-lg-block"></div>
-			<div class="d-none d-lg-block col-2 col-lg-8">
+			<div class="col-lg-2"></div>
+			<div class="col-10 col-lg-8" id="allfoods">
 				{% for food in foods %}
 				<div class="editfoodbdiv">
-				<div class="editfoodexp">
-					<p class="editexplp nameinp">Name</p>
-					<p class="editexplp">Serving</p>
-					<p class="editexplp">Calories</p>
-					<p class="editexplp">Protein</p>
-					<p class="editexplp">Carbs</p>
-					<p class="editexplp">Fat</p>
-					<p class="editexplp">Color</p>
-				</div>
-				<div class="editfoodinp" id="{{food.id}}">
-					<input type="text" class="editinp nameinp" value="{{food.name}}"></input>
-					<input type="text" class="editinp servinp" value="{{food.serv}}"></input>
-					<input type="text" class="editinp calinp" value="{{food.calories}}"></input>
-					<input type="text" class="editinp protinp" value="{{food.protein}}"></input>
-					<input type="text" class="editinp carbinp" value="{{food.carbs}}"></input>
-					<input type="text" class="editinp finp" value="{{food.fat}}"></input>
-					<input type="text" class="editinp colorinp" value="{{food.color}}"></input>
+				<div class="editfoodinp row" id="{{food.id}}">
+					<div class="col-6 col-lg-12 exps">
+						<p class="editexplp nameexp">Name</p>
+						<p class="editexplp">Serving</p>
+						<p class="editexplp">Calories</p>
+						<p class="editexplp">Protein</p>
+						<p class="editexplp">Carbs</p>
+						<p class="editexplp">Fat</p>
+						<p class="editexplp">Color</p>
+					</div>
+					<div class="col-6 col-lg-12 inps">
+						<input type="text" class="editinp nameinp" value="{{food.name}}"></input>
+						<input type="text" class="editinp servinp" value="{{food.serv}}"></input>
+						<input type="text" class="editinp calinp" value="{{food.calories}}"></input>
+						<input type="text" class="editinp protinp" value="{{food.protein}}"></input>
+						<input type="text" class="editinp carbinp" value="{{food.carbs}}"></input>
+						<input type="text" class="editinp finp" value="{{food.fat}}"></input>
+						<input type="text" class="editinp colorinp" value="{{food.color}}"></input>
+					</div>
 				</div>
 				</div>
 				{% endfor %}
-				<div class="submitbtndiv col-lg-12">
-					<button class="submitbtn" onclick="submit();">Submit</button>
-				</div>
 			</div>
-			
-			
-			<div class="d-block d-lg-none col-12">
-				{% for food in foods %}
-				<div class="editfoodbdiv">
-				<div class="editfoodexpsm" id="{{food.id}}">
-					<div class="editdivsm">
-					<p class="editexplpsm nameinp">Name</p>
-					<input type="text" class="editinp editinpsm nameinp" value="{{food.name}}"></input>
-					</div>
-					<div class="editdivsm">
-					<p class="editexplpsm">Serving</p>
-					<input type="text" class="editinp editinpsm servinp" value="{{food.serv}}"></input>
-					</div>
-					<div class="editdivsm">
-					<p class="editexplpsm">Calories</p>
-					<input type="text" class="editinp editinpsm calinp" value="{{food.calories}}"></input>
-					</div>
-					<div class="editdivsm">
-					<p class="editexplpsm">Protein</p>
-					<input type="text" class="editinp editinpsm protinp" value="{{food.protein}}"></input>
-					</div>
-					<div class="editdivsm">
-					<p class="editexplpsm">Carbs</p>
-					<input type="text" class="editinp editinpsm carbinp" value="{{food.carbs}}"></input>
-					</div>
-					<div class="editdivsm">
-					<p class="editexplpsm">Fat</p>
-					<input type="text" class="editinp editinpsm finp" value="{{food.fat}}"></input>
-					</div>
-					<div class="editdivsm">
-					<p class="editexplpsm">Color</p>
-					<input type="text" class="editinp editinpsm colorinp" value="{{food.color}}"></input>
-					</div>
-				</div>
-				</div>
-				{% endfor %}
-				<div class="d-block d-lg-none submitbtndiv col-12">
-					<button class="submitbtn" onclick="submitsmall();">Submit</button>
-				</div>
+			<div class="submitbtndiv col-2 col-lg-12">
+				<button class="adddivbtn" onclick="adddiv();">Add a Food</button>
+				<button class="submitbtn" onclick="submit();">Submit</button>
 			</div>
 	</div>
 </body>

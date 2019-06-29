@@ -192,22 +192,19 @@ button {
 	margin: 5px;
 	width: 100px;
 }
+.nameexp {
+	text-align: left;
+	display: block;
+	width: 200px !important;
+	margin-top: 20px;
+}
 .nameinp {
-	margin: 5px;
-	width: 150px !important;
+	width: 200px !important;
+	margin-top: 20px;
 }
 .editfoodbdiv {
 	border: 1px solid black !important;
 	margin: 20px !important;
-	text-align: center;
-}
-.editdivsm {
-	display: block;
-	text-align: left;
-}
-.editexplpsm {
-	display: inline;
-	width: 100px !important;
 	text-align: center;
 }
 .submitbtndiv {
@@ -215,8 +212,26 @@ button {
 	margin: 5px;
 	text-align: center;
 }
-.editinpsm {
-	position: relative;
-	left: 10px;
-	width: 150px !important;
+@media (max-width: 991.98px) {
+	.editinp, .editexplp {
+		height: 30px !important;
+		display: block !important;
+		text-align: left;
+		margin-left: 40px;
+		margin-right: 0;
+	}
+}
+@media (min-width: 992px) {
+	.exps {
+		margin-top: 10px;
+	}
+	.nameexp {
+		text-align: center;
+	}
+	.editinp, .editexplp {
+		margin: auto;
+		width: 100px;
+		height: 30px !important;
+		display: inline-block !important;
+	}
 }
