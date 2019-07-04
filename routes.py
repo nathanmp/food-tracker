@@ -158,11 +158,11 @@ def stats(timeframe):
 		timediff = datetime.timestamp(timediff)
 	
 	if current_user.is_authenticated:
-		feq = models.Meal.query.filter(models.Meal.ts_created>timediff).filter_by(uid=current_user.uid).all()
+		meal_query = models.Meal.query.filter(models.Meal.ts_created>timediff).filter_by(uid=current_user.uid).all()
 	else:
-		feq = models.Meal.query.filter_by(uid="Guest").all()
+		meal_query = models.Meal.query.filter_by(uid="Guest").all()
 	
-	feqd = []
+	meal_dict = []
 	ddict = {}
 	td = date.today()
 	ddict[td] = []
@@ -171,28 +171,28 @@ def stats(timeframe):
 		td = td - timediff
 		ddict[td] = []
 	
-	for item in feq:
+	for item in meal_query:
 		if item.timeoffset == None:
 			item.timeoffset = 240
 		d = datetime.fromtimestamp(item.ts_created - item.timeoffset*60)
-		feqd.append({"mealid": item.mid, "timestamp": d.strftime("%B %d %Y, %I:%M%p"), "details":item.details})
+		meal_dict.append({"mealid": item.mid, "timestamp": d.strftime("%B %d %Y, %I:%M%p"), "details":item.details})
 		d = date.fromtimestamp(item.ts_created)
-		feqd[-1]['flist'] = []
-		feqd[-1]['elist'] = []
-		feqd[-1]['welem'] = 0
+		meal_dict[-1]['flist'] = []
+		meal_dict[-1]['elist'] = []
+		meal_dict[-1]['welem'] = 0
 		for i in item.elements:
 			tempd = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.sid, "active":i.active, "eid":i.eid}
-			feqd[-1]['flist'].append(tempd)
+			meal_dict[-1]['flist'].append(tempd)
 			ddict[d].append(tempd)
 		for i in item.eelements:
 			tempd = {"eid":i.eid, "uid":i.uid, "calories":i.calsburned, "previous_changes":False, "ename":i.ename, "length":i.length}
-			feqd[-1]['elist'].append(tempd)
+			meal_dict[-1]['elist'].append(tempd)
 		
 		if item.weightval != -1 and item.weightval != None:
 			print(str(item.weightval/100.0), file=sys.stderr)
-			feqd[-1]['welem'] = str(item.weightval/100.0)
+			meal_dict[-1]['welem'] = str(item.weightval/100.0)
 		else:
-			feqd[-1]['welem'] = -1
+			meal_dict[-1]['welem'] = -1
 	nddict = {}
 	print(ddict, file=sys.stderr)
 	
@@ -211,7 +211,7 @@ def stats(timeframe):
 		nddict[k.strftime("%B %d %Y")] = tdict
 	
 	print(str(nddict), file=sys.stderr)
-	return render_template("stats.html", title="Stats", meals=feqd, d=nddict)
+	return render_template("stats.html", title="Stats", meals=meal_dict, d=nddict)
 
 @app.route("/editfoods", methods=["GET"])
 def editfoodspg():
@@ -225,22 +225,30 @@ def editfoodspg():
 @app.route("/editfoods", methods=["POST"])
 def editfoods():
 	data = request.get_json()
-	feq = models.FoodType.query.filter_by(uid=current_user.uid)
-	print("lenfeq: " + str(len(feq.all())), file=sys.stderr)
+	print(str(data), file=sys.stderr)
+	foodtype_query = models.FoodType.query.filter_by(uid=current_user.uid)
+	print(str(len(foodtype_query.all())), file=sys.stderr)
 	for e in data:
-		items = feq.filter_by(ftid=int(e['id'])).all()
-		print("lenitems: " + str(len(items)), file=sys.stderr)
-		if len(items) > 0:
+		items = foodtype_query.filter_by(ftid=int(e['id'])).all()
+		
+		if int(e['id']) < 0 or len(items) == 0:
+			i = models.FoodType()
+		else:
 			i = items[0]
-			print(str(e), file=sys.stderr)
-			i.name = e['name']
-			i.calories = int(e['calories'])
-			i.fat_amt = int(e['fat'])
-			i.protein_amt = int(e['protein'])
-			i.carb_amt = int(e['carbs'])
-			i.serv_name = e['serving']
-			i.color = e['color']
-			db.session.add(i)
+			
+		if e['delete'] == "on" and len(items) != 0:
+			db.session.delete(i)
+			continue
+		
+		i.food_name = e['name']
+		i.uid = current_user.uid
+		i.calories = int(e['calories'])
+		i.fat_amt = int(e['fat'])
+		i.protein_amt = int(e['protein'])
+		i.carb_amt = int(e['carbs'])
+		i.serv_name = e['serving']
+		i.color = e['color']
+		db.session.add(i)
 	db.session.commit()
 	return ""
 @app.route("/signup", methods=["GET"])

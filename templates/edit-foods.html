@@ -13,12 +13,13 @@
 			p.classList.add("nameexp");
 		}
 		p.innerHTML = childName;
-		
+		p.style.margin = "2px";
 		var inp = document.createElement("input");
 		inp.type = "text";
 		inp.classList.add("editinp");
 		inp.classList.add(childClass);
 		inp.placeholder = childName;
+		inp.style.margin = "2px";
 		parent.children[0].appendChild(p);
 		parent.children[1].appendChild(inp);
 	}
@@ -29,10 +30,10 @@
 		div.id = "-1";
 		div.classList.add("editfoodbdiv");
 		
-		var ediv = document.createElement('div');
-		ediv.id = "-2";
-		ediv.classList.add("editfoodinp");
-		ediv.classList.add("row");
+		var parentdiv = document.createElement('div');
+		parentdiv.id = "-2";
+		parentdiv.classList.add("editfoodinp");
+		parentdiv.classList.add("row");
 		
 		var expdiv = document.createElement('div');
 		expdiv.id = "-3";
@@ -46,16 +47,35 @@
 		inpdiv.classList.add("col-lg-12");
 		inpdiv.classList.add("inps");
 		
-		ediv.appendChild(expdiv);
-		ediv.appendChild(inpdiv);
-		childAdder(ediv, "Name", "nameinp");
-		childAdder(ediv, "Serving", "servinp");
-		childAdder(ediv, "Calories", "calinp");
-		childAdder(ediv, "Protein", "protinp");
-		childAdder(ediv, "Carbs", "carbinp");
-		childAdder(ediv, "Fat", "finp");
-		childAdder(ediv, "Color", "colorinp");
-		div.appendChild(ediv);
+		parentdiv.appendChild(expdiv);
+		parentdiv.appendChild(inpdiv);
+		
+		childAdder(parentdiv, "Name", "nameinp");
+		childAdder(parentdiv, "Serving", "servinp");
+		childAdder(parentdiv, "Calories", "calinp");
+		childAdder(parentdiv, "Protein", "protinp");
+		childAdder(parentdiv, "Carbs", "carbinp");
+		childAdder(parentdiv, "Fat", "finp");
+		childAdder(parentdiv, "Color", "colorinp");
+		
+		var cdiv = document.createElement('div');
+		cdiv.classList.add("deleteinpparent");
+		
+		var cexp = document.createElement('p');
+		cexp.classList.add("editexplp");
+		cexp.innerHTML = "Delete?";
+		
+		var cbox = document.createElement('input');
+		cbox.type = "checkbox";
+		cbox.classList.add("deleteinp");
+		cbox.classList.add("editinp");
+		cdiv.appendChild(cbox);
+		
+		parentdiv.children[0].appendChild(cexp);
+		parentdiv.children[1].appendChild(cdiv);
+		div.appendChild(parentdiv);
+		div.id = "-2";
+		parentdiv.id = "-1";
 		document.getElementById("allfoods").appendChild(div);
 	}
 	
@@ -66,21 +86,23 @@
 		for (var i = 0, len = foodlist.length; i < len; i++) {
 			var div = foodlist[i];
 			id = div.id;
-			name = div.children[0].value;
+			name = div.children[1].children[0].value;
 			console.log(name);
-			servname = div.children[1].value;
+			servname = div.children[1].children[1].value;
 			console.log(servname);
-			cals = div.children[2].value;
+			cals = div.children[1].children[2].value;
 			console.log(cals);
-			protein = div.children[3].value;
+			protein = div.children[1].children[3].value;
 			console.log(protein);
-			carbs = div.children[4].value;
+			carbs = div.children[1].children[4].value;
 			console.log(carbs);
-			fat = div.children[5].value;
+			fat = div.children[1].children[5].value;
 			console.log(fat);
-			color = div.children[6].value;
+			color = div.children[1].children[6].value;
 			console.log(color);
-			food = {"name":name, "fat": fat, "protein":protein, "carbs":carbs, "calories":cals, "serving":servname, "color":color, "id":id, "username": {{current_user.uid}} };
+			checkbox = div.children[1].children[7].children[0].value;
+			console.log(checkbox);
+			food = {"name":name, "fat": fat, "protein":protein, "carbs":carbs, "calories":cals, "serving":servname, "color":color, "id":id, "username": {{current_user.uid}}, "delete":checkbox};
 			foodjson.push(food);
 		};
 		var http = new XMLHttpRequest();
@@ -99,8 +121,8 @@
 	{% include "header.html" %}
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-lg-2"></div>
-			<div class="col-10 col-lg-8" id="allfoods">
+			<div class="col-lg-1"></div>
+			<div class="col-10 col-lg-10" id="allfoods">
 				{% for food in foods %}
 				<div class="editfoodbdiv">
 				<div class="editfoodinp row" id="{{food.id}}">
@@ -112,6 +134,7 @@
 						<p class="editexplp">Carbs</p>
 						<p class="editexplp">Fat</p>
 						<p class="editexplp">Color</p>
+						<p class="editexplp">Delete?</p>
 					</div>
 					<div class="col-6 col-lg-12 inps">
 						<input type="text" class="editinp nameinp" value="{{food.name}}"></input>
@@ -121,6 +144,9 @@
 						<input type="text" class="editinp carbinp" value="{{food.carbs}}"></input>
 						<input type="text" class="editinp finp" value="{{food.fat}}"></input>
 						<input type="text" class="editinp colorinp" value="{{food.color}}"></input>
+						<div class="deleteinpparent">
+							<input type="checkbox" class="editinp deleteinp"></input>
+						</div>
 					</div>
 				</div>
 				</div>
@@ -130,6 +156,7 @@
 				<button class="adddivbtn" onclick="adddiv();">Add a Food</button>
 				<button class="submitbtn" onclick="submit();">Submit</button>
 			</div>
+			<div class="col-lg-1"></div>
 	</div>
 </body>
 

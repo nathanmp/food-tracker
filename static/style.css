@@ -220,6 +220,14 @@ button {
 		margin-left: 40px;
 		margin-right: 0;
 	}
+	.deleteinp {
+		margin-top: 3px;
+		margin-left: 0px;
+		margin-right: 0px;
+		width: 20px;
+		left: 0px;
+		display: block !important;
+	}
 }
 @media (min-width: 992px) {
 	.exps {
@@ -234,4 +242,19 @@ button {
 		height: 30px !important;
 		display: inline-block !important;
 	}
+	.deleteinp {
+		padding-top: 7px;
+		margin-left: 40px;
+		margin-right: 40px;
+		height: 20px;
+		width: 20px;
+		vertical-align: -6px;
+		display: inline !important;
+	}
+}
+.deleteinpparent {
+	width: 100px;
+	height: 30px;
+	margin-top: -7px;
+	display: inline-block !important;
 }
