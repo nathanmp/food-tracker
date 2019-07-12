@@ -34,8 +34,8 @@
 				{% set ns.fats = 0 %}
 				{% set ns.carbs = 0 %}
 				<div class="table-responsive">
-				{% if meal['flist'] != [] %}
-				{% for foodelem in meal['flist'] %}
+				{% if meal['foodlist'] != [] %}
+				{% for foodelem in meal['foodlist'] %}
 				{% if foodelem.active == True %}
 				{% set ns.cals = ns.cals + foodelem.calories %}
 				{% set ns.proteins = ns.proteins + foodelem.protein_amt %}
@@ -44,9 +44,9 @@
 				{% endif %}
 				{% endfor %}
 				{% endif %}
-				{% if meal['flist'] != [] or meal['elist'] != [] %}
+				{% if meal['foodlist'] != [] or meal['exerciselist'] != [] or meal['welem'] != -1 or meal.details != "" %}
 				<table class="mealtable table no-gutters">
-					{% if meal['flist'] != [] %}
+					{% if meal['foodlist'] != [] %}
 					<tr class="mealrow">
 						<th style="width:40%" class="mealheading">Food Name</th>
 						<th style="width:15%" class="mealheading">Color</th>
@@ -56,7 +56,7 @@
 						<th style="width:10%" class="mealheading">Carbs</th>
 						<th style="width:5%" class="mealheading">Delete</th>
 					</tr>
-					{% for item in meal['flist'] %}
+					{% for item in meal['foodlist'] %}
 					{% if item.active == True %}
 					<tr class="mealrow">
 					<td>{{item.name}}: {{item.sid}}</td>
@@ -78,14 +78,14 @@
 					<td class="mealheading"><a href="/deletemeal/{{meal.mealid}}">Delete</a></td>
 					</tr>
 					{% endif %}
-					{% if meal['elist'] != [] %}
+					{% if meal['exerciselist'] != [] %}
 					<tr class="mealrow">
 						<th colspan=3 class="mealheading">Exercise Name</th>
 						<th colspan=1 class="mealheading">Length</th>
 						<th colspan=2 class="mealheading">Calories</th>
 						<th colspan=1 class="mealheading">Delete</th>
 					</tr>
-					{% for item in meal['elist'] %}
+					{% for item in meal['exerciselist'] %}
 						<tr class="mealrow">
 							<td colspan=3 >{{item.ename}}</td>
 							<td colspan=1 >{{item.length}}</td>
@@ -94,19 +94,23 @@
 						</tr>
 					{% endfor %}
 					{% endif %}
-					<tr class="time">
-						<td colspan=7>Created on: {{meal.timestamp}}</td>
-					</tr>
+					
 					{% if meal.welem != -1 %}
 					<tr class="weight" style="border-bottom: 1pt solid black;">
-						<td colspan=7>Weight: {{meal.welem}}</td>
+						<td colspan=7>Weight: {{meal.weightelement}}</td>
 					</tr>
 					{% endif %}
+					
 					{% if meal.details != "" %}
 					<tr class="details" style="border-bottom: 1pt solid black;">
 						<td colspan=7>Notes: {{meal.details}}</td>
 					</tr>
 					{% endif %}
+					
+					<tr class="time">
+						<td colspan=7>Created on: {{meal.timestamp}}</td>
+					</tr>
+					
 				</table>
 				{% endif %}
 				</div>

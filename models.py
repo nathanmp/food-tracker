@@ -11,21 +11,6 @@ import os
 from eatr import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
-meals = db.Table("meals",
-	db.Column("mealid", db.Integer, db.ForeignKey("meal.mid"), primary_key=True),
-	db.Column("userid", db.Integer, db.ForeignKey("user.uid"), primary_key=True)
-)
-
-follows = db.Table("follows",
-	db.Column("userid", db.Integer, db.ForeignKey("user.uid"), primary_key=True),
-	db.Column("userid", db.Integer, db.ForeignKey("user.uid"), primary_key=True)
-)
-"""
-tags = db.Table("posttags",
-	db.Column("pid", db.Integer, db.ForeignKey("post.pid"), primary_key=True),
-	db.Column("tid", db.Integer, db.ForeignKey("tag.tid"), primary_key=True)
-)
-"""
 class ExerciseType(db.Model):
 	def __repr__(self):
 		return ("<UserID {}, Name {}, METS {}>").format(self.uid, self.name, self.mets)
@@ -34,7 +19,8 @@ class ExerciseType(db.Model):
 	name = db.Column(db.String(50))
 	mets = db.Column(db.Float)
 	serv_name = db.Column(db.String(64))
-	calperlb = db.Column(db.Integer)
+	calories = db.Column(db.Integer)
+	caloriesperweight = db.Column(db.Integer)
 	uid = db.Column(db.Integer, db.ForeignKey("user.uid"))
 
 class FoodType(db.Model):
@@ -67,19 +53,18 @@ class User(UserMixin, db.Model):
 	password_hash = db.Column(db.String(128))
 	foodtypes = db.relationship(FoodType, backref="user")
 	exercisetypes = db.relationship(ExerciseType)
-	follows = db.relationship("User", secondary=follows, lazy="dynamic", backref=db.backref('followers', lazy="dynamic"))
-	meals = db.relationship("Meal", secondary=meals, lazy="subquery", backref="user")
+	meals = db.relationship("DataSet", lazy="subquery", backref="user")
 
-class FoodElement(db.Model):
+class FoodData(db.Model):
 	def __repr__(self):
 		ft = FoodType.query.filter_by(ftid=self.fid).first()
-		return ("<FoodElement, FID {}, Username {}, SS {}, Time {}>").format(ft.food_name, self.uid, self.sid, self.timestamp)
+		return ("<FoodData, FID {}, Username {}, SS {}, Time {}>").format(ft.food_name, self.uid, self.sid, self.timestamp)
 	
 	__tablename__ = "foodelement"
-	eid = db.Column(db.Integer, primary_key=True)
-	fid = db.Column(db.Integer, db.ForeignKey('foodtype.ftid'))
-	sid = db.Column(db.Float)
-	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
+	elementid = db.Column(db.Integer, primary_key=True)
+	foodtypeid = db.Column(db.Integer, db.ForeignKey('foodtype.ftid'))
+	servingsize = db.Column(db.Float)
+	userid = db.Column(db.String(64), db.ForeignKey('user.username'))
 	color = db.Column(db.String(10))
 	timestamp = db.Column(db.Integer, default=datetime.utcnow())
 	carb_amt = db.Column(db.Integer)
@@ -91,11 +76,11 @@ class FoodElement(db.Model):
 	active = db.Column(db.Boolean(), default=True)
 	mealid = db.Column(db.Integer, db.ForeignKey("meal.mid"))
 
-class Meal(db.Model):
+class DataSet(db.Model):
 	__tablename__ = "meal"
 	mid = db.Column(db.Integer, primary_key=True)
-	elements = db.relationship('FoodElement', backref="meal", lazy=True)
-	eelements = db.relationship('ExerciseElement', backref="meal", lazy=True)
+	elements = db.relationship('FoodData', backref="meal", lazy=True)
+	eelements = db.relationship('ExerciseData', backref="meal", lazy=True)
 	ts_created = db.Column(db.Integer, default=datetime.utcnow())
 	uid = db.Column(db.Integer, db.ForeignKey("user.uid"))
 	details = db.Column(db.String(300), default="")
@@ -124,7 +109,7 @@ class Tag(db.Model):
 	posts = db.relationship("Post", secondary=tags, lazy=True, backref=db.backref("tags"))
 """
 	
-class ExerciseElement(db.Model):
+class ExerciseData(db.Model):
 	__tablename__ = "exerciseelement"
 	eid = db.Column(db.Integer, primary_key=True)
 	uid = db.Column(db.Integer, db.ForeignKey("user.uid"))

@@ -202,7 +202,7 @@ button {
 	width: 200px !important;
 	margin-top: 20px;
 }
-.editfoodbdiv {
+.editfoodbdiv, .editexerbdiv {
 	border: 1px solid black !important;
 	margin: 20px !important;
 	text-align: center;

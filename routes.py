@@ -17,7 +17,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
-food_defaults_med = """Water|blue|1 cup|0|0|0|0
+food_defaults = """Water|blue|1 cup|0|0|0|0
 Tea|blue|1 cup|0|0|0|0
 Coffee|blue|1 cup|0|0|0|0
 Green vegetables|green|1 cup|25|0|5|2
@@ -43,14 +43,16 @@ Processed Grains|red|1/2 cup|0|15|3|0
 Dairy desserts|red|1/2 cup|130|7|15|3
 Other desserts|red|2 oz|220|11|30|2
 Soda|red|8 oz|100|0|26|0""".split("\n")
-
-exercise_defaults_med = """Light exercise (<3 METs)|3|1 hour|3
+	
+exercise_defaults = """Light exercise (<3 METs)|3|1 hour|3
 Medium exercise (3-6 METs)|5|1 hour|5
 Intense exercise (>6 METs)|7|1 hour|7""".split("\n")
+
 @login_manager.user_loader
 def load_user(user_id):
 	u = models.User.query.filter_by(username=user_id).first()
 	return u
+
 @app.route("/")	
 @app.route("/home")	
 def home():
@@ -58,73 +60,54 @@ def home():
 		return redirect("/signuporin")
 	else:
 		return redirect("/addfood")
-	# ~ flist = current_user.foodtypes
-	# ~ if flist == []:
-		# ~ for i in range(len(food_defaults_med)):
-			# ~ food_defaults_med[i] = food_defaults_med[i].strip().split("|")
-			# ~ nft = models.FoodType(food_name=food_defaults_med[i][0], color=food_defaults_med[i][1],
-			# ~ serv_name=food_defaults_med[i][2], calories=int(food_defaults_med[i][3]), fat_amt=int(food_defaults_med[i][4]),
-			# ~ carb_amt=int(food_defaults_med[i][5]), protein_amt=int(food_defaults_med[i][6]))
-			# ~ nft.uid = current_user.uid
-			# ~ db.session.add(nft)
-		# ~ db.session.commit()
-		# ~ flist = current_user.foodtypes
-	# ~ colors = []
-	# ~ for i in flist:
-		# ~ colors.append({"name":i.food_name, "id":i.ftid, "color":i.color, "serving":i.serv_name,
-		# ~ "protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories})
-	# ~ postlist = []
-	# ~ follows = current_user.follows
-	# ~ print(str(follows), file=sys.stderr)
-	# ~ return render_template("home.html", quickadd=colors)
 
 @app.route("/addfood", methods=["GET"])
-def addfoodpg():
+def addfoodpage():
 	if current_user.is_anonymous:
 		return redirect("/signuporin")
 	else:
-		flist = current_user.foodtypes
-		if flist == []:
-			for i in range(len(food_defaults_med)):
-				food_defaults_med[i] = food_defaults_med[i].strip().split("|")
+		foodlist = current_user.foodtypes
+		if foodlist == []:
+			for i in range(len(food_defaults)):
+				food_defaults[i] = food_defaults[i].strip().split("|")
 				
-				nft = models.FoodType(food_name=food_defaults_med[i][0], color=food_defaults_med[i][1],
-				serv_name=food_defaults_med[i][2], calories=int(food_defaults_med[i][3]), fat_amt=int(food_defaults_med[i][4]),
-				carb_amt=int(food_defaults_med[i][5]), protein_amt=int(food_defaults_med[i][6]))
+				newfoodtype = models.FoodType(food_name=food_defaults[i][0], color=food_defaults[i][1],
+				serv_name=food_defaults[i][2], calories=int(food_defaults[i][3]), fat_amt=int(food_defaults[i][4]),
+				carb_amt=int(food_defaults[i][5]), protein_amt=int(food_defaults[i][6]))
 				
-				nft.uid = current_user.uid
-				db.session.add(nft)
+				newfoodtype.uid = current_user.uid
+				db.session.add(newfoodtype)
 			db.session.commit()
-			flist = current_user.foodtypes
+			foodlist = current_user.foodtypes
 		colors = []
-		for i in flist:
+		for i in foodlist:
 			colors.append({"name":i.food_name, "id":i.ftid, "color":i.color, "serving":i.serv_name,
 				"protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories})
 		
-		elist = current_user.exercisetypes
-		if elist == []:
-			for i in range(len(exercise_defaults_med)):
-				exercise_defaults_med[i] = exercise_defaults_med[i].strip().split("|")
-				print(exercise_defaults_med[i], file=sys.stderr)
-				net = models.ExerciseType(name=exercise_defaults_med[i][0], mets=exercise_defaults_med[i][1],
-				serv_name=exercise_defaults_med[i][2], calperlb=exercise_defaults_med[i][3])
+		exerciselist = current_user.exercisetypes
+		if exerciselist == []:
+			for i in range(len(exercise_defaults)):
+				exercise_defaults[i] = exercise_defaults[i].strip().split("|")
+				print(exercise_defaults[i], file=sys.stderr)
+				net = models.ExerciseType(name=exercise_defaults[i][0], mets=exercise_defaults[i][1],
+				serv_name=exercise_defaults[i][2], caloriesperweight=exercise_defaults[i][3])
 				net.uid = current_user.uid
 				db.session.add(net)
-				elist.append(net)
+				exerciselist.append(net)
 			db.session.commit()
-			elist = current_user.exercisetypes
+			exerciselist = current_user.exercisetypes
 		exercises = []
-		for i in elist:
+		for i in exerciselist:
 			print(i, file=sys.stderr)
 			exercises.append({"name":i.name, "id":i.tid, "serving":i.serv_name, "mets":i.mets})
 		
-		return render_template("food-index.html", title="Home", foods=colors, elist=exercises, cuser=current_user)
+		return render_template("food-index.html", title="Home", foods=colors, exerciselist=exercises, cuser=current_user)
 
 
 @app.route("/addfood", methods=["POST"])
 def addfood():
 	data = request.get_json()
-	m = models.Meal(ts_created=int(datetime.utcnow().timestamp()), uid=current_user.uid, details=data['post'], timeoffset=data['tz'])
+	m = models.DataSet(ts_created=int(datetime.utcnow().timestamp()), uid=current_user.uid, details=data['post'], timeoffset=data['tz'])
 	if data['weight'] != -1:
 		m.weightval = 100*float(data['weight'])
 	else:
@@ -134,12 +117,12 @@ def addfood():
 	l = []
 	for i in data["foods"]:
 		print(i, file=sys.stderr)
-		fe = models.FoodElement(fid=i['id'], sid=i['serving'], uid=i['uid'], mealid=m.mid, calories=i['calories'],
+		fe = models.FoodData(foodtypeid=i['id'], servingsize=i['serving'], uid=i['uid'], mealid=m.mid, calories=i['calories'],
 		protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'], color=i['color'])
 		db.session.add(fe)
 	for i in data["exercises"]:
 		print(i, file=sys.stderr)
-		ee = models.ExerciseElement(uid=i['uid'], mealid=m.mid, calsburned=i['calories'],
+		ee = models.ExerciseData(uid=i['uid'], mealid=m.mid, calsburned=i['calories'],
 		previous_changes=False, ename=i['name'], length=i['length'])
 		db.session.add(ee)
 	db.session.commit()
@@ -149,85 +132,84 @@ def addfood():
 @app.route("/foodstats/<int:timeframe>")
 def stats(timeframe):
 	if timeframe == -1:
-		tf = date.today() - date(2019, 6, 1)
+		##Get all foods since July 1 2019
+		tf = date.today() - date(2019, 7, 1)
 		timeframe = tf.days
-		timediff = datetime(2019, 6, 1)
+		timediff = datetime(2019, 7, 1)
 		timediff = datetime.timestamp(timediff)
 	else:
+		##Get all foods in (timeframe) days
 		timediff = datetime.utcnow() - timedelta(days=timeframe-1)
 		timediff = datetime.timestamp(timediff)
 	
 	if current_user.is_authenticated:
-		meal_query = models.Meal.query.filter(models.Meal.ts_created>timediff).filter_by(uid=current_user.uid).all()
+		meal_query = models.DataSet.query.filter(models.DataSet.ts_created>timediff).filter_by(uid=current_user.uid).all()
 	else:
-		meal_query = models.Meal.query.filter_by(uid="Guest").all()
+		meal_query = models.DataSet.query.filter_by(uid="Guest").all()
 	
 	meal_dict = []
-	ddict = {}
+	day_dict = {}
 	td = date.today()
-	ddict[td] = []
+	day_dict[td] = []
 	timediff = timedelta(days=1)
 	for i in range(timeframe):
 		td = td - timediff
-		ddict[td] = []
+		day_dict[td] = []
 	
 	for item in meal_query:
 		if item.timeoffset == None:
-			item.timeoffset = 240
+			item.timeoffset = 0
 		d = datetime.fromtimestamp(item.ts_created - item.timeoffset*60)
 		meal_dict.append({"mealid": item.mid, "timestamp": d.strftime("%B %d %Y, %I:%M%p"), "details":item.details})
 		d = date.fromtimestamp(item.ts_created)
-		meal_dict[-1]['flist'] = []
-		meal_dict[-1]['elist'] = []
-		meal_dict[-1]['welem'] = 0
+		data_dict[-1]['foodlist'] = []
+		data_dict[-1]['exerciselist'] = []
+		data_dict[-1]['weightelement'] = 0
 		for i in item.elements:
-			tempd = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.sid, "active":i.active, "eid":i.eid}
-			meal_dict[-1]['flist'].append(tempd)
-			ddict[d].append(tempd)
+			elemendataset_dict = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.servingsize, "active":i.active, "eid":i.eid}
+			data_dict[-1]['foodlist'].append(elemendataset_dict)
+			day_dict[d].append(elemendataset_dict)
 		for i in item.eelements:
-			tempd = {"eid":i.eid, "uid":i.uid, "calories":i.calsburned, "previous_changes":False, "ename":i.ename, "length":i.length}
-			meal_dict[-1]['elist'].append(tempd)
+			elemendataset_dict = {"eid":i.eid, "uid":i.uid, "calories":i.calsburned, "previous_changes":False, "ename":i.ename, "length":i.length}
+			data_dict[-1]['exerciselist'].append(elemendataset_dict)
 		
 		if item.weightval != -1 and item.weightval != None:
-			print(str(item.weightval/100.0), file=sys.stderr)
-			meal_dict[-1]['welem'] = str(item.weightval/100.0)
+			data_dict[-1]['weightelement'] = str(item.weightval/100.0)
 		else:
-			meal_dict[-1]['welem'] = -1
-	nddict = {}
-	print(ddict, file=sys.stderr)
+			data_dict[-1]['weightelement'] = -1
+	new_day_dict = {}
+	print(day_dict, file=sys.stderr)
 	
-	for k in ddict.keys():
-		tdict = {"fat":0, "protein":0, "carbs":0, "calories":0}
-		print(ddict[k], file=sys.stderr)
-		for i in ddict[k]:
-			if i['color'] not in tdict.keys():
-				tdict[i['color']] = i['sid']
+	for k in day_dict.keys():
+		dataset_dict = {"fat":0, "protein":0, "carbs":0, "calories":0}
+		print(day_dict[k], file=sys.stderr)
+		for i in day_dict[k]:
+			if i['color'] not in dataset_dict.keys():
+				dataset_dict[i['color']] = i['sid']
 			else:
-				tdict[i['color']] += i['sid']
-			tdict['fat'] += i['fat_amt']
-			tdict['protein'] += i['protein_amt']
-			tdict['carbs'] += i['carb_amt']
-			tdict['calories'] += i['calories']
-		nddict[k.strftime("%B %d %Y")] = tdict
+				dataset_dict[i['color']] += i['sid']
+			dataset_dict['fat'] += i['fat_amt']
+			dataset_dict['protein'] += i['protein_amt']
+			dataset_dict['carbs'] += i['carb_amt']
+			dataset_dict['calories'] += i['calories']
+		new_day_dict[k.strftime("%B %d %Y")] = dataset_dict
 	
-	print(str(nddict), file=sys.stderr)
-	return render_template("stats.html", title="Stats", meals=meal_dict, d=nddict)
+	print(str(new_day_dict), file=sys.stderr)
+	return render_template("stats.html", title="Stats", meals=meal_dict, d=new_day_dict)
 
 @app.route("/editfoods", methods=["GET"])
 def editfoodspg():
-	flist = current_user.foodtypes
+	foodlist = current_user.foodtypes
 	colors = []
-	for i in flist:
-		colors.append({"name":i.food_name, "id":i.ftid, "color":i.color, "serv":i.serv_name,
+	for i in foodlist:
+		colors.append({"name":i.food_name, "id":i.ftid, "color":i.color, "servingsize":i.serv_name,
 			"protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories, "id":i.ftid})
 	return render_template('edit-foods.html', foods=colors)
 	
 @app.route("/editfoods", methods=["POST"])
 def editfoods():
-	data = request.get_json()
 	print(str(data), file=sys.stderr)
 	foodtype_query = models.FoodType.query.filter_by(uid=current_user.uid)
-	print(str(len(foodtype_query.all())), file=sys.stderr)
 	for e in data:
 		items = foodtype_query.filter_by(ftid=int(e['id'])).all()
 		
@@ -264,7 +246,7 @@ def sorl():
 def deletemeal(mealid):
 	if mealid == -1:
 		return redirect('/foodstats')
-	me = models.Meal.query.filter_by(mid=mealid).first()
+	me = models.DataSet.query.filter_by(mid=mealid).first()
 	if me.uid == current_user.uid:
 		db.session.delete(me)
 		db.session.commit()
@@ -275,7 +257,7 @@ def deletemeal(mealid):
 def deletefood(foodid):
 	if foodid == -1:
 		return redirect('/foodstats')
-	fe = models.FoodElement.query.filter_by(eid=foodid).first()
+	fe = models.FoodData.query.filter_by(eid=foodid).first()
 	print(fe.uid, file=sys.stderr)
 	print(current_user.uid, file=sys.stderr)
 	if str(fe.uid) == str(current_user.uid):
@@ -315,11 +297,3 @@ def signinuser():
 		return redirect("/")
 	else:
 		return redirect("/signuporin")
-
-@app.route("/addweight", methods=["POST"])
-def addweight():
-	data = request.get_json()
-	w = models.WeightElement(uid=current_user.username, ts_created=datetime.datetime.timestamp(datetime.utcnow()), val=int(data["weight"]))
-	db.session.add(w)
-	db.session.commit()
-	return ""
