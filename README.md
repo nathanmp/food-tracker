@@ -11,21 +11,21 @@ Features (this is mostly a todo list):
 - [x] - sign in
 - [x] - add a meal
 - [x] - preset categories appear on first use
-- [ ] - add a category of food
-- [ ] - edit a category of food
-- [ ] - delete a category of food
+- [x] - add a category of food
+- [x] - edit a category of food
+- [x] - delete a category of food
 - [ ] - edit meals
 - [x] - delete meals
 - [x] - view meals
 - [ ] - have calorie target
 - [ ] - modify calorie target
-- [ ] - add weight
+- [x] - add weight
 - [ ] - edit weight
-- [ ] - add exercise
+- [x] - add exercise
 - [ ] - reflect exercise in calorie target
 - [ ] - global stats
 - [ ] - follow other users
 - [ ] - activity log of other users
 - [ ] - edit what shows up on log
-- [ ] - have text notes about meal
-- [ ] - have notes visible
+- [x] - have text notes about meal
+- [x] - have notes visible
