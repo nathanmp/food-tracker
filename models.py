@@ -57,8 +57,8 @@ class User(UserMixin, db.Model):
 
 class FoodData(db.Model):
 	def __repr__(self):
-		ft = FoodType.query.filter_by(ftid=self.fid).first()
-		return ("<FoodData, FID {}, Username {}, SS {}, Time {}>").format(ft.food_name, self.uid, self.sid, self.timestamp)
+		ft = FoodType.query.filter_by(ftid=self.elementid).first()
+		return ("<FoodData, FID {}, Username {}, SS {}, Time {}>").format(self.food_name, ft.food_name, self.userid, self.servingsize, self.timestamp)
 	
 	__tablename__ = "foodelement"
 	elementid = db.Column(db.Integer, primary_key=True)
@@ -77,6 +77,17 @@ class FoodData(db.Model):
 	mealid = db.Column(db.Integer, db.ForeignKey("meal.mid"))
 
 class DataSet(db.Model):
+	def __repr__(self):
+		s = ""
+		if self.elements != []:
+			for i in self.elements:
+				s = s + str(i) + ", "
+		
+		if self.eelements != []:	
+			for j in self.eelements:
+				s = s + str(j) + ", "
+		
+		return s
 	__tablename__ = "meal"
 	mid = db.Column(db.Integer, primary_key=True)
 	elements = db.relationship('FoodData', backref="meal", lazy=True)
@@ -110,9 +121,11 @@ class Tag(db.Model):
 """
 	
 class ExerciseData(db.Model):
+	def __repr__(self):
+		return ("<ExerciseData, Name {}, Username {}, SS {}, Time {}>").format(self.uid, self.length, self.ts_created)
 	__tablename__ = "exerciseelement"
 	eid = db.Column(db.Integer, primary_key=True)
-	uid = db.Column(db.Integer, db.ForeignKey("user.uid"))
+	userid = db.Column(db.Integer, db.ForeignKey("user.uid"))
 	ts_created = db.Column(db.Integer, default=datetime.timestamp(datetime.utcnow()))
 	length = db.Column(db.Integer)
 	etid = db.Column(db.Integer, db.ForeignKey('exercisetype.tid'))

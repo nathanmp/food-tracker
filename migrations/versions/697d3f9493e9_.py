@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: fdb26aff444d
+Revision ID: 697d3f9493e9
 Revises: 
-Create Date: 2019-07-12 12:37:27.142139
+Create Date: 2019-07-29 15:27:19.681867
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'fdb26aff444d'
+revision = '697d3f9493e9'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -72,7 +72,7 @@ def upgrade():
     )
     op.create_table('exerciseelement',
     sa.Column('eid', sa.Integer(), nullable=False),
-    sa.Column('uid', sa.Integer(), nullable=True),
+    sa.Column('userid', sa.Integer(), nullable=True),
     sa.Column('ts_created', sa.Integer(), nullable=True),
     sa.Column('length', sa.Integer(), nullable=True),
     sa.Column('etid', sa.Integer(), nullable=True),
@@ -83,7 +83,7 @@ def upgrade():
     sa.Column('ename', sa.String(length=40), nullable=True),
     sa.ForeignKeyConstraint(['etid'], ['exercisetype.tid'], ),
     sa.ForeignKeyConstraint(['mealid'], ['meal.mid'], ),
-    sa.ForeignKeyConstraint(['uid'], ['user.uid'], ),
+    sa.ForeignKeyConstraint(['userid'], ['user.uid'], ),
     sa.PrimaryKeyConstraint('eid')
     )
     op.create_table('foodelement',

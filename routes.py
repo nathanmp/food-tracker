@@ -116,13 +116,15 @@ def addfood():
 	db.session.commit()
 	l = []
 	for i in data["foods"]:
-		print(i, file=sys.stderr)
-		fe = models.FoodData(foodtypeid=i['id'], servingsize=i['serving'], uid=i['uid'], mealid=m.mid, calories=i['calories'],
+		##print(i, file=sys.stderr)
+		fe = models.FoodData(foodtypeid=i['id'], servingsize=i['serving'], userid=i['uid'], mealid=m.mid, calories=i['calories'],
 		protein_amt=i['protein'], fat_amt=i['fat'], carb_amt=i['carbs'], previous_changes=False, food_name=i['name'], color=i['color'])
 		db.session.add(fe)
+		##print(i, file=sys.stderr)
+		m.elements.append(fe)
 	for i in data["exercises"]:
-		print(i, file=sys.stderr)
-		ee = models.ExerciseData(uid=i['uid'], mealid=m.mid, calsburned=i['calories'],
+		##print(i, file=sys.stderr)
+		ee = models.ExerciseData(userid=i['uid'], mealid=m.mid, calsburned=i['calories'],
 		previous_changes=False, ename=i['name'], length=i['length'])
 		db.session.add(ee)
 	db.session.commit()
@@ -131,6 +133,8 @@ def addfood():
 @app.route("/foodstats/", defaults={"timeframe":-1})
 @app.route("/foodstats/<int:timeframe>")
 def stats(timeframe):
+	daydict = {}
+	
 	if timeframe == -1:
 		##Get all foods since July 1 2019
 		tf = date.today() - date(2019, 7, 1)
@@ -142,60 +146,34 @@ def stats(timeframe):
 		timediff = datetime.utcnow() - timedelta(days=timeframe-1)
 		timediff = datetime.timestamp(timediff)
 	
+	for i in range(timeframe+1):
+		temptime = datetime.today() - timedelta(days=i)
+		print(temptime.strftime('%b %d %Y'), file=sys.stderr)
+		daydict[temptime.strftime('%b %d %Y')] = {'fat':0, 'protein':0, 'carbs':0, 'calories':0}
+	print(str(daydict), file=sys.stderr)
 	if current_user.is_authenticated:
 		meal_query = models.DataSet.query.filter(models.DataSet.ts_created>timediff).filter_by(uid=current_user.uid).all()
 	else:
 		meal_query = models.DataSet.query.filter_by(uid="Guest").all()
 	
-	meal_dict = []
-	day_dict = {}
+	data = []
 	td = date.today()
-	day_dict[td] = []
-	timediff = timedelta(days=1)
-	for i in range(timeframe):
-		td = td - timediff
-		day_dict[td] = []
 	
 	for item in meal_query:
 		if item.timeoffset == None:
 			item.timeoffset = 0
-		d = datetime.fromtimestamp(item.ts_created - item.timeoffset*60)
-		meal_dict.append({"mealid": item.mid, "timestamp": d.strftime("%B %d %Y, %I:%M%p"), "details":item.details})
-		d = date.fromtimestamp(item.ts_created)
-		data_dict[-1]['foodlist'] = []
-		data_dict[-1]['exerciselist'] = []
-		data_dict[-1]['weightelement'] = 0
-		for i in item.elements:
-			elemendataset_dict = {"color":i.color, "name":i.food_name, "carb_amt":i.carb_amt, "fat_amt":i.fat_amt, "protein_amt":i.protein_amt, "calories":i.calories, "sid":i.servingsize, "active":i.active, "eid":i.eid}
-			data_dict[-1]['foodlist'].append(elemendataset_dict)
-			day_dict[d].append(elemendataset_dict)
-		for i in item.eelements:
-			elemendataset_dict = {"eid":i.eid, "uid":i.uid, "calories":i.calsburned, "previous_changes":False, "ename":i.ename, "length":i.length}
-			data_dict[-1]['exerciselist'].append(elemendataset_dict)
-		
-		if item.weightval != -1 and item.weightval != None:
-			data_dict[-1]['weightelement'] = str(item.weightval/100.0)
-		else:
-			data_dict[-1]['weightelement'] = -1
-	new_day_dict = {}
-	print(day_dict, file=sys.stderr)
-	
-	for k in day_dict.keys():
-		dataset_dict = {"fat":0, "protein":0, "carbs":0, "calories":0}
-		print(day_dict[k], file=sys.stderr)
-		for i in day_dict[k]:
-			if i['color'] not in dataset_dict.keys():
-				dataset_dict[i['color']] = i['sid']
-			else:
-				dataset_dict[i['color']] += i['sid']
-			dataset_dict['fat'] += i['fat_amt']
-			dataset_dict['protein'] += i['protein_amt']
-			dataset_dict['carbs'] += i['carb_amt']
-			dataset_dict['calories'] += i['calories']
-		new_day_dict[k.strftime("%B %d %Y")] = dataset_dict
-	
-	print(str(new_day_dict), file=sys.stderr)
-	return render_template("stats.html", title="Stats", meals=meal_dict, d=new_day_dict)
+		##print(item, file=sys.stderr)
+		data.append(item)
+
+	for i in data:
+		print("I: " + str(i), file=sys.stderr)
+		for j in i.elements:
+			print("J: " + str(j), file=sys.stderr)
+			daydict[date.fromtimestamp(i.ts_created).strftime('%b %d %Y')]['fat'] += j.fat_amt
+			daydict[date.fromtimestamp(i.ts_created).strftime('%b %d %Y')]['protein'] += j.protein_amt
+			daydict[date.fromtimestamp(i.ts_created).strftime('%b %d %Y')]['carbs'] += j.carb_amt
+			daydict[date.fromtimestamp(i.ts_created).strftime('%b %d %Y')]['calories'] += j.calories
+	return render_template("stats.html", title="Stats", meals=data, d=daydict)
 
 @app.route("/editfoods", methods=["GET"])
 def editfoodspg():
@@ -206,7 +184,7 @@ def editfoodspg():
 			"protein":i.protein_amt, "fat":i.fat_amt, "carbs":i.carb_amt, "calories":i.calories, "id":i.ftid})
 	return render_template('edit-foods.html', foods=colors)
 	
-@app.route("/editfoods", methods=["POST"])
+@app.route("/editfoodtypes", methods=["POST"])
 def editfoods():
 	print(str(data), file=sys.stderr)
 	foodtype_query = models.FoodType.query.filter_by(uid=current_user.uid)
@@ -230,6 +208,7 @@ def editfoods():
 		i.carb_amt = int(e['carbs'])
 		i.serv_name = e['serving']
 		i.color = e['color']
+		
 		db.session.add(i)
 	db.session.commit()
 	return ""
@@ -241,26 +220,26 @@ def signuppg():
 def sorl():
 	return render_template("signuporin.html")
 
-@app.route("/deletemeal/", defaults={"mealid":-1})
+@app.route("/deletemeal", defaults={"mealid":-1})
 @app.route("/deletemeal/<int:mealid>")
 def deletemeal(mealid):
+	print("MEALID: " + str(mealid), file=sys.stderr)
 	if mealid == -1:
 		return redirect('/foodstats')
-	me = models.DataSet.query.filter_by(mid=mealid).first()
+	me = models.DataSet.query.filter_by(mid=mealid)
+	print("MEALS: " + str(me), file=sys.stderr)
+	me = me.first()
+	print("MEAL: " + str(me), file=sys.stderr)
 	if me.uid == current_user.uid:
 		db.session.delete(me)
 		db.session.commit()
 	return redirect('/foodstats')
 
-@app.route("/deletefood/", defaults={"foodid":-1})
-@app.route("/deletefood/<int:foodid>")
-def deletefood(foodid):
-	if foodid == -1:
-		return redirect('/foodstats')
-	fe = models.FoodData.query.filter_by(eid=foodid).first()
-	print(fe.uid, file=sys.stderr)
-	print(current_user.uid, file=sys.stderr)
-	if str(fe.uid) == str(current_user.uid):
+@app.route("/deletefood", methods=['POST'])
+def deletefood():
+	data = request.get_json()
+	fe = models.FoodData.query.filter_by(elementid=data['id']).first()
+	if str(fe.userid) == str(current_user.uid):
 		print("Deleting", file=sys.stderr)
 		db.session.delete(fe)
 		db.session.commit()
@@ -297,3 +276,23 @@ def signinuser():
 		return redirect("/")
 	else:
 		return redirect("/signuporin")
+
+@app.template_filter("formattime")
+def _jinja2_filter_datetime(value):
+	return datetime.fromtimestamp(value).strftime('%b %d %Y %I:%M:%S %p')
+
+@app.route("/editonefood", methods=["POST"])
+def editonefood():
+	data = request.get_json()
+	val = models.FoodData.query.filter_by(elementid=data['id']).first()
+	db.session.add(val)
+	val.food_name = data['name']
+	val.uid = current_user.uid
+	val.calories = int(data['calories'])
+	val.fat_amt = int(data['fat'])
+	val.protein_amt = int(data['protein'])
+	val.carb_amt = int(data['carbs'])
+	val.serv_name = float(data['serving'])
+	val.color = data['color']
+	db.session.commit()
+	return ""

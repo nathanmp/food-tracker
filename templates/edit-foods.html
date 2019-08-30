@@ -159,7 +159,7 @@
 			foodjson.push(food);
 		};
 		var http = new XMLHttpRequest();
-		http.open("POST", "/editfoods", true);
+		http.open("POST", "/editfoodtypes", true);
 		http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 		http.send(JSON.stringify(foodjson));
 		setTimeout( function() {
@@ -174,8 +174,8 @@
 	{% include "header.html" %}
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-lg-1"></div>
-			<div class="col-10 col-lg-10" id="allfoods">
+			<div class="d-none d-lg-block col-lg-1"></div>
+			<div class="col-12 col-lg-10" id="allfoods">
 				{% for food in foods %}
 				<div class="editfoodbdiv">
 				<div class="editfoodinp row" id="{{food.id}}">
@@ -205,44 +205,11 @@
 				</div>
 				{% endfor %}
 			</div>
-			<div class="submitbtndiv col-2 col-lg-12">
+			<div class="submitbtndiv col-12 col-lg-12">
 				<button class="adddivbtn" onclick="adddiv();">Add a Food</button>
 				<button class="submitbtn" onclick="submit();">Submit</button>
 			</div>
-			<div class="col-lg-1"></div>
-	</div>
-	<div class="row">
-		<div class="col-lg-1"></div>
-			<div class="col-10 col-lg-10" id="allexers">
-				{% for exercise in exercises %}
-				<div class="editexerbdiv">
-				<div class="editexerinp row" id="{{exercise.tid}}">
-					<div class="col-6 col-lg-12 exps">
-						<p class="editexplp nameexp">Name</p>
-						<p class="editexplp">Unit Name</p>
-						<p class="editexplp">Calories for ...</p>
-						<p class="editexplp">Weight</p>
-						<p class="editexplp">Delete?</p>
-					</div>
-					<div class="col-6 col-lg-12 inps">
-						<input type="text" class="editinp nameinp" value="{{exercise.name}}"></input>
-						<input type="text" class="editinp" value="{{exercise.servingsize}}"></input>
-						<input type="text" class="editinp" value="{{exercise.calories}}"></input>
-						<input type="text" class="editinp" value="{{exercise.weight}}"></input>
-						<input type="text" class="editinp" value="{{exercise.fat}}"></input>
-						<div class="deleteinpparent">
-							<input type="checkbox" class="editinp deleteinp"></input>
-						</div>
-					</div>
-				</div>
-				</div>
-				{% endfor %}
-			</div>
-			<div class="submitbtndiv col-2 col-lg-12">
-				<button class="adddivbtn" onclick="adddiv();">Add a Food</button>
-				<button class="submitbtn" onclick="submit();">Submit</button>
-			</div>
-			<div class="col-lg-1"></div>
+			<div class="d-none d-lg-block col-lg-1"></div>
 	</div>
 </body>
 
