@@ -18,7 +18,7 @@
         foods.push(food);
     }
     function exerciseHandler(l, color, name, id, mets) {
-		exercise = {"name":name, "length": l, "calories":100*mets, "id":id, "username": {{current_user.uid}} };
+		exercise = {"name":name, "length": l, "calories":100*mets, "id":id, "uid": {{current_user.uid}} };
         console.log(exercise);
         exercises.push(exercise);
     }

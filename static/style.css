@@ -154,6 +154,8 @@ table {
 
 col, td, th {
 	white-space: normal;
+}
+th {	
 	border: 1px solid black !important;
 }
 td {

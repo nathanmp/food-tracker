@@ -58,7 +58,7 @@ class User(UserMixin, db.Model):
 class FoodData(db.Model):
 	def __repr__(self):
 		ft = FoodType.query.filter_by(ftid=self.elementid).first()
-		return ("<FoodData, FID {}, Username {}, SS {}, Time {}>").format(self.food_name, ft.food_name, self.userid, self.servingsize, self.timestamp)
+		return ("<FoodData, FID {}, Username {}, SS {}, Time {}>").format(self.food_name, self.userid, self.servingsize, self.timestamp)
 	
 	__tablename__ = "foodelement"
 	elementid = db.Column(db.Integer, primary_key=True)
@@ -99,13 +99,14 @@ class DataSet(db.Model):
 	weightval = db.Column(db.Integer)
 	timeoffset = db.Column(db.Integer)
 
-# ~ class WeightElement(db.Model):
-	# ~ __tablename__ = "weightelement"
-	# ~ weightid = db.Column(db.Integer, primary_key=True, autoincrement=True)
-	# ~ ts_created = db.Column(db.Integer, default=datetime.timestamp(datetime.utcnow()))
-	# ~ uid = db.Column(db.String(64), db.ForeignKey('user.username'))
-	# ~ mealid = db.Column(db.Integer, db.ForeignKey("meal.mid"))
-	# ~ ##represented in 100ths of a pound to prevent rounding issues
+class WeightElement(db.Model):
+	__tablename__ = "weightelement"
+	weightid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+	ts_created = db.Column(db.Integer, default=datetime.timestamp(datetime.utcnow()))
+	uid = db.Column(db.String(64), db.ForeignKey('user.username'))
+	mealid = db.Column(db.Integer, db.ForeignKey("meal.mid"))
+	##represented in 100ths of a pound to prevent rounding issues
+	weight = db.Column(db.Integer)
 """
 class Post(db.Model):
 	__tablename__ = "post"
@@ -122,10 +123,10 @@ class Tag(db.Model):
 	
 class ExerciseData(db.Model):
 	def __repr__(self):
-		return ("<ExerciseData, Name {}, Username {}, SS {}, Time {}>").format(self.uid, self.length, self.ts_created)
+		return ("<ExerciseData, Name {}, Username {}, Len {}, Time {}>").format(self.ename, self.uid, self.length, self.ts_created)
 	__tablename__ = "exerciseelement"
 	eid = db.Column(db.Integer, primary_key=True)
-	userid = db.Column(db.Integer, db.ForeignKey("user.uid"))
+	uid = db.Column(db.Integer, db.ForeignKey("user.uid"))
 	ts_created = db.Column(db.Integer, default=datetime.timestamp(datetime.utcnow()))
 	length = db.Column(db.Integer)
 	etid = db.Column(db.Integer, db.ForeignKey('exercisetype.tid'))

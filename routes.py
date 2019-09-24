@@ -88,7 +88,6 @@ def addfoodpage():
 		if exerciselist == []:
 			for i in range(len(exercise_defaults)):
 				exercise_defaults[i] = exercise_defaults[i].strip().split("|")
-				print(exercise_defaults[i], file=sys.stderr)
 				net = models.ExerciseType(name=exercise_defaults[i][0], mets=exercise_defaults[i][1],
 				serv_name=exercise_defaults[i][2], caloriesperweight=exercise_defaults[i][3])
 				net.uid = current_user.uid
@@ -124,7 +123,7 @@ def addfood():
 		m.elements.append(fe)
 	for i in data["exercises"]:
 		##print(i, file=sys.stderr)
-		ee = models.ExerciseData(userid=i['uid'], mealid=m.mid, calsburned=i['calories'],
+		ee = models.ExerciseData(uid=i['uid'], mealid=m.mid, calsburned=i['calories'],
 		previous_changes=False, ename=i['name'], length=i['length'])
 		db.session.add(ee)
 	db.session.commit()
@@ -148,9 +147,7 @@ def stats(timeframe):
 	
 	for i in range(timeframe+1):
 		temptime = datetime.today() - timedelta(days=i)
-		print(temptime.strftime('%b %d %Y'), file=sys.stderr)
 		daydict[temptime.strftime('%b %d %Y')] = {'fat':0, 'protein':0, 'carbs':0, 'calories':0}
-	print(str(daydict), file=sys.stderr)
 	if current_user.is_authenticated:
 		meal_query = models.DataSet.query.filter(models.DataSet.ts_created>timediff).filter_by(uid=current_user.uid).all()
 	else:
