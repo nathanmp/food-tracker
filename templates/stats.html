@@ -4,308 +4,306 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css') ~ '?v=' ~ range(1,5000)|random}}" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script>
-	
-	function replaceWithInput(parent, child, id, val, pct) {
-		var td = document.createElement('td');
-		var input = document.createElement('input');
-		input.parentNode = td;
-		//input.id = id;
-		input.value = val;
-		td.style.width = pct+"%";
-		input.style.width = "100%";
-		input.style.left = "0px";
-		input.style.right = "0px";
-		td.appendChild(input);
-		parent.replaceChild(td, child);
-		return;
-	}
-	function replaceWithData(parent, child, id, val) {
-		
-		
-		
-	}
-	function editfood(id) {
-		console.log("id: " + id);
-		id = "f"+id;
-		var row = document.getElementById(id);
-		var children = row.children;
-		inp0 = children[0].innerHTML;
-		inp1 = children[1].innerHTML;
-		inp2 = children[2].innerHTML;
-		inp3 = children[3].innerHTML;
-		inp4 = children[4].innerHTML;
-		inp5 = children[5].innerHTML;
-		inp6 = children[6].innerHTML;
-		inp7 = children[7].innerHTML;
-		
-		replaceWithInput(row, children[0], id, inp0, 45);
-		replaceWithInput(row, children[1], id, inp1, 10);
-		replaceWithInput(row, children[2], id, inp2, 15);
-		replaceWithInput(row, children[3], id, inp3, 9);
-		replaceWithInput(row, children[4], id, inp4, 5);
-		replaceWithInput(row, children[5], id, inp5, 3);
-		replaceWithInput(row, children[6], id, inp6, 3);
-		
-		inp02 = children[0].children[0];
-		var td = document.createElement('td');
-		var a = document.createElement('a');
-		a.innerHTML = "Done";
-		a.onclick = function() {submitEditFood(row.id) };
-		console.log(row.id);
-		a.style.marginLeft = "-10px";
-		a.style.marginRight = "-10px";
-		a.style.textAlign = "center";
-		a.style.display = "inline-block";
-		a.style.color = "blue";
-		td.style.display = "inline-block";
-		td.style.marginLeft = "5px";
-		td.appendChild(a);
-		row.replaceChild(td, children[7]);
-		children[8].children[0].style.display = "none";
-		children[8].children[0].removeAttribute("href");
-	}
-	
-	function editexercise(id) {
-		console.log("id: " + id);
-		id = "e"+id;
-		
-		var row = document.getElementById(id);
-		var children = row.children;
-		
-		inp0 = children[0].innerHTML;
-		inp1 = children[1].innerHTML;
-		inp2 = children[2].innerHTML;
-		
-		replaceWithInput(row, children[0], id, inp0, 45);
-		replaceWithInput(row, children[1], id, inp1, 10);
-		replaceWithInput(row, children[2], id, inp2, 15);
-		replaceWithInput(row, children[3], id, inp3, 15);
-		
-		var td = document.createElement('td');
-		var a = document.createElement('a');
-		
-		a.innerHTML = "Done";
-		a.onclick = function() {submitEditFood(row.id) };
-		console.log(row.id);
-		a.style.marginLeft = "-10px";
-		a.style.marginRight = "-10px";
-		a.style.textAlign = "center";
-		a.style.display = "inline-block";
-		a.style.color = "blue";
-		td.style.display = "inline-block";
-		td.style.marginLeft = "5px";
-		td.appendChild(a);
-		row.replaceChild(td, children[7]);
-		children[8].children[0].style.display = "none";
-		children[8].children[0].removeAttribute("href");
-	}
-	
-	function deleteFood(id) {
-		food = {"id": id};
-		console.log(food);
-		var http = new XMLHttpRequest();
-		http.open("POST", "/deletefood", true);
-		http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-		http.send(JSON.stringify(food));
-		setTimeout( function() {
-				window.location.href = "/foodstats";
-		}, 500);
-	}
-	
-	function submitEditFood(id) {
-		var row = document.getElementById(id);
-		var food = {"name":row.children[0].children[0].value,
-			"fat": row.children[5].children[0].value,
-			"protein":row.children[4].children[0].value,
-			"carbs":row.children[6].children[0].value,
-			"calories":row.children[3].children[0].value,
-			"serving":row.children[1].children[0].value,
-			"color":row.children[2].children[0].value,
-			"id":id,
-			"username": {{current_user.uid}}
-		};
-		console.log(food);
-		var http = new XMLHttpRequest();
-		http.open("POST", "/editonefood", true);
-		http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-		http.send(JSON.stringify(food));
-		setTimeout( function() {
-			window.location.href = "/foodstats";
-		}, 500);
-	}
-	
-	function submitEditExercise(id) {
-		var row = document.getElementById("f"+id);
-		var exercise = {
-			
-		}
-		console.log(food);
-		var http = new XMLHttpRequest();
-		http.open("POST", "/editonefood", true);
-		http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-		http.send(JSON.stringify(food));
-		setTimeout( function() {
-			window.location.href = "/foodstats";
-		}, 500);
-	}
-	
+    
+    function replaceWithInput(parent, child, id, val, pct) {
+        var td = document.createElement('td');
+        var input = document.createElement('input');
+        input.parentNode = td;
+        //input.id = id;
+        input.value = val;
+        td.style.width = pct+"%";
+        input.style.width = "100%";
+        input.style.left = "0px";
+        input.style.right = "0px";
+        td.appendChild(input);
+        parent.replaceChild(td, child);
+        return;
+    }
+    function replaceWithData(parent, child, id, val) {
+        
+        
+        
+    }
+    function editfood(id) {
+        console.log("id: " + id);
+        id = "f"+id;
+        var row = document.getElementById(id);
+        var children = row.children;
+        inp0 = children[0].innerHTML;
+        inp1 = children[1].innerHTML;
+        inp2 = children[2].innerHTML;
+        inp3 = children[3].innerHTML;
+        inp4 = children[4].innerHTML;
+        inp5 = children[5].innerHTML;
+        inp6 = children[6].innerHTML;
+        inp7 = children[7].innerHTML;
+        
+        replaceWithInput(row, children[0], id, inp0, 45);
+        replaceWithInput(row, children[1], id, inp1, 10);
+        replaceWithInput(row, children[2], id, inp2, 15);
+        replaceWithInput(row, children[3], id, inp3, 9);
+        replaceWithInput(row, children[4], id, inp4, 5);
+        replaceWithInput(row, children[5], id, inp5, 3);
+        replaceWithInput(row, children[6], id, inp6, 3);
+        
+        inp02 = children[0].children[0];
+        var td = document.createElement('td');
+        var a = document.createElement('a');
+        a.innerHTML = "Done";
+        a.onclick = function() {submitEditFood(row.id) };
+        console.log(row.id);
+        a.style.marginLeft = "-10px";
+        a.style.marginRight = "-10px";
+        a.style.textAlign = "center";
+        a.style.display = "inline-block";
+        a.style.color = "blue";
+        td.style.display = "inline-block";
+        td.style.marginLeft = "5px";
+        td.appendChild(a);
+        row.replaceChild(td, children[7]);
+        children[8].children[0].style.display = "none";
+        children[8].children[0].removeAttribute("href");
+    }
+    
+    function editexercise(id) {
+        console.log("id: " + id);
+        id = "e"+id;
+        
+        var row = document.getElementById(id);
+        var children = row.children;
+        
+        inp0 = children[0].innerHTML;
+        inp1 = children[1].innerHTML;
+        inp2 = children[2].innerHTML;
+        
+        replaceWithInput(row, children[0], id, inp0, 45);
+        replaceWithInput(row, children[1], id, inp1, 10);
+        replaceWithInput(row, children[2], id, inp2, 15);
+        replaceWithInput(row, children[3], id, inp3, 15);
+        
+        var td = document.createElement('td');
+        var a = document.createElement('a');
+        
+        a.innerHTML = "Done";
+        a.onclick = function() {submitEditFood(row.id) };
+        console.log(row.id);
+        a.style.marginLeft = "-10px";
+        a.style.marginRight = "-10px";
+        a.style.textAlign = "center";
+        a.style.display = "inline-block";
+        a.style.color = "blue";
+        td.style.display = "inline-block";
+        td.style.marginLeft = "5px";
+        td.appendChild(a);
+        row.replaceChild(td, children[7]);
+        children[8].children[0].style.display = "none";
+        children[8].children[0].removeAttribute("href");
+    }
+    
+    function deleteFood(id) {
+        food = {"id": id};
+        console.log(food);
+        var http = new XMLHttpRequest();
+        http.open("POST", "/deletefood", true);
+        http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        http.send(JSON.stringify(food));
+        setTimeout( function() {
+                window.location.href = "/foodstats";
+        }, 500);
+    }
+    
+    function submitEditFood(id) {
+        var row = document.getElementById(id);
+        var food = {"name":row.children[0].children[0].value,
+            "fat": row.children[5].children[0].value,
+            "protein":row.children[4].children[0].value,
+            "carbs":row.children[6].children[0].value,
+            "calories":row.children[3].children[0].value,
+            "serving":row.children[1].children[0].value,
+            "color":row.children[2].children[0].value,
+            "id":id,
+            "username": {{current_user.uid}}
+        };
+        console.log(food);
+        var http = new XMLHttpRequest();
+        http.open("POST", "/editonefood", true);
+        http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        http.send(JSON.stringify(food));
+        setTimeout( function() {
+            window.location.href = "/foodstats";
+        }, 500);
+    }
+    
+    function submitEditExercise(id) {
+        var row = document.getElementById("f"+id);
+        var exercise = {
+            
+        }
+        console.log(food);
+        var http = new XMLHttpRequest();
+        http.open("POST", "/editonefood", true);
+        http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        http.send(JSON.stringify(food));
+        setTimeout( function() {
+            window.location.href = "/foodstats";
+        }, 500);
+    }
+    
 </script>
 <!--
 </head>
 -->
 <body>
-	{% include "header.html" %}
-	<div class="container-fluid">
-		<div class="row">
-			
+    {% include "header.html" %}
+    <div class="container-fluid">
+        <div class="row">
+            
 <!--
-			The below column contains list of meals
+            The below column contains list of meals
 -->
-			
-			<div class="col-xs-12 col-md-8">
-				{% for meal in meals %}
-				{% set ns = namespace() %}
-				{% set ns.cals = 0 %}
-				{% set ns.proteins = 0 %}
-				{% set ns.fats = 0 %}
-				{% set ns.carbs = 0 %}
-				<div class="table-responsive">
-				{% if meal.elements != [] %}
-				{% for foodelem in meal.elements %}
-				{% if foodelem.active == True %}
-				{% set ns.cals = ns.cals + foodelem.calories %}
-				{% set ns.proteins = ns.proteins + foodelem.protein_amt %}
-				{% set ns.fats = ns.fats + foodelem.fat_amt %}
-				{% set ns.carbs = ns.carbs + foodelem.carb_amt %}
-				{% endif %}
-				{% endfor %}
-				{% endif %}
-				{% if meal.elements != [] or meal.exerciselist != [] or meal.welem != -1 or meal.details != "" %}
-				<table class="mealtable table no-gutters">
-					{% if meal.elements != [] %}
-					<col width="45%">
-					<col width="10%">
-					<col width="10%">
-					<col width="5%">
-					<col width="5%">
-					<col width="5%">
-					<col width="5%">
-					<col width="5%">
-					<col width="5%">
-					<tr class="mealrow">
-						<th class="mealheading">Food Name</th>
-						<th class="mealheading">Amount</th>
-						<th class="mealheading">Color</th>
-						<th class="mealheading">Calories</th>
-						<th class="mealheading">Protein</th>
-						<th class="mealheading">Fats</th>
-						<th class="mealheading">Carbs</th>
-						<th class="mealheading">Edit</th>
-						<th class="mealheading">Delete</th>
-					</tr>
-					{% for item in meal.elements %}
-					{% if item.active == True %}
-					<tr class="mealrow" id="f{{item.elementid}}">
-					<td>{{item.food_name}}</td>
-					<td>{{item.servingsize}}</td>
-					<td>{{item.color}}</td>
-					<td>{{item.calories}}</td>
-					<td>{{item.protein_amt}}</td>
-					<td>{{item.fat_amt}}</td>
-					<td>{{item.carb_amt}}</td>
-					<td class="mealedit"><a href="#" onclick="editfood({{item.elementid}});">Edit</a></td>
-					<td class="mealedit"><a href="#" onclick="deleteFood({{item.elementid}});">Delete</a></td>
-					</tr>
-					{% endif %}
-					{% endfor %}
-					<tr class="mealrow">
-					<td colspan=2>Total</td>
-					<td>{{meal.mid}}</td>
-					<td>{{ns.cals}}</td>
-					<td>{{ns.proteins}}</td>
-					<td>{{ns.fats}}</td>
-					<td>{{ns.carbs}}</td>
-					<td></td>
-					<td></td>
-					</tr>
-					{% endif %}
-					{% if meal.eelements != [] %}
-					<tr class="mealrow">
-						<th colspan=4 class="mealheading">Exercise Name</th>
-						<th colspan=1 class="mealheading">Length</th>
-						<th colspan=2 class="mealheading">Calories</th>
-						<th colspan=1 class="mealheading">Calories</th>
-						<th colspan=1 class="mealheading">Delete</th>
-					</tr>
-					{% for item in meal.eelements %}
-						<tr class="mealrow" id="e{{item.elementid}}">
-							<td colspan=4 >{{item.ename}}</td>
-							<td colspan=1 >{{item.length}}</td>
-							<td colspan=2 >{{item.calsburned}}</td>
-							<td colspan=1 ><a href="#" onclick="editexercise({{item.eeid}}">Edit</a></td>
-							<td colspan=1 ><a href="/deleteexercise/{{item.eeid}}">Delete</a></td>
-						</tr>
-					{% endfor %}
-					{% endif %}
-					
-					{% if meal.weightval != -1 %}
-					<tr class="weight" style="border: 1pt solid black;">
-						<td colspan=9 style="border: 1pt solid black;">Weight: {{meal.weightelement}}</td>
-					</tr>
-					{% endif %}
-					
-					{% if meal.details != "" %}
-					<tr class="details" style="border: 1pt solid black;">
-						<td colspan=9 style="border: 1pt solid black;">Notes: {{meal.details}}</td>
-					</tr>
-					{% endif %}
-					
-					<tr class="time">
-						<td colspan=7>Created on: {{meal.ts_created|formattime}}</td>
-						<td colspan=2><a href="/deletemeal/{{meal.mid}}">Delete All</a></td>
-					</tr>
-					
-				</table>
-				{% endif %}
-				</div>
-				{% endfor %}
-			</div>
+            
+            <div class="col-xs-12 col-md-8">
+                {% for meal in meals %}
+                {% set ns = namespace() %}
+                {% set ns.cals = 0 %}
+                {% set ns.proteins = 0 %}
+                {% set ns.fats = 0 %}
+                {% set ns.carbs = 0 %}
+                <div class="table-responsive">
+                {% if meal.elements != [] %}
+                {% for foodelem in meal.elements %}
+                {% if foodelem.active == True %}
+                {% set ns.cals = ns.cals + foodelem.calories %}
+                {% set ns.proteins = ns.proteins + foodelem.protein_amt %}
+                {% set ns.fats = ns.fats + foodelem.fat_amt %}
+                {% set ns.carbs = ns.carbs + foodelem.carb_amt %}
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+                {% if meal.elements != [] or meal.exerciselist != [] or meal.welem != -1 or meal.details != "" %}
+                <table class="mealtable table no-gutters">
+                    {% if meal.elements != [] %}
+                    <col width="45%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="5%">
+                    <col width="5%">
+                    <col width="5%">
+                    <col width="5%">
+                    <col width="5%">
+                    <col width="5%">
+                    <tr class="mealrow">
+                        <th class="mealheading">Food Name</th>
+                        <th class="mealheading">Amount</th>
+                        <th class="mealheading">Color</th>
+                        <th class="mealheading">Calories</th>
+                        <th class="mealheading">Protein</th>
+                        <th class="mealheading">Fats</th>
+                        <th class="mealheading">Carbs</th>
+                        <th class="mealheading">Edit</th>
+                        <th class="mealheading">Delete</th>
+                    </tr>
+                    {% for item in meal.elements %}
+                    {% if item.active == True %}
+                    <tr class="mealrow" id="f{{item.elementid}}">
+                    <td>{{item.food_name}}</td>
+                    <td>{{item.servingsize}}</td>
+                    <td>{{item.color}}</td>
+                    <td>{{item.calories}}</td>
+                    <td>{{item.protein_amt}}</td>
+                    <td>{{item.fat_amt}}</td>
+                    <td>{{item.carb_amt}}</td>
+                    <td class="mealedit"><a href="#" onclick="editfood({{item.elementid}});">Edit</a></td>
+                    <td class="mealedit"><a href="#" onclick="deleteFood({{item.elementid}});">Delete</a></td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                    <tr class="mealrow">
+                    <td colspan=2>Total</td>
+                    <td>{{meal.mid}}</td>
+                    <td>{{ns.cals}}</td>
+                    <td>{{ns.proteins}}</td>
+                    <td>{{ns.fats}}</td>
+                    <td>{{ns.carbs}}</td>
+                    <td></td>
+                    <td></td>
+                    </tr>
+                    {% endif %}
+                    {% if meal.eelements != [] %}
+                    <tr class="mealrow">
+                        <th colspan=4 class="mealheading">Exercise Name</th>
+                        <th colspan=1 class="mealheading">Length</th>
+                        <th colspan=2 class="mealheading">Calories</th>
+                        <th colspan=1 class="mealheading">Calories</th>
+                        <th colspan=1 class="mealheading">Delete</th>
+                    </tr>
+                    {% for item in meal.eelements %}
+                        <tr class="mealrow" id="e{{item.elementid}}">
+                            <td colspan=4 >{{item.ename}}</td>
+                            <td colspan=1 >{{item.length}}</td>
+                            <td colspan=2 >{{item.calsburned}}</td>
+                            <td colspan=1 ><a href="#" onclick="editexercise({{item.eeid}}">Edit</a></td>
+                            <td colspan=1 ><a href="/deleteexercise/{{item.eeid}}">Delete</a></td>
+                        </tr>
+                    {% endfor %}
+                    {% endif %}
+                    
+                    {% if meal.weightval != -1 %}
+                    <tr class="weight" style="border: 1pt solid black;">
+                        <td colspan=9 style="border: 1pt solid black;">Weight: {{meal.weightelement}}</td>
+                    </tr>
+                    {% endif %}
+                    
+                    {% if meal.details != "" %}
+                    <tr class="details" style="border: 1pt solid black;">
+                        <td colspan=9 style="border: 1pt solid black;">Notes: {{meal.details}}</td>
+                    </tr>
+                    {% endif %}
+                    
+                    <tr class="time">
+                        <td colspan=7>Created on: {{meal.ts_created|formattime}}</td>
+                        <td colspan=2><a href="/deletemeal/{{meal.mid}}">Delete All</a></td>
+                    </tr>
+                    
+                </table>
+                {% endif %}
+                </div>
+                {% endfor %}
+            </div>
 
 <!--
-			The below column contains stats by day
+            The below column contains stats by day
 -->
-			
-			<div class="col-xs-12 col-md-4">
-				<div class="table-responsive">
-				<table class="mealtable table no-gutters">
-				<colgroup>
-				<col style="width:35%">
-				<col style="width:20%">
-				<col style="width:10%">
-				<col style="width:10%">
-				<col style="width:10%">
-				<col style="width:10%">
-				<col style="width:5%">
-				</colgroup>
-				<tr class="mealrow">
-					<th class="mealheading">Date</th>
-					<th class="mealheading">Calories</th>
-					<th class="mealheading">Protein</th>
-					<th class="mealheading">Fats</th>
-					<th class="mealheading">Carbs</th>
-				</tr>
-				{% for date in d|reverse %}
-				<tr class="daterow">
-					<td class="data">{{date}}</td>
-					<td class="data">{{d[date].calories}}</td>
-					<td class="data">{{d[date].protein}}</td>
-					<td class="data">{{d[date].fat}}</td>
-					<td class="data">{{d[date].carbs}}</td>
-				</tr>
-				{% endfor %}
-				</table>
-				</div>
-			</div>
-		</div>
-	</div>
+            
+            <div class="col-xs-12 col-md-4">
+                <div class="table-responsive">
+                <table class="mealtable table no-gutters">
+                <colgroup>
+                <col style="width:35%">
+                <col style="width:20%">
+                <col style="width:10%">
+                <col style="width:10%">
+                <col style="width:10%">
+                </colgroup>
+                <tr class="mealrow">
+                    <th class="mealheading">Date</th>
+                    <th class="mealheading">Calories</th>
+                    <th class="mealheading">Protein</th>
+                    <th class="mealheading">Fats</th>
+                    <th class="mealheading">Carbs</th>
+                </tr>
+                {% for date in d|reverse %}
+                <tr class="daterow">
+                    <td class="data">{{date}}</td>
+                    <td class="data">{{d[date].calories}}</td>
+                    <td class="data">{{d[date].protein}}</td>
+                    <td class="data">{{d[date].fat}}</td>
+                    <td class="data">{{d[date].carbs}}</td>
+                </tr>
+                {% endfor %}
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>

@@ -1,33 +1,33 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> {% include "header.html" %}
 <script>
-	var foods = [];
-	var post = {};
-	function servingHandler(serv, color, name, id, calories, protein, carbs, fat) {
-		{% if current_user.username %}
-			food = {"name":name, "fat": fat, "protein":protein, "carbs":carbs, "calories":calories, "serving":serv, "color":color, "id":id, "username": {{current_user.uid}} };
-		{% else %}
-			food = {"serving":serv, "color":color, "id":id, "username": "Guest" };
-		{% endif %}
+    var foods = [];
+    var post = {};
+    function servingHandler(serv, color, name, id, calories, protein, carbs, fat) {
+        {% if current_user.username %}
+            food = {"name":name, "fat": fat, "protein":protein, "carbs":carbs, "calories":calories, "serving":serv, "color":color, "id":id, "username": {{current_user.uid}} };
+        {% else %}
+            food = {"serving":serv, "color":color, "id":id, "username": "Guest" };
+        {% endif %}
         console.log(food);
         foods.push(food);
     }
     function submit() {
-		foods.push(document.getElementById("post").value);
+        foods.push(document.getElementById("post").value);
         var http = new XMLHttpRequest();
         http.open("POST", "/addfood", true);
         http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         http.send(JSON.stringify(foods));
         setTimeout( function() {
-			window.location.href = "/home";
-		}, 1000);
-	}
+            window.location.href = "/home";
+        }, 1000);
+    }
 </script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-4">
-			{% for ft in quickadd %}
-            <div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}">				
+            {% for ft in quickadd %}
+            <div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}">                
                 <p class="foodname">{{ft.name}}: {{ft.serv}}</p>
                 <div class="elements">
                     <svg width="24" height="24" onclick="servingHandler(0.25, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
@@ -41,9 +41,9 @@
                     </svg>
                 </div>
             </div>
-			{% endfor %}
-			<textarea rows="3" cols="40" id="post" name="post"></textarea>
-			<button onclick="submit();" name="quicksubmitfood">Submit Food</button>
+            {% endfor %}
+            <textarea rows="3" cols="40" id="post" name="post"></textarea>
+            <button onclick="submit();" name="quicksubmitfood">Submit Food</button>
         </div>
         <div class="col-4">
             <div class="posts">

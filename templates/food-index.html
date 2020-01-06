@@ -5,32 +5,32 @@
 <meta http-equiv="expires" content="-1" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <script>
-	var foods = [];
-	var exercises = [];
-	var weight = -1;
-	function servingHandler(serv, color, name, id, calories, protein, carbs, fat) {
-		{% if current_user.username %}
-			food = {"name":name, "fat": fat, "protein":protein, "carbs":carbs, "calories":calories, "serving":serv, "color":color, "id":id, "uid": {{current_user.uid}} };
-		{% else %}
-			food = {"serving":serv, "color":color, "id":id, "username": "Guest" };
-		{% endif %}
+    var foods = [];
+    var exercises = [];
+    var weight = -1;
+    function servingHandler(serv, color, name, id, calories, protein, carbs, fat) {
+        {% if current_user.username %}
+            food = {"name":name, "fat": fat, "protein":protein, "carbs":carbs, "calories":calories, "serving":serv, "color":color, "id":id, "uid": {{current_user.uid}} };
+        {% else %}
+            food = {"serving":serv, "color":color, "id":id, "username": "Guest" };
+        {% endif %}
         console.log(food);
         foods.push(food);
     }
     function exerciseHandler(l, color, name, id, mets) {
-		exercise = {"name":name, "length": l, "calories":100*mets, "id":id, "uid": {{current_user.uid}} };
+        exercise = {"name":name, "length": l, "calories":100*mets, "id":id, "uid": {{current_user.uid}} };
         console.log(exercise);
         exercises.push(exercise);
     }
     function submit() {
-		var weight = -1;
-		if (document.getElementById("weightinp").value != "") {
-			weight = document.getElementById("weightinp").value;
-		}
-		var post = "";
-		if (document.getElementById("post").value != "") {
-			post = document.getElementById("post").value;
-		}
+        var weight = -1;
+        if (document.getElementById("weightinp").value != "") {
+            weight = document.getElementById("weightinp").value;
+        }
+        var post = "";
+        if (document.getElementById("post").value != "") {
+            post = document.getElementById("post").value;
+        }
         var http = new XMLHttpRequest();
         var offset = new Date().getTimezoneOffset();
         var to_send = {"foods":foods, "exercises":exercises, "weight":weight, "post":post, "tz":offset};
@@ -38,9 +38,9 @@
         http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
         http.send(JSON.stringify(to_send));
         setTimeout( function() {
-			window.location.href = "/foodstats";
-		}, 1000);
-	}
+            window.location.href = "/foodstats";
+        }, 1000);
+    }
 </script>
 </head>
 <body>
@@ -102,14 +102,14 @@
             {% endfor %}
         </div>
         <div class="col-12 col-md-6 col-lg-4">
-			<div class="outerminlabel">
-				<p class="minlabel" style="background-color: #C5C5C5;">All measured in minutes</p>
-			</div>
-			{% for et in exerciselist %}
-			<div class="eservs" style="background-color: {{loop.cycle('#DCDCDC', '#C5C5C5')}}">
+            <div class="outerminlabel">
+                <p class="minlabel" style="background-color: #C5C5C5;">All measured in minutes</p>
+            </div>
+            {% for et in exerciselist %}
+            <div class="eservs" style="background-color: {{loop.cycle('#DCDCDC', '#C5C5C5')}}">
                 <p class="foodname">{{et.name}}</p>
                 <div class="elements">
-					<div class="exel" onclick="exerciseHandler(1, 'black', '{{et.name}}', {{et.id}}, {{et.mets}})" >
+                    <div class="exel" onclick="exerciseHandler(1, 'black', '{{et.name}}', {{et.id}}, {{et.mets}})" >
                         <text x="0" y="0" fill="black">1</text>
                     </div>
                     <div class="exel" onclick="exerciseHandler(5, 'black', '{{et.name}}', {{et.id}}, {{et.mets}})" > 
@@ -124,7 +124,7 @@
                 </div>
             </div>
             {% endfor %}
-		</div>
+        </div>
         <div class="divnotes col-12 col-md-6 col-lg-4 flex-column d-flex align-items-center ">
             <textarea rows="5" cols="50" id="post" name="post" placeholder="Notes"></textarea>
             <input type="text" id="weightinp" name="weight" placeholder="Weight"></input>

@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <div class="container-fluid">
 <div class="row">
-<div class="col-xs-6">	
+<div class="col-xs-6">    
 
 <div class="posts">
 {% for item in posts %}
@@ -11,22 +11,22 @@
 </div>
 
 </div>
-<div class="col-6">	
+<div class="col-6">    
 {% for ft in exeradd %}
 <div class="foodservs" style="background-color: {{loop.cycle('#C5C5C5', '#DCDCDC')}}" >
-	<p class="foodname">{{ft.name}}: {{ft.serv}}</p>
-	<div class="elements">
-	<svg width="24" height="24" onclick="servingHandler(0.25, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
-		<path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{ft.color}} />
-	</svg>
-	<svg width="24" height="24" onclick="servingHandler(0.5, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
-		<path d="M 12 12 V 0 A 12 12 0 0 1 12 24 M 12 12" fill={{ft.color}} />
-	</svg>
-	<svg width="24" height="24" onclick="servingHandler(1, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
-		<circle cx="12" cy="12" r="12" fill={{ft.color}} />
-	</svg>
-	</div>
-	</div>
+    <p class="foodname">{{ft.name}}: {{ft.serv}}</p>
+    <div class="elements">
+    <svg width="24" height="24" onclick="servingHandler(0.25, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
+        <path d="M 12 12 V 0 A 12 12 0 0 1 24 12 M 12 12" fill={{ft.color}} />
+    </svg>
+    <svg width="24" height="24" onclick="servingHandler(0.5, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
+        <path d="M 12 12 V 0 A 12 12 0 0 1 12 24 M 12 12" fill={{ft.color}} />
+    </svg>
+    <svg width="24" height="24" onclick="servingHandler(1, '{{ft.color}}', '{{ft.name}}', {{ft.id}}, {{ft.calories}}, {{ft.protein}}, {{ft.carbs}}, {{ft.fat}})">
+        <circle cx="12" cy="12" r="12" fill={{ft.color}} />
+    </svg>
+    </div>
+    </div>
 {% endfor %}
 </div>
 </div>

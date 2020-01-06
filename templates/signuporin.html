@@ -1,41 +1,33 @@
 <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}" />
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-<!-- ><script>
-	function signup() {
-		uname = document.getElementById("uname").value;
-		passwd = document.getElementById("password").value;
-		data = {"uname":uname, "email":email, "passwd":passwd}
-		var http = new XMLHttpRequest();
-        http.open("POST", "/signinuser", true);
-        http.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        http.send(JSON.stringify(data));	
-	}
-</script> -->
 <body>
-	<div class="container-fluid">
-	<div class="row">
-	<div class="col-md-8">
-		<div id="advert">
-			<p style="text-align: center;">Advertisement</p>
-			<img src="https://images-na.ssl-images-amazon.com/images/I/31ZZor%2Bo36L._SX425_.jpg">
-			<img src="https://i.ytimg.com/vi/7MsTKxWM-QQ/hqdefault.jpg">
-		</div>
-	</div>
-	<div class="col-md-4">
-	<p>Sign Up Below</p>
-	<form method="post" action="/signupuser">
-		<input class="margin10inp" type="text" id="uname" name="username"></input>
-		<input class="margin10inp" type="email" id="email" name="email"></input>
-		<input class="margin10inp" type="password" id="password" name="password"></input>
-		<button type="submit" value="Submit">Submit</button>
-	</form>
-	<p>Sign In Below</p>
-	<form method="post" action="/signinuser">
-		<input class="margin10inp" type="text" id="uname" name="username"></input>
-		<input class="margin10inp" type="password" id="password" name="password"></input>
-		<button type="submit" value="Submit">Submit</button>
-	</form>
-	</div>
-	</div>
-	</div>
+    <div class="container-fluid">
+    <div class="row">
+    <div class="col-md-8">
+        <div id="advert">
+            <p style="text-align: center;">Advertisement</p>
+            <img src="https://images-na.ssl-images-amazon.com/images/I/31ZZor%2Bo36L._SX425_.jpg">
+            <img src="https://i.ytimg.com/vi/7MsTKxWM-QQ/hqdefault.jpg">
+        </div>
+    </div>
+    <div class="col-md-4">
+    <p>Sign Up Below</p>
+    <form method="post" action="/signupuser">
+        <p>Username</p>
+        <input class="margin10inp" type="text" id="uname" name="username"></input>
+        <p>Email</p>
+        <input class="margin10inp" type="email" id="email" name="email"></input>
+        <p>Password</p>
+        <input class="margin10inp" type="password" id="password" name="password"></input>
+        <button type="submit" value="Submit">Submit</button>
+    </form>
+    <p>Sign In Below</p>
+    <form method="post" action="/signinuser">
+        <input class="margin10inp" type="text" id="uname" name="username"></input>
+        <input class="margin10inp" type="password" id="password" name="password"></input>
+        <button type="submit" value="Submit">Submit</button>
+    </form>
+    </div>
+    </div>
+    </div>
 </body>
