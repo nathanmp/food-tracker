@@ -10,6 +10,8 @@ import sys
 import os
 from datetime import datetime, date, timedelta
 from eatr import db, app, models
+from fbclient.fitbitclient import FitbitClient
+
 app = Flask('eatr')
 app.debug = True
 app.config.from_pyfile('config.py', silent=True)
@@ -17,6 +19,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 login_manager = LoginManager()
 login_manager.init_app(app)
+
 food_defaults = """Water|blue|1 cup|0|0|0|0
 Tea|blue|1 cup|0|0|0|0
 Coffee|blue|1 cup|0|0|0|0
@@ -48,6 +51,11 @@ exercise_defaults = """Light exercise (<3 METs)|3|1 hour|3
 Medium exercise (3-6 METs)|5|1 hour|5
 Intense exercise (>6 METs)|7|1 hour|7""".split("\n")
 
+fbc = FitbitClient()
+if fbc.enabled:
+    fbclient = fbc.make_client()
+print(fbclient, file=sys.stderr)
+print(fbc.enabled, file=sys.stderr)
 @login_manager.user_loader
 def load_user(user_id):
     u = models.User.query.filter_by(username=user_id).first()
@@ -114,6 +122,21 @@ def addfood():
     db.session.add(m)
     db.session.commit()
     l = []
+    dtnow = datetime.now()
+    mtid = 7
+    if dtnow.hour >= 3 and dtnow.hour < 10:
+        mtid = 1
+    elif dtnow.hour >= 10 and dtnow.hour < 12:
+        mtid = 2
+    elif dtnow.hour >= 12 and dtnow.hour < 15:
+        mtid = 3
+    elif dtnow.hour >= 15 and dtnow.hour < 18:
+        mtid = 4
+    elif dtnow.hour >= 18 and dtnow.hour < 22:
+        mtid = 5
+    else:
+        mtid = 7
+
     for i in data["foods"]:
         ##print(i, file=sys.stderr)
         fe = models.FoodData(foodtypeid=i['id'], servingsize=i['serving'], userid=i['uid'], mealid=m.mid, calories=i['calories'],
@@ -121,6 +144,21 @@ def addfood():
         db.session.add(fe)
         ##print(i, file=sys.stderr)
         m.elements.append(fe)
+        
+        if fbc.enabled:
+            json = {
+                "foodName": i['name'],
+                'mealTypeId': mtid,
+                'unitId': 304,
+                'amount': i['serving'],
+                'date': dtnow.strftime("%Y-%m-%d"),
+                'calories': i['calories'],
+                'totalCarbohydrate': i['carbs'],
+                'totalFat': i['fat'],
+                'protein': i['protein']
+            }
+            fbclient.log_food(json)
+
     for i in data["exercises"]:
         ##print(i, file=sys.stderr)
         ee = models.ExerciseData(uid=i['uid'], mealid=m.mid, calsburned=i['calories'],
@@ -164,9 +202,7 @@ def stats(timeframe):
         data.append(item)
 
     for i in data:
-        print("I: " + str(i), file=sys.stderr)
         for j in i.elements:
-            print("J: " + str(j), file=sys.stderr)
             daydict[date.fromtimestamp(i.ts_created).strftime('%b %d %Y')]['fat'] += j.fat_amt
             daydict[date.fromtimestamp(i.ts_created).strftime('%b %d %Y')]['protein'] += j.protein_amt
             daydict[date.fromtimestamp(i.ts_created).strftime('%b %d %Y')]['carbs'] += j.carb_amt

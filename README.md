@@ -29,3 +29,5 @@ Features (this is mostly a todo list):
 - [ ] - edit what shows up on log
 - [x] - have text notes about meal
 - [x] - have notes visible
+- [x] - Fitbit integration using 1 person's profile
+- [ ] - Fitbit integration on a per-person basis
